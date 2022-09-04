@@ -28,7 +28,7 @@
   
   .groupsList{
     overflow-y: scroll;
-    height: 100%;
+    height: calc(100% - 230px);
    }
 
   .ingredientGroup {
@@ -92,8 +92,6 @@
       /* border: 1px dashed #4c4cff; */
       text-align: center;
   }
-  
-
   
     
 /* Works on Firefox */

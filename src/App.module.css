@@ -1,13 +1,13 @@
 .app {
   text-align: center;
-  /* height: 100vh; */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #131316;
 }
 
 .app__main {
-  height: calc(100% - 360px);
+  height: calc( 100% - 128px) ;
   flex-shrink: 0;
   display: flex;
   justify-content: center;
