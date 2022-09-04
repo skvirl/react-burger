@@ -1,0 +1,49 @@
+.inredientList {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: scroll;
+  height: 100%;
+
+}
+
+.elementBox{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+
+  width: 568px;
+  height: 80px;
+}
+.elementBox_dragable{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 568px;
+  height: 80px;
+}
+
+
+  
+    
+/* Works on Firefox */
+.inredientList {
+  scrollbar-width: thin;
+  scrollbar-color: #8585AD #131316;
+ 
+}
+
+/* Works on Chrome, Edge, and Safari */
+.inredientList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inredientList::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #131316;
+}
+
+.inredientList::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
