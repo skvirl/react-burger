@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import styles from "./BurgerConstructor.module.css";
 import {
   ConstructorElement,
@@ -47,7 +48,7 @@ const IngredientList = () => {
         );
         if (!currentIngredient) return <div>ингридиент потерялся</div>;
         return (
-          <div className={styles.elementBox_dragable}>
+          <div className={styles.elementBox_dragable} key={currentIngredient._id}>
             <DragIcon type="primary" />
             <ConstructorElement
               text={currentIngredient.name}
@@ -62,5 +63,10 @@ const IngredientList = () => {
   );
 };
 
+BunElem.propTypes = {
+  type: PropTypes.string,
+  currentBunId: PropTypes.string
+}; 
+
 export default BurgerConstructor;
-//{(()=>{console.log(name); return 'a'})()}
+ 

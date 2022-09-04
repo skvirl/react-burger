@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import styles from "./BurgerIngredients.module.css";
 import {
   Tab,
@@ -61,7 +62,7 @@ const IngredientGroup = ({ name, type, alt }) => {
               return val.type === type;
             })
             .map((val) => (
-              <IngredientView elem={val} alt={alt} />
+               <IngredientView elem={val} alt={alt} key ={val._id} />
             ))}
         </div>
       </div>
@@ -70,9 +71,9 @@ const IngredientGroup = ({ name, type, alt }) => {
 };
 
 const IngredientView = ({ elem, alt }) => {
-  const { id, image, price, name } = elem;
+  const { _id, image, price, name } = elem;
   return (
-    <div className={styles.ingredient__Card} id={id}>
+    <div className={styles.ingredient__Card} key={_id}>
       <img src={image} alt={alt} className={styles.ingredient__Picture} />
       <div className={styles.ingredient__priceBox}>
         <div className={'text text_type_digits-default '+styles.ingredient__price}>{price}</div>
@@ -84,6 +85,24 @@ const IngredientView = ({ elem, alt }) => {
     </div>
   );
 };
+
+IngredientGroup.propTypes = {
+  name: PropTypes.string,
+  type: PropTypes.string,
+  alt: PropTypes.string
+};
+
+IngredientView.propTypes = {
+  elem: PropTypes.shape({
+    id: PropTypes.string,
+    image: PropTypes.string,
+    price:  PropTypes.number,
+    name: PropTypes.string,
+     
+    fontSize: PropTypes.number
+  }),
+  alt: PropTypes.string
+}; 
 
 export default BurgerIngredients;
 //{(()=>{console.log(name); return 'a'})()}
