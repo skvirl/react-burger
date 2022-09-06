@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styles from "./AppHeader.module.css";
 import {
   Logo,
@@ -49,12 +50,17 @@ const HeaderButton = ({ type, ico, title }) => {
         className={
           (type === "primary"
             ? styles.button__title_primary
-            : styles.button__title_secondary) 
-            + " text text_type_main-small"
+            : styles.button__title_secondary) + " text text_type_main-small"
         }
       >
         {title}
       </span>
     </div>
   );
+};
+
+HeaderButton.propTypes = {
+  type: PropTypes.string,
+  title: PropTypes.string,
+  ico: PropTypes.element,
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.css";
 import {
   ConstructorElement,
@@ -14,11 +14,9 @@ import {
 const BurgerConstructor = () => {
   const [current, setCurrent] = React.useState("one");
   return (
-    <>
-      <div className={styles.inredientList}>
-        <IngredientList />
-      </div>
-    </>
+    <div className={styles.inredientList}>
+      <IngredientList />
+    </div>
   );
 };
 
@@ -28,13 +26,13 @@ const BunElem = ({ type, currentBunId }) => {
 
   return (
     <div className={styles.elementBox}>
-    <ConstructorElement
-      type={type}
-      isLocked={true}
-      text={currentBunElem.name}
-      price={currentBunElem.price}
-      thumbnail={currentBunElem.image}
-    />
+      <ConstructorElement
+        type={type}
+        isLocked={true}
+        text={currentBunElem.name}
+        price={currentBunElem.price}
+        thumbnail={currentBunElem.image}
+      />
     </div>
   );
 };
@@ -48,7 +46,10 @@ const IngredientList = () => {
         );
         if (!currentIngredient) return <div>ингридиент потерялся</div>;
         return (
-          <div className={styles.elementBox_dragable} key={currentIngredient._id}>
+          <div
+            className={styles.elementBox_dragable}
+            key={currentIngredient._id}
+          >
             <DragIcon type="primary" />
             <ConstructorElement
               text={currentIngredient.name}
@@ -64,9 +65,8 @@ const IngredientList = () => {
 };
 
 BunElem.propTypes = {
-  type: PropTypes.string,
-  currentBunId: PropTypes.string
-}; 
+  type: PropTypes.string.isRequired,
+  currentBunId: PropTypes.string.isRequired,
+};
 
 export default BurgerConstructor;
- 
