@@ -29,7 +29,7 @@ const BunElem = ({ type, currentBunId }) => {
       <ConstructorElement
         type={type}
         isLocked={true}
-        text={currentBunElem.name}
+        text={currentBunElem.name + (type === "top" ? " (верх)" : " (низ)")}
         price={currentBunElem.price}
         thumbnail={currentBunElem.image}
       />
