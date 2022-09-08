@@ -7,24 +7,23 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import {
-  ingredientData,
   currentBunId,
   constructorIngedientsList,
 } from "../../utils/data";
 
-const BurgerConstructor = () => {
+const BurgerConstructor = ({ingredientData}) => {
   const [current, setCurrent] = React.useState("one");
   return (
     <>
       <div className={styles.inredientList}>
-        <IngredientList />
+        <IngredientList ingredientData={ingredientData}/>
       </div>
-      <OrderBtn />
+      <OrderBtn ingredientData={ingredientData}/>
     </>
   );
 };
 
-const BunElem = ({ type, currentBunId }) => {
+const BunElem = ({ type, currentBunId, ingredientData }) => {
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   if (!currentBunElem) return;
 
@@ -41,10 +40,12 @@ const BunElem = ({ type, currentBunId }) => {
   );
 };
 
-const IngredientList = () => {
+const IngredientList = ({ingredientData}) => {
+  console.log(ingredientData);
+
   return (
     <>
-      <BunElem type="top" currentBunId={currentBunId} />
+      <BunElem type="top" currentBunId={currentBunId} ingredientData={ingredientData}/>
       {constructorIngedientsList.map((listElem) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
@@ -64,21 +65,21 @@ const IngredientList = () => {
           </div>
         );
       })}
-      <BunElem type="bottom" currentBunId={currentBunId} />
+      <BunElem type="bottom" currentBunId={currentBunId} ingredientData={ingredientData}/>
     </>
   );
 };
 
-const OrderBtn = () => {
+const OrderBtn = ({ingredientData}) => {
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
     constructorIngedientsList.reduce((sumVal, listElem) => {
       const currentIngredient = ingredientData.find(
         (ingredientElem) => ingredientElem._id === listElem._id
       );
-      return sumVal + currentIngredient.price * listElem.count;
+      return sumVal + currentIngredient?currentIngredient.price:0 * listElem.count;
     }, 0) +
-    currentBunElem.price * 2;
+    currentBunElem?currentBunElem.price:0 * 2;
 
   return (
     <div className={styles.orderBtn}>

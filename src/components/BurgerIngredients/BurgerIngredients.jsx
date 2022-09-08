@@ -5,11 +5,12 @@ import {
   Tab,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientData } from "../../utils/data";
+// import { ingredientData } from "../../utils/data";
 import { ingredientType } from "../../utils/types";
 
-const BurgerIngredients = () => {
+const BurgerIngredients = ({ingredientData}) => {
   const [current, setCurrent] = React.useState("one");
+  
   return (
     <>
       <h1 className={styles.title + " text text_type_main-large"}>
@@ -42,15 +43,16 @@ const BurgerIngredients = () => {
         </Tab>
       </div>
       <div className={styles.groupsList}>
-        <IngredientGroup name="Булки" type="bun" alt="Булка" />
-        <IngredientGroup name="Соусы" type="sauce" alt="Соус" />
-        <IngredientGroup name="Начинки" type="main" alt="Начинка" />
+        <IngredientGroup ingredientData={ingredientData} name="Булки" type="bun" alt="Булка" />
+        <IngredientGroup ingredientData={ingredientData} name="Соусы" type="sauce" alt="Соус" />
+        <IngredientGroup ingredientData={ingredientData} name="Начинки" type="main" alt="Начинка" />
       </div>
     </>
   );
 };
 
-const IngredientGroup = ({ name, type, alt }) => {
+const IngredientGroup = ({ ingredientData, name, type, alt }) => {
+  
   return (
     <div className={styles.ingredientGroup}>
       <div
