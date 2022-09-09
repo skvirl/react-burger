@@ -5,10 +5,9 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import Modal from "../Modal/Modal";
 import { getIngredientsData, cachedData } from "../../utils/data";
 
-function App(a) {
+function App() {
   const [hasError, setHasError] = React.useState(null);
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [data, setData] = React.useState([]);
@@ -25,8 +24,7 @@ function App(a) {
 
   return (
     <>
-      <Modal />
-      {isLoaded && (
+       {isLoaded && (
         <div className={styles.app}>
           <AppHeader />
           <main className={styles.app__main}>

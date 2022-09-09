@@ -7,7 +7,9 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { currentBunId, constructorIngedientsList } from "../../utils/data";
-import Modal from "../Modal/Modal";
+import { Modal, ModalController } from "../Modal/Modal";
+import OrderDetails from "../Modal/OrderDetails";
+import { ingredientType } from "../../utils/types";
 
 const BurgerConstructor = ({ ingredientData }) => {
   const [current, setCurrent] = React.useState("one");
@@ -39,8 +41,6 @@ const BunElem = ({ type, currentBunId, ingredientData }) => {
 };
 
 const IngredientList = ({ ingredientData }) => {
-  console.log(ingredientData);
-
   return (
     <>
       <BunElem
@@ -77,11 +77,7 @@ const IngredientList = ({ ingredientData }) => {
 };
 
 const OrderBtn = ({ ingredientData }) => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handleOpenModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  const modalControl = ModalController();
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
@@ -89,12 +85,12 @@ const OrderBtn = ({ ingredientData }) => {
       const currentIngredient = ingredientData.find(
         (ingredientElem) => ingredientElem._id === listElem._id
       );
-      return sumVal + currentIngredient
-        ? currentIngredient.price
-        : 0 * listElem.count;
-    }, 0) + currentBunElem
-      ? currentBunElem.price
-      : 0 * 2;
+      return (
+        sumVal +
+        (currentIngredient ? currentIngredient.price : 0) * listElem.count
+      );
+    }, 0) +
+    (currentBunElem ? currentBunElem.price : 0) * 2;
 
   return (
     <>
@@ -111,19 +107,39 @@ const OrderBtn = ({ ingredientData }) => {
         </div>
         <div
           className={styles.orderBtn__btn + " text text_type_main-default"}
-          onClick={handleOpenModal}
+          onClick={modalControl.modalToggle}
         >
           Оформить заказ
         </div>
       </div>
-      <Modal isOpen={isModalOpen} handleOpenModal={handleOpenModal} />
+      <Modal
+        isOpen={modalControl.isModalOpen}
+        handleOpenModal={modalControl.modalToggle}
+      >
+        <div>
+          <OrderDetails orderNumber={(Math.random()*1000000).toFixed(0)} />
+          </div> 
+      </Modal>
     </>
   );
 };
 
+BurgerConstructor.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
+};
+
 BunElem.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
   type: PropTypes.string.isRequired,
   currentBunId: PropTypes.string.isRequired,
+};
+
+IngredientList.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
+};
+
+OrderBtn.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 export default BurgerConstructor;

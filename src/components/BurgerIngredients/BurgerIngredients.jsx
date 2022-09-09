@@ -5,7 +5,6 @@ import {
   Tab,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-// import { ingredientData } from "../../utils/data";
 import { ingredientType } from "../../utils/types";
 
 const BurgerIngredients = ({ingredientData}) => {
@@ -97,7 +96,12 @@ const IngredientView = ({ elem, alt }) => {
   );
 };
 
+BurgerIngredients.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
+ };
+
 IngredientGroup.propTypes = {
+  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
   name: PropTypes.string,
   type: PropTypes.string,
   alt: PropTypes.string,
