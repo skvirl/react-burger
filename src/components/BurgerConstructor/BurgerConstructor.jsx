@@ -6,19 +6,17 @@ import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import {
-  currentBunId,
-  constructorIngedientsList,
-} from "../../utils/data";
+import { currentBunId, constructorIngedientsList } from "../../utils/data";
+import Modal from "../Modal/Modal";
 
-const BurgerConstructor = ({ingredientData}) => {
+const BurgerConstructor = ({ ingredientData }) => {
   const [current, setCurrent] = React.useState("one");
   return (
     <>
       <div className={styles.inredientList}>
-        <IngredientList ingredientData={ingredientData}/>
+        <IngredientList ingredientData={ingredientData} />
       </div>
-      <OrderBtn ingredientData={ingredientData}/>
+      <OrderBtn ingredientData={ingredientData} />
     </>
   );
 };
@@ -40,12 +38,16 @@ const BunElem = ({ type, currentBunId, ingredientData }) => {
   );
 };
 
-const IngredientList = ({ingredientData}) => {
+const IngredientList = ({ ingredientData }) => {
   console.log(ingredientData);
 
   return (
     <>
-      <BunElem type="top" currentBunId={currentBunId} ingredientData={ingredientData}/>
+      <BunElem
+        type="top"
+        currentBunId={currentBunId}
+        ingredientData={ingredientData}
+      />
       {constructorIngedientsList.map((listElem) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
@@ -65,38 +67,57 @@ const IngredientList = ({ingredientData}) => {
           </div>
         );
       })}
-      <BunElem type="bottom" currentBunId={currentBunId} ingredientData={ingredientData}/>
+      <BunElem
+        type="bottom"
+        currentBunId={currentBunId}
+        ingredientData={ingredientData}
+      />
     </>
   );
 };
 
-const OrderBtn = ({ingredientData}) => {
+const OrderBtn = ({ ingredientData }) => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
     constructorIngedientsList.reduce((sumVal, listElem) => {
       const currentIngredient = ingredientData.find(
         (ingredientElem) => ingredientElem._id === listElem._id
       );
-      return sumVal + currentIngredient?currentIngredient.price:0 * listElem.count;
-    }, 0) +
-    currentBunElem?currentBunElem.price:0 * 2;
+      return sumVal + currentIngredient
+        ? currentIngredient.price
+        : 0 * listElem.count;
+    }, 0) + currentBunElem
+      ? currentBunElem.price
+      : 0 * 2;
 
   return (
-    <div className={styles.orderBtn}>
-      <div className={styles.orderBtn__totalBox}>
+    <>
+      <div className={styles.orderBtn}>
+        <div className={styles.orderBtn__totalBox}>
+          <div
+            className={styles.orderBtn__total + " text text_type_digits-medium"}
+          >
+            {sum}
+          </div>
+          <div className={styles.orderBtn__ico}>
+            <CurrencyIcon type="primary" />
+          </div>
+        </div>
         <div
-          className={styles.orderBtn__total + " text text_type_digits-medium"}
+          className={styles.orderBtn__btn + " text text_type_main-default"}
+          onClick={handleOpenModal}
         >
-          {sum}
-        </div>
-        <div className={styles.orderBtn__ico}>
-          <CurrencyIcon type="primary" />
+          Оформить заказ
         </div>
       </div>
-      <div className={styles.orderBtn__btn + " text text_type_main-default"}>
-        Оформить заказ
-      </div>
-    </div>
+      <Modal isOpen={isModalOpen} handleOpenModal={handleOpenModal} />
+    </>
   );
 };
 

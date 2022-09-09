@@ -5,8 +5,8 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-
-const apiUrl = "https://norma.nomoreparties.space/api/ingredients";
+import Modal from "../Modal/Modal";
+import { getIngredientsData, cachedData } from "../../utils/data";
 
 function App(a) {
   const [hasError, setHasError] = React.useState(null);
@@ -14,26 +14,18 @@ function App(a) {
   const [data, setData] = React.useState([]);
 
   React.useEffect(() => {
-    getIngredientsData();
+    getIngredientsData(setData, setIsLoaded, setHasError);
   }, []);
 
-  const getIngredientsData = () => {
-    fetch(apiUrl)
-    .then(res => res.json())
-    .then(result => {
-        setIsLoaded(true);
-        setData(result.data);
-      },
-      (error) => {
-        setIsLoaded(true);
-        setHasError(error);
-      }
-    )
-  };
+  //devmod
+  if (hasError) {
+    setData(cachedData);
+    setHasError(false);
+  }
 
- 
   return (
     <>
+      <Modal />
       {isLoaded && (
         <div className={styles.app}>
           <AppHeader />
@@ -53,7 +45,7 @@ function App(a) {
                   <BurgerIngredients ingredientData={data} />
                 </section>
                 <section className={styles.mainSection}>
-                  <BurgerConstructor ingredientData={data}/>
+                  <BurgerConstructor ingredientData={data} />
                 </section>
               </div>
             )}
