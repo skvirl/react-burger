@@ -1,0 +1,34 @@
+.app {
+  text-align: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #131316;
+}
+
+.app__main {
+  height: calc(100% - 128px);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1240px;
+
+  margin-left: 2%;
+  margin-right: 2%;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.mainSection {
+  box-sizing: border-box;
+
+  max-width: 600px;
+  width: 100%;
+}
