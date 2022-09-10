@@ -16,15 +16,15 @@ function App() {
     getIngredientsData(setData, setIsLoaded, setHasError);
   }, []);
 
-  //devmod
-  if (hasError) {
-    setData(cachedData);
-    setHasError(false);
-  }
+  // //devmod  использую если нет доступа к api
+  // if (hasError) {
+  //   setData(cachedData);
+  //   setHasError(false);
+  // }
 
   return (
     <>
-       {isLoaded && (
+      {isLoaded && (
         <div className={styles.app}>
           <AppHeader />
           <main className={styles.app__main}>

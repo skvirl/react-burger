@@ -9,7 +9,7 @@
 
 .modal__overlay {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 1000;
   left: 0;
   right: 0;
@@ -34,8 +34,8 @@
 .modal__close {
   cursor: pointer;
   position: absolute;
-  right: 25px;
-  top: 25px;
+  right: 40px;
+  top: 50px;
   height: 24px;
   width: 24px;
   /* background: #F2F2F3; */

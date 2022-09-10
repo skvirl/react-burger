@@ -117,8 +117,8 @@ const OrderBtn = ({ ingredientData }) => {
         handleOpenModal={modalControl.modalToggle}
       >
         <div>
-          <OrderDetails orderNumber={(Math.random()*1000000).toFixed(0)} />
-          </div> 
+          <OrderDetails orderNumber={(Math.random() * 1000000).toFixed(0)} />
+        </div>
       </Modal>
     </>
   );

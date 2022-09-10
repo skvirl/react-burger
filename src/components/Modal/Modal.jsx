@@ -10,6 +10,7 @@ const ModalController = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleModalToggle = (e) => {
+    console.log(e);
     if ("key" in e) {
       e.key === "Escape" && setIsModalOpen(false);
       return;
@@ -65,6 +66,7 @@ const ModalContent = ({ children, handleOpenModal }) => {
 export { Modal, ModalController };
 
 Modal.propTypes = {
+  children: PropTypes.node,
   isOpen: PropTypes.bool.isRequired,
   handleOpenModal: PropTypes.func.isRequired,
 };

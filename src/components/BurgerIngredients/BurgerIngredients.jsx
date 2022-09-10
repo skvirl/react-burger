@@ -6,10 +6,12 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientType } from "../../utils/types";
+import IngredientDetails from "../Modal/IngredientDetails";
+import { Modal, ModalController } from "../Modal/Modal";
 
-const BurgerIngredients = ({ingredientData}) => {
+const BurgerIngredients = ({ ingredientData }) => {
   const [current, setCurrent] = React.useState("one");
-  
+
   return (
     <>
       <h1 className={styles.title + " text text_type_main-large"}>
@@ -42,16 +44,30 @@ const BurgerIngredients = ({ingredientData}) => {
         </Tab>
       </div>
       <div className={styles.groupsList}>
-        <IngredientGroup ingredientData={ingredientData} name="Булки" type="bun" alt="Булка" />
-        <IngredientGroup ingredientData={ingredientData} name="Соусы" type="sauce" alt="Соус" />
-        <IngredientGroup ingredientData={ingredientData} name="Начинки" type="main" alt="Начинка" />
+        <IngredientGroup
+          ingredientData={ingredientData}
+          name="Булки"
+          type="bun"
+          alt="Булка"
+        />
+        <IngredientGroup
+          ingredientData={ingredientData}
+          name="Соусы"
+          type="sauce"
+          alt="Соус"
+        />
+        <IngredientGroup
+          ingredientData={ingredientData}
+          name="Начинки"
+          type="main"
+          alt="Начинка"
+        />
       </div>
     </>
   );
 };
 
 const IngredientGroup = ({ ingredientData, name, type, alt }) => {
-  
   return (
     <div className={styles.ingredientGroup}>
       <div
@@ -74,36 +90,51 @@ const IngredientGroup = ({ ingredientData, name, type, alt }) => {
 
 const IngredientView = ({ elem, alt }) => {
   const { _id, image, price, name } = elem;
+  const modalControl = ModalController();
   return (
-    <div className={styles.ingredient__Card} key={_id}>
-      <img src={image} alt={alt} className={styles.ingredient__Picture} />
-      <div className={styles.ingredient__priceBox}>
+    <>
+      <div
+        className={styles.ingredient__Card}
+        key={_id}
+        onClick={modalControl.modalToggle}
+      >
+        <img src={image} alt={alt} className={styles.ingredient__Picture} />
+        <div className={styles.ingredient__priceBox}>
+          <div
+            className={
+              "text text_type_digits-default " + styles.ingredient__price
+            }
+          >
+            {price}
+          </div>
+          <div className={styles.ingredient__CurrencyIcon}>
+            <CurrencyIcon type="primary" />
+          </div>
+        </div>
         <div
-          className={
-            "text text_type_digits-default " + styles.ingredient__price
-          }
+          className={"text text_type_main-default " + styles.ingredient__name}
         >
-          {price}
-        </div>
-        <div className={styles.ingredient__CurrencyIcon}>
-          <CurrencyIcon type="primary" />
+          {name}
         </div>
       </div>
-      <div className={"text text_type_main-default " + styles.ingredient__name}>
-        {name}
-      </div>
-    </div>
+      <Modal
+        isOpen={modalControl.isModalOpen}
+        handleOpenModal={modalControl.modalToggle}
+      >
+        <IngredientDetails {...elem} />
+      </Modal>
+    </>
   );
 };
 
 BurgerIngredients.propTypes = {
   ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
- };
+};
 
 IngredientGroup.propTypes = {
   ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
-  name: PropTypes.string,
-  type: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   alt: PropTypes.string,
 };
 
