@@ -81,14 +81,14 @@ const IngredientGroup = ({ ingredientData, name, type, alt }) => {
             return val.type === type;
           })
           .map((val) => (
-            <IngredientView elem={val} alt={alt} key={val._id} />
+            <IngredientView elem={val} alt={alt} quantity={0} key={val._id} />
           ))}
       </div>
     </div>
   );
 };
 
-const IngredientView = ({ elem, alt }) => {
+const IngredientView = ({ elem, alt , quantity}) => {
   const { _id, image, price, name } = elem;
   const modalControl = ModalController();
   return (
@@ -116,15 +116,23 @@ const IngredientView = ({ elem, alt }) => {
         >
           {name}
         </div>
+      <Counter num = {quantity} />
       </div>
+
+
       <Modal
         isOpen={modalControl.isModalOpen}
         handleOpenModal={modalControl.modalToggle}
       >
         <IngredientDetails {...elem} />
       </Modal>
+
     </>
   );
+};
+
+const Counter = ({ num }) => {
+  return num > 0 && <div className={'text text_type_main-small '+styles.ingredient__counter}>{num}</div>;
 };
 
 BurgerIngredients.propTypes = {
@@ -141,6 +149,10 @@ IngredientGroup.propTypes = {
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
+};
+
+Counter.propTypes = {
+  num : PropTypes.number
 };
 
 export default BurgerIngredients;

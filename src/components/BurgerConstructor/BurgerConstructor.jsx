@@ -12,14 +12,26 @@ import OrderDetails from "../Modal/OrderDetails";
 import { ingredientType } from "../../utils/types";
 
 const BurgerConstructor = ({ ingredientData }) => {
-  const [current, setCurrent] = React.useState("one");
   return (
-    <>
+    <div className={styles.burgerParts}>
+      <BunElem
+        type="top"
+        currentBunId={currentBunId}
+        ingredientData={ingredientData}
+      />
+
       <div className={styles.inredientList}>
         <IngredientList ingredientData={ingredientData} />
       </div>
+
+      <BunElem
+        type="bottom"
+        currentBunId={currentBunId}
+        ingredientData={ingredientData}
+      />
+
       <OrderBtn ingredientData={ingredientData} />
-    </>
+    </div>
   );
 };
 
@@ -43,11 +55,6 @@ const BunElem = ({ type, currentBunId, ingredientData }) => {
 const IngredientList = ({ ingredientData }) => {
   return (
     <>
-      <BunElem
-        type="top"
-        currentBunId={currentBunId}
-        ingredientData={ingredientData}
-      />
       {constructorIngedientsList.map((listElem) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
@@ -67,11 +74,6 @@ const IngredientList = ({ ingredientData }) => {
           </div>
         );
       })}
-      <BunElem
-        type="bottom"
-        currentBunId={currentBunId}
-        ingredientData={ingredientData}
-      />
     </>
   );
 };

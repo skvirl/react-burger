@@ -10,8 +10,8 @@ const IngredientDetails = ({ image_large, name, calories, proteins ,fat ,carbohy
       <div className={styles.ingredientDetails}>
         <div className={`text text_type_main-large `+styles.ingredientDetails__title}>Детали ингредиента</div>
         <img src={image_large} alt='Ингредиент' className={styles.ingredientDetails__Picture} />
-        <div className={`text text text_type_digits-default `+styles.ingredientDetails__name}>{name}</div>
-        <div className={`text text_type_main-small text_color_inactive `+styles.ingredientDetails__composition}>
+        <div className={`text text_type_main-medium `+styles.ingredientDetails__name}>{name}</div>
+        <div className={`text text_type_main-default text_color_inactive `+styles.ingredientDetails__composition}>
 
          <CompositionBox title='Калории,ккал' val = {calories} />
          <CompositionBox title='Белки, г' val = {proteins} />

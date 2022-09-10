@@ -48,6 +48,8 @@
 }
 
 .ingredient__Card {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,6 +89,19 @@
   height: 48px;
   /* border: 1px dashed #4c4cff; */
   text-align: center;
+}
+
+.ingredient__counter{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0px;
+  right: 0px;
+  width: 32px;
+  height: 32px;
+  background-color: #4C4CFF;
+  border-radius: 50%;
 }
 
 /* Works on Firefox */

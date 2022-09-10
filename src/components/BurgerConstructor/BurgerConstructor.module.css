@@ -1,10 +1,19 @@
-.inredientList {
+.burgerParts{
   margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 135px);
+
+  }
+
+.inredientList {
+  margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   overflow-y: scroll;
-  max-height: calc(100% - 235px);
+  min-height: 80px;
 }
 
 .elementBox {

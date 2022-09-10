@@ -10,7 +10,6 @@ const ModalController = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleModalToggle = (e) => {
-    console.log(e);
     if ("key" in e) {
       e.key === "Escape" && setIsModalOpen(false);
       return;
