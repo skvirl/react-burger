@@ -6,75 +6,47 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const modalsElement = document.getElementById("modal");
 
-const ModalController = () => {
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handleModalToggle = (e) => {
-    if ("key" in e) {
-      e.key === "Escape" && setIsModalOpen(false);
-      return;
-    }
-    setIsModalOpen(!isModalOpen);
-  };
-
-  return {
-    isModalOpen: isModalOpen,
-    modalToggle: handleModalToggle,
-  };
-};
-
-const Modal = ({ children, isOpen, handleOpenModal }) => {
+const Modal = ({ children, isOpen, closeModal }) => {
   return (
     isOpen &&
     ReactDOM.createPortal(
       <div className={styles.modal}>
-        <ModalOverlay handleOpenModal={handleOpenModal} />
-        <ModalContent handleOpenModal={handleOpenModal}>
-          {children}
-        </ModalContent>
+        <ModalOverlay closeModal={closeModal} />
+        <ModalContent closeModal={closeModal}>{children}</ModalContent>
       </div>,
       modalsElement
     )
   );
 };
 
-const ModalOverlay = ({ handleOpenModal }) => {
-  return (
-    <div className={styles.modal__overlay} onClick={handleOpenModal}></div>
-  );
+const ModalOverlay = ({ closeModal }) => {
+  return <div className={styles.modal__overlay} onClick={closeModal}></div>;
 };
 
-const ModalContent = ({ children, handleOpenModal }) => {
-  React.useEffect(() => {
-    document.addEventListener("keydown", handleOpenModal);
-    return () => {
-      document.removeEventListener("keydown", handleOpenModal);
-    };
-  }, []);
-
+const ModalContent = ({ children, closeModal }) => {
   return (
     <div className={styles.modal__content}>
       {children}
-      <div className={styles.modal__close} onClick={handleOpenModal}>
+      <div className={styles.modal__close} onClick={closeModal}>
         <CloseIcon type="primary" />
       </div>
     </div>
   );
 };
 
-export { Modal, ModalController };
+export default Modal;
 
 Modal.propTypes = {
   children: PropTypes.node,
   isOpen: PropTypes.bool.isRequired,
-  handleOpenModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 ModalContent.propTypes = {
   children: PropTypes.node,
-  handleOpenModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 ModalOverlay.propTypes = {
-  handleOpenModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };

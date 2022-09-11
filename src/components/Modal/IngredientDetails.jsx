@@ -2,10 +2,13 @@
 import PropTypes from "prop-types";
 import styles from "./IngredientDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
+import { ingredientType } from "../../utils/types";
 
 
-const IngredientDetails = ({ image_large, name, calories, proteins ,fat ,carbohydrates }) => {
-  
+const IngredientDetails = ({ingredient}) => {
+    
+    const { image_large, name, calories, proteins ,fat ,carbohydrates } = ingredient
+
     return (
       <div className={styles.ingredientDetails}>
         <div className={`text text_type_main-large `+styles.ingredientDetails__title}>Детали ингредиента</div>
@@ -40,12 +43,7 @@ const CompositionBox = ({ title,val }) => {
 export default IngredientDetails;
 
 IngredientDetails.propTypes = {
-  image_large: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  calories: PropTypes.number,
-  proteins: PropTypes.number,
-  fat: PropTypes.number,
-  carbohydrates: PropTypes.number,
+  ingredient: ingredientType.isRequired,
 };
 
 CompositionBox.propTypes = {

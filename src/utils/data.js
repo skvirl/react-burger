@@ -225,18 +225,20 @@ export const cachedData = [
 const apiUrl = "https://norma.nomoreparties.space/api/ingredients";
 
 export const getIngredientsData = (setData, setIsLoaded, setHasError) => {
-  fetch(apiUrl, {
-    // mode: "no-cors",
-  })
-    .then((res) => res.json())
-    .then(
-      (result) => {
-        setIsLoaded(true);
-        setData(result.data);
-      },
-      (error) => {
-        setIsLoaded(true);
-        setHasError(error);
+  fetch(apiUrl)
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
       }
-    );
+      return Promise.reject(`Ошибка ${res.status}`);
+    })
+    .then((result) => {
+      setData(result.data);
+    })
+    .catch((error) => {
+      setHasError(error);
+    })
+    .finally(() => {
+      setIsLoaded(true);
+    });
 };

@@ -7,10 +7,19 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientType } from "../../utils/types";
 import IngredientDetails from "../Modal/IngredientDetails";
-import { Modal, ModalController } from "../Modal/Modal";
+import Modal from "../Modal/Modal";
+import useModalController from "../../hooks/ModalController";
 
 const BurgerIngredients = ({ ingredientData }) => {
   const [current, setCurrent] = React.useState("one");
+  const [modalChildren, setModalChildren] = React.useState(null);
+
+  const modalControl = useModalController();
+
+  const modalChilrdenToggle = (event, newChildren) => {
+    setModalChildren(newChildren);
+    modalControl.openModal(event);
+  };
 
   return (
     <>
@@ -45,29 +54,44 @@ const BurgerIngredients = ({ ingredientData }) => {
       </div>
       <div className={styles.groupsList}>
         <IngredientGroup
+          modalChilrdenToggle={modalChilrdenToggle}
           ingredientData={ingredientData}
           name="Булки"
           type="bun"
           alt="Булка"
         />
         <IngredientGroup
+          modalChilrdenToggle={modalChilrdenToggle}
           ingredientData={ingredientData}
           name="Соусы"
           type="sauce"
           alt="Соус"
         />
         <IngredientGroup
+          modalChilrdenToggle={modalChilrdenToggle}
           ingredientData={ingredientData}
           name="Начинки"
           type="main"
           alt="Начинка"
         />
       </div>
+      <Modal
+        isOpen={modalControl.isModalOpen}
+        closeModal={modalControl.closeModal}
+      >
+        {modalChildren}
+      </Modal>
     </>
   );
 };
 
-const IngredientGroup = ({ ingredientData, name, type, alt }) => {
+const IngredientGroup = ({
+  ingredientData,
+  name,
+  type,
+  alt,
+  modalChilrdenToggle,
+}) => {
   return (
     <div className={styles.ingredientGroup}>
       <div
@@ -81,58 +105,60 @@ const IngredientGroup = ({ ingredientData, name, type, alt }) => {
             return val.type === type;
           })
           .map((val) => (
-            <IngredientView elem={val} alt={alt} quantity={0} key={val._id} />
+            <IngredientView
+              elem={val}
+              alt={alt}
+              quantity={0}
+              modalChilrdenToggle={modalChilrdenToggle}
+              key={val._id}
+            />
           ))}
       </div>
     </div>
   );
 };
 
-const IngredientView = ({ elem, alt , quantity}) => {
+const IngredientView = ({ elem, alt, quantity, modalChilrdenToggle }) => {
   const { _id, image, price, name } = elem;
-  const modalControl = ModalController();
   return (
-    <>
-      <div
-        className={styles.ingredient__Card}
-        key={_id}
-        onClick={modalControl.modalToggle}
-      >
-        <img src={image} alt={alt} className={styles.ingredient__Picture} />
-        <div className={styles.ingredient__priceBox}>
-          <div
-            className={
-              "text text_type_digits-default " + styles.ingredient__price
-            }
-          >
-            {price}
-          </div>
-          <div className={styles.ingredient__CurrencyIcon}>
-            <CurrencyIcon type="primary" />
-          </div>
-        </div>
+    <div
+      className={styles.ingredient__Card}
+      key={_id}
+      onClick={(e) => {
+        modalChilrdenToggle(e, <IngredientDetails ingredient={elem} />);
+      }}
+    >
+      <img src={image} alt={alt} className={styles.ingredient__Picture} />
+      <div className={styles.ingredient__priceBox}>
         <div
-          className={"text text_type_main-default " + styles.ingredient__name}
+          className={
+            "text text_type_digits-default " + styles.ingredient__price
+          }
         >
-          {name}
+          {price}
         </div>
-      <Counter num = {quantity} />
+        <div className={styles.ingredient__CurrencyIcon}>
+          <CurrencyIcon type="primary" />
+        </div>
       </div>
-
-
-      <Modal
-        isOpen={modalControl.isModalOpen}
-        handleOpenModal={modalControl.modalToggle}
-      >
-        <IngredientDetails {...elem} />
-      </Modal>
-
-    </>
+      <div className={"text text_type_main-default " + styles.ingredient__name}>
+        {name}
+      </div>
+      <Counter num={quantity} />
+    </div>
   );
 };
 
 const Counter = ({ num }) => {
-  return num > 0 && <div className={'text text_type_main-small '+styles.ingredient__counter}>{num}</div>;
+  return (
+    num > 0 && (
+      <div
+        className={"text text_type_main-small " + styles.ingredient__counter}
+      >
+        {num}
+      </div>
+    )
+  );
 };
 
 BurgerIngredients.propTypes = {
@@ -144,15 +170,18 @@ IngredientGroup.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
+  modalChilrdenToggle: PropTypes.func.isRequired,
 };
 
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
+  quantity: PropTypes.number,
+  modalChilrdenToggle: PropTypes.func.isRequired,
 };
 
 Counter.propTypes = {
-  num : PropTypes.number
+  num: PropTypes.number,
 };
 
 export default BurgerIngredients;

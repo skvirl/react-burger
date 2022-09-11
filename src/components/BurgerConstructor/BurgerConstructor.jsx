@@ -5,9 +5,11 @@ import {
   CurrencyIcon,
   ConstructorElement,
   DragIcon,
+  Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { currentBunId, constructorIngedientsList } from "../../utils/data";
-import { Modal, ModalController } from "../Modal/Modal";
+import Modal from "../Modal/Modal";
+import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
 import { ingredientType } from "../../utils/types";
 
@@ -79,7 +81,7 @@ const IngredientList = ({ ingredientData }) => {
 };
 
 const OrderBtn = ({ ingredientData }) => {
-  const modalControl = ModalController();
+  const modalControl = useModalController();
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
@@ -107,20 +109,15 @@ const OrderBtn = ({ ingredientData }) => {
             <CurrencyIcon type="primary" />
           </div>
         </div>
-        <div
-          className={styles.orderBtn__btn + " text text_type_main-default"}
-          onClick={modalControl.modalToggle}
-        >
+        <Button type="primary" size="medium" onClick={modalControl.openModal}>
           Оформить заказ
-        </div>
+        </Button>
       </div>
       <Modal
         isOpen={modalControl.isModalOpen}
-        handleOpenModal={modalControl.modalToggle}
+        closeModal={modalControl.closeModal}
       >
-        <div>
-          <OrderDetails orderNumber={(Math.random() * 1000000).toFixed(0)} />
-        </div>
+        <OrderDetails orderNumber={(Math.random() * 1000000).toFixed(0)} />
       </Modal>
     </>
   );
