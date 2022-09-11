@@ -12,12 +12,12 @@ import useModalController from "../../hooks/ModalController";
 
 const BurgerIngredients = ({ ingredientData }) => {
   const [current, setCurrent] = React.useState("one");
-  const [modalChildren, setModalChildren] = React.useState(null);
+  const [modalElem, setModalElem] = React.useState(null);
 
   const modalControl = useModalController();
 
-  const modalChilrdenToggle = (event, newChildren) => {
-    setModalChildren(newChildren);
+  const setCurrentIngredient = (event, elem) => {
+    setModalElem(elem);
     modalControl.openModal(event);
   };
 
@@ -54,33 +54,33 @@ const BurgerIngredients = ({ ingredientData }) => {
       </div>
       <div className={styles.groupsList}>
         <IngredientGroup
-          modalChilrdenToggle={modalChilrdenToggle}
+          setCurrentIngredient={setCurrentIngredient}
           ingredientData={ingredientData}
           name="Булки"
           type="bun"
           alt="Булка"
         />
         <IngredientGroup
-          modalChilrdenToggle={modalChilrdenToggle}
+          setCurrentIngredient={setCurrentIngredient}
           ingredientData={ingredientData}
           name="Соусы"
           type="sauce"
           alt="Соус"
         />
         <IngredientGroup
-          modalChilrdenToggle={modalChilrdenToggle}
+          setCurrentIngredient={setCurrentIngredient}
           ingredientData={ingredientData}
           name="Начинки"
           type="main"
           alt="Начинка"
         />
       </div>
-      <Modal
+      {modalControl.isModalOpen && <Modal
         isOpen={modalControl.isModalOpen}
         closeModal={modalControl.closeModal}
       >
-        {modalChildren}
-      </Modal>
+        <IngredientDetails ingredient={modalElem} />
+      </Modal>}
     </>
   );
 };
@@ -90,7 +90,7 @@ const IngredientGroup = ({
   name,
   type,
   alt,
-  modalChilrdenToggle,
+  setCurrentIngredient,
 }) => {
   return (
     <div className={styles.ingredientGroup}>
@@ -109,7 +109,7 @@ const IngredientGroup = ({
               elem={val}
               alt={alt}
               quantity={0}
-              modalChilrdenToggle={modalChilrdenToggle}
+              setCurrentIngredient={setCurrentIngredient}
               key={val._id}
             />
           ))}
@@ -118,14 +118,14 @@ const IngredientGroup = ({
   );
 };
 
-const IngredientView = ({ elem, alt, quantity, modalChilrdenToggle }) => {
+const IngredientView = ({ elem, alt, quantity, setCurrentIngredient }) => {
   const { _id, image, price, name } = elem;
   return (
     <div
       className={styles.ingredient__Card}
       key={_id}
       onClick={(e) => {
-        modalChilrdenToggle(e, <IngredientDetails ingredient={elem} />);
+        setCurrentIngredient(e, elem);
       }}
     >
       <img src={image} alt={alt} className={styles.ingredient__Picture} />
@@ -170,14 +170,14 @@ IngredientGroup.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
-  modalChilrdenToggle: PropTypes.func.isRequired,
+  setCurrentIngredient: PropTypes.func.isRequired,
 };
 
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
   quantity: PropTypes.number,
-  modalChilrdenToggle: PropTypes.func.isRequired,
+  setCurrentIngredient: PropTypes.func.isRequired,
 };
 
 Counter.propTypes = {

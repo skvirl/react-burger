@@ -24,6 +24,20 @@ const ModalOverlay = ({ closeModal }) => {
 };
 
 const ModalContent = ({ children, closeModal }) => {
+
+  React.useEffect(() => {
+    function closeByEscape(evt) {
+      if (evt.key === "Escape") {
+        closeModal();
+      }
+    }
+
+    document.addEventListener("keydown", closeByEscape);
+    return () => {
+      document.removeEventListener("keydown", closeByEscape);
+    };
+  }, []);
+
   return (
     <div className={styles.modal__content}>
       {children}
