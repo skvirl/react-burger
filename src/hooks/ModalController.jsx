@@ -11,13 +11,6 @@ const useModalController = () => {
     setIsModalOpen(false);
   };
 
-  React.useEffect(() => {
-    document.addEventListener("keydown", closeByEscape);
-    return () => {
-      document.removeEventListener("keydown", closeByEscape);
-    };
-  }, []);
-
   return {
     isModalOpen: isModalOpen,
     openModal: openModal,
