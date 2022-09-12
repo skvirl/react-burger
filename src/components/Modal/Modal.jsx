@@ -24,7 +24,6 @@ const ModalOverlay = ({ closeModal }) => {
 };
 
 const ModalContent = ({ children, closeModal }) => {
-
   React.useEffect(() => {
     function closeByEscape(evt) {
       if (evt.key === "Escape") {

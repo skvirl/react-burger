@@ -12,12 +12,6 @@ const useModalController = () => {
   };
 
   React.useEffect(() => {
-    function closeByEscape(evt) {
-      if (evt.key === "Escape") {
-        closeModal();
-      }
-    }
-
     document.addEventListener("keydown", closeByEscape);
     return () => {
       document.removeEventListener("keydown", closeByEscape);
