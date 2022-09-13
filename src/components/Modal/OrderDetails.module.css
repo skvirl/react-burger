@@ -1,0 +1,30 @@
+.orderDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 720px;
+}
+.orderDetails__orderNumber {
+  margin-top: 100px;
+  text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25),
+    0px 0px 8px rgba(51, 51, 255, 0.25), 0px 4px 32px rgba(51, 51, 255, 0.5);
+}
+.text1 {
+  margin-top: 32px;
+}
+.text2 {
+  margin-top: 60px;
+  font-size: 16px;
+}
+.text3 {
+  margin-top: 8px;
+  margin-bottom: 120px;
+  color: #8585ad;
+  font-size: 16px;
+}
+.image {
+  margin-top: 60px;
+  height: 120px;
+  width: 120px;
+  background: url(../../images/orderDetailsGraphics.svg) no-repeat center;
+}

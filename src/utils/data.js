@@ -1,15 +1,15 @@
-export const currentBunId = "60666c42cc7b410027a1a9b1";
+export const currentBunId = "60d3b41abdacab0026a733c6";
 
 export const constructorIngedientsList = [
-  { _id: "60666c42cc7b410027a1a9b4", count: 1 },
-  { _id: "60666c42cc7b410027a1a9b9", count: 1 },
-  { _id: "60666c42cc7b410027a1a9bc", count: 1 },
-  { _id: "60666c42cc7b410027a1a9bb", count: 2 },
+  { _id: "60d3b41abdacab0026a733c9", count: 1 },
+  { _id: "60d3b41abdacab0026a733ce", count: 1 },
+  { _id: "60d3b41abdacab0026a733d1", count: 1 },
+  { _id: "60d3b41abdacab0026a733d0", count: 2 },
 ];
 
-export const ingredientData = [
+export const cachedData = [
   {
-    _id: "60666c42cc7b410027a1a9b1",
+    _id: "60d3b41abdacab0026a733c6",
     name: "Краторная булка N-200i",
     type: "bun",
     proteins: 80,
@@ -37,7 +37,7 @@ export const ingredientData = [
     __v: 0,
   },
   {
-    _id: "60666c42cc7b410027a1a9b6",
+    _id: "60d3b41abdacab0026a733c9",
     name: "Биокотлета из марсианской Магнолии",
     type: "main",
     proteins: 420,
@@ -51,7 +51,7 @@ export const ingredientData = [
     __v: 0,
   },
   {
-    _id: "60666c42cc7b410027a1a9b7",
+    _id: "60d3b41abdacab0026a733ce",
     name: "Соус Spicy-X",
     type: "sauce",
     proteins: 30,
@@ -121,7 +121,7 @@ export const ingredientData = [
     __v: 0,
   },
   {
-    _id: "60666c42cc7b410027a1a9bb",
+    _id: "60d3b41abdacab0026a733d1",
     name: "Хрустящие минеральные кольца",
     type: "main",
     proteins: 808,
@@ -179,7 +179,7 @@ export const ingredientData = [
     __v: 0,
   },
   {
-    _id: "60666c42cc7b410027a1a9b3",
+    _id: "60d3b41abdacab0026a733d0",
     name: "Филе Люминесцентного тетраодонтимформа",
     type: "main",
     proteins: 44,
@@ -221,3 +221,24 @@ export const ingredientData = [
     __v: 0,
   },
 ];
+
+const apiUrl = "https://norma.nomoreparties.space/api/ingredients";
+
+export const getIngredientsData = (setData, setIsLoaded, setHasError) => {
+  fetch(apiUrl)
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка ${res.status}`);
+    })
+    .then((result) => {
+      setData(result.data);
+    })
+    .catch((error) => {
+      setHasError(error);
+    })
+    .finally(() => {
+      setIsLoaded(true);
+    });
+};

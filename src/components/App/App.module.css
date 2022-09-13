@@ -32,3 +32,11 @@
   max-width: 600px;
   width: 100%;
 }
+
+.dataLoadingError {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  
+}
