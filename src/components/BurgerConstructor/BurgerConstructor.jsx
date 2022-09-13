@@ -7,37 +7,42 @@ import {
   DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { currentBunId, constructorIngedientsList } from "../../utils/data";
+import { currentBunId } from "../../utils/data";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
-import { ingredientType } from "../../utils/types";
+import { ContructorIngredientsContext, IngredientsDataContext} from "../../utils/context";
 
-const BurgerConstructor = ({ ingredientData }) => {
+const BurgerConstructor = () => {
+  
+  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const currentBunId = contructorIngredients.bunId;
+
   return (
     <div className={styles.burgerParts}>
       <BunElem
         type="top"
         currentBunId={currentBunId}
-        ingredientData={ingredientData}
       />
 
       <div className={styles.inredientList}>
-        <IngredientList ingredientData={ingredientData} />
+        <IngredientList  />
       </div>
 
       <BunElem
         type="bottom"
         currentBunId={currentBunId}
-        ingredientData={ingredientData}
       />
 
-      <OrderBtn ingredientData={ingredientData} />
+      <OrderBtn />
     </div>
   );
 };
 
-const BunElem = ({ type, currentBunId, ingredientData }) => {
+const BunElem = ({ type, currentBunId }) => {
+  
+  const ingredientData = React.useContext(IngredientsDataContext);
+
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   if (!currentBunElem) return;
 
@@ -54,10 +59,17 @@ const BunElem = ({ type, currentBunId, ingredientData }) => {
   );
 };
 
-const IngredientList = ({ ingredientData }) => {
+const IngredientList = () => {
+ 
+  const ingredientData = React.useContext(IngredientsDataContext);
+
+  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const constructorIngedientsList = contructorIngredients.ingredients;
+
+
   return (
     <>
-      {constructorIngedientsList.map((listElem) => {
+      {constructorIngedientsList.map((listElem,index) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
@@ -65,7 +77,8 @@ const IngredientList = ({ ingredientData }) => {
         return (
           <div
             className={styles.elementBox_dragable}
-            key={currentIngredient._id}
+            // key={currentIngredient._id}
+            key={index}
           >
             <DragIcon type="primary" />
             <ConstructorElement
@@ -80,8 +93,13 @@ const IngredientList = ({ ingredientData }) => {
   );
 };
 
-const OrderBtn = ({ ingredientData }) => {
+const OrderBtn = () => {
+  
   const modalControl = useModalController();
+  const ingredientData = React.useContext(IngredientsDataContext);
+
+  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const constructorIngedientsList = contructorIngredients.ingredients;
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
@@ -91,7 +109,7 @@ const OrderBtn = ({ ingredientData }) => {
       );
       return (
         sumVal +
-        (currentIngredient ? currentIngredient.price : 0) * listElem.count
+        (currentIngredient ? currentIngredient.price : 0)  
       );
     }, 0) +
     (currentBunElem ? currentBunElem.price : 0) * 2;
@@ -124,21 +142,17 @@ const OrderBtn = ({ ingredientData }) => {
 };
 
 BurgerConstructor.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 BunElem.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
   type: PropTypes.string.isRequired,
-  currentBunId: PropTypes.string.isRequired,
+  currentBunId: PropTypes.string,
 };
 
 IngredientList.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 OrderBtn.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 export default BurgerConstructor;

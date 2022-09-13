@@ -5,7 +5,11 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { getIngredientsData, cachedData } from "../../utils/data";
+import { getIngredientsData, cachedData, initialConstructorIngredientData } from "../../utils/data";
+import {
+  ContructorIngredientsContext,
+  IngredientsDataContext,
+} from "../../utils/context";
 
 function App() {
   const [hasError, setHasError] = React.useState(null);
@@ -22,10 +26,33 @@ function App() {
   //   setHasError(false);
   // }
 
+  function reducer(state, action) {
+    switch (action.type) {
+      case "addBun":
+        return { ...state, bunId:action.ingredientId };
+      case "removeBun":
+        return { ...state, bunId:null };
+      case "addIngredient":
+         state.ingredients.push(action.ingredientId)   
+        return { ...state };
+      case "removeIngredient":
+        const  existingIngredientIndex = state.ingredients.findIndex((val) => val === action.ingredientId )  
+        if(existingIngredientIndex>=0) state.ingredients.splice(existingIngredientIndex,1);  
+        return { ...state };
+      default:
+        throw new Error(`Wrong type of action: ${action.type}`);
+    }
+  }
+  const [contructorIngredients, dispatchContructorIngredients] = React.useReducer(reducer, initialConstructorIngredientData);
+
+   //   dispatchContructorIngredients({ type: "addBun", ingredientId:'1' });
+   
   return (
     <>
       {isLoaded && (
         <div className={styles.app}>
+ 
+
           <AppHeader />
           <main className={styles.app__main}>
             {hasError ? (
@@ -39,12 +66,16 @@ function App() {
               </div>
             ) : (
               <div className={styles.container}>
-                <section className={styles.mainSection}>
-                  <BurgerIngredients ingredientData={data} />
-                </section>
-                <section className={styles.mainSection}>
-                  <BurgerConstructor ingredientData={data} />
-                </section>
+                <ContructorIngredientsContext.Provider value={{contructorIngredients, dispatchContructorIngredients}}>
+                  <IngredientsDataContext.Provider value={data}>
+                    <section className={styles.mainSection}>
+                      <BurgerIngredients  />
+                    </section>
+                    <section className={styles.mainSection}>
+                      <BurgerConstructor  />
+                    </section>
+                  </IngredientsDataContext.Provider>
+                </ContructorIngredientsContext.Provider>
               </div>
             )}
           </main>
