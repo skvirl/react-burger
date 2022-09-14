@@ -9,7 +9,7 @@ import { ingredientType } from "../../utils/types";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
-import { ContructorIngredientsContext, IngredientsDataContext} from "../../utils/context";
+import {IngredientsDataContext} from "../../utils/context";
 
 const BurgerIngredients = () => {
   const [current, setCurrent] = React.useState("one");

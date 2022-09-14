@@ -1,11 +1,11 @@
 export const currentBunId = "60d3b41abdacab0026a733c6";
 
 export const constructorIngedientsList = [
-  { _id: "60d3b41abdacab0026a733c9"},
-  { _id: "60d3b41abdacab0026a733ce"},
-  { _id: "60d3b41abdacab0026a733d1"},
-  { _id: "60d3b41abdacab0026a733d1"},
-  { _id: "60d3b41abdacab0026a733d0"},
+  "60d3b41abdacab0026a733c9",
+  "60d3b41abdacab0026a733ce",
+  "60d3b41abdacab0026a733d1",
+  "60d3b41abdacab0026a733d1",
+  "60d3b41abdacab0026a733d0",
 ];
 
 export const initialConstructorIngredientData = {bunId:currentBunId, ingredients:constructorIngedientsList }
@@ -225,23 +225,3 @@ export const cachedData = [
   },
 ];
 
-const apiUrl = "https://norma.nomoreparties.space/api/ingredients";
-
-export const getIngredientsData = (setData, setIsLoaded, setHasError) => {
-  fetch(apiUrl)
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка ${res.status}`);
-    })
-    .then((result) => {
-      setData(result.data);
-    })
-    .catch((error) => {
-      setHasError(error);
-    })
-    .finally(() => {
-      setIsLoaded(true);
-    });
-};

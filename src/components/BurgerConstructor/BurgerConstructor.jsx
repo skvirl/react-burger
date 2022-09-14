@@ -11,28 +11,26 @@ import { currentBunId } from "../../utils/data";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
-import { ContructorIngredientsContext, IngredientsDataContext} from "../../utils/context";
+import {
+  ContructorIngredientsContext,
+  IngredientsDataContext,
+} from "../../utils/context";
 
 const BurgerConstructor = () => {
-  
-  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const { contructorIngredients } = React.useContext(
+    ContructorIngredientsContext
+  );
   const currentBunId = contructorIngredients.bunId;
 
   return (
     <div className={styles.burgerParts}>
-      <BunElem
-        type="top"
-        currentBunId={currentBunId}
-      />
+      <BunElem type="top" currentBunId={currentBunId} />
 
       <div className={styles.inredientList}>
-        <IngredientList  />
+        <IngredientList />
       </div>
 
-      <BunElem
-        type="bottom"
-        currentBunId={currentBunId}
-      />
+      <BunElem type="bottom" currentBunId={currentBunId} />
 
       <OrderBtn />
     </div>
@@ -40,7 +38,6 @@ const BurgerConstructor = () => {
 };
 
 const BunElem = ({ type, currentBunId }) => {
-  
   const ingredientData = React.useContext(IngredientsDataContext);
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
@@ -60,18 +57,17 @@ const BunElem = ({ type, currentBunId }) => {
 };
 
 const IngredientList = () => {
- 
   const ingredientData = React.useContext(IngredientsDataContext);
-
-  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const { contructorIngredients } = React.useContext(
+    ContructorIngredientsContext
+  );
   const constructorIngedientsList = contructorIngredients.ingredients;
-
 
   return (
     <>
-      {constructorIngedientsList.map((listElem,index) => {
+      {constructorIngedientsList.map((listElem, index) => {
         const currentIngredient = ingredientData.find(
-          (ingredientElem) => ingredientElem._id === listElem._id
+          (ingredientElem) => ingredientElem._id === listElem
         );
         if (!currentIngredient) return <div>ингридиент потерялся</div>;
         return (
@@ -94,23 +90,21 @@ const IngredientList = () => {
 };
 
 const OrderBtn = () => {
-  
   const modalControl = useModalController();
   const ingredientData = React.useContext(IngredientsDataContext);
 
-  const {contructorIngredients} = React.useContext(ContructorIngredientsContext);
+  const { contructorIngredients } = React.useContext(
+    ContructorIngredientsContext
+  );
   const constructorIngedientsList = contructorIngredients.ingredients;
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
     constructorIngedientsList.reduce((sumVal, listElem) => {
       const currentIngredient = ingredientData.find(
-        (ingredientElem) => ingredientElem._id === listElem._id
+        (ingredientElem) => ingredientElem._id === listElem
       );
-      return (
-        sumVal +
-        (currentIngredient ? currentIngredient.price : 0)  
-      );
+      return sumVal + (currentIngredient ? currentIngredient.price : 0);
     }, 0) +
     (currentBunElem ? currentBunElem.price : 0) * 2;
 
@@ -135,24 +129,18 @@ const OrderBtn = () => {
         isOpen={modalControl.isModalOpen}
         closeModal={modalControl.closeModal}
       >
-        <OrderDetails orderNumber={(Math.random() * 1000000).toFixed(0)} />
+        <OrderDetails />
       </Modal>
     </>
   );
 };
 
-BurgerConstructor.propTypes = {
-};
-
+ 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,
   currentBunId: PropTypes.string,
 };
 
-IngredientList.propTypes = {
-};
-
-OrderBtn.propTypes = {
-};
+ 
 
 export default BurgerConstructor;
