@@ -1,29 +1,13 @@
 import React from "react";
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
-import { sendOrderData } from "../../utils/api";
-import useFetch from "../../hooks/useFetch";
-import { ConstructorIngredientsContext } from "../../utils/context";
-
-const OrderDetails = () => {
-  const { constructorIngredients } = React.useContext(
-    ConstructorIngredientsContext
-  );
-  const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
-    sendOrderData([
-      constructorIngredients.bunId,
-      ...constructorIngredients.ingredients,
-      constructorIngredients.bunId,
-    ])
-  );
-
-  React.useEffect(() => {
-    executeApiRequest();
-  }, []);
+ 
+const OrderDetails = ({number,hasError}) => {
 
   return (
     <>
-      {isLoaded && hasError ? (
+    
+      {  hasError ? (
         <div className={styles.orderDetails}>
           <div className={`text text_type_main-medium ` + styles.text1}>
             Ничего не вышло. Попробуйте повторить заказ чуть позже.
@@ -37,7 +21,7 @@ const OrderDetails = () => {
               `text text_type_digits-large ` + styles.orderDetails__orderNumber
             }
           >
-            {data?.order?.number}
+            {number}
           </div>
           <div className={`text text_type_main-medium ` + styles.text1}>
             идентификатор заказа
