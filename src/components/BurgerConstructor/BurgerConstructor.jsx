@@ -7,7 +7,6 @@ import {
   DragIcon,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { currentBunId } from "../../utils/data";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
@@ -69,16 +68,15 @@ const IngredientList = () => {
 
   return (
     <>
-      {constructorIngedientsList.map((listElem, index) => {
+      {constructorIngedientsList.map((listElem) => {
         const currentIngredient = ingredientData.find(
-          (ingredientElem) => ingredientElem._id === listElem
+          (ingredientElem) => ingredientElem._id === listElem._id
         );
         if (!currentIngredient) return <div>ингридиент потерялся</div>;
         return (
           <div
             className={styles.elementBox_dragable}
-            // key={currentIngredient._id}
-            key={index}
+            key={listElem.constructorId}
           >
             <DragIcon type="primary" />
             <ConstructorElement
@@ -94,6 +92,20 @@ const IngredientList = () => {
 };
 
 const OrderBtn = ({ currentBunElem }) => {
+
+  const getOrderSum = (ingredientData, ingedientsList, currentBunElem) => {
+    const sum =
+      ingedientsList.reduce((sumVal, listElem) => {
+        const currentIngredient = ingredientData.find(
+          (ingredientElem) => ingredientElem._id === listElem._id
+        );
+        return sumVal + (currentIngredient ? currentIngredient.price : 0);
+      }, 0) +
+      (currentBunElem ? currentBunElem.price : 0) * 2;
+  
+    return sum;
+  };
+    
   const modalControl = useModalController();
 
   const ingredientData = React.useContext(IngredientsDataContext);
@@ -148,26 +160,12 @@ const OrderBtn = ({ currentBunElem }) => {
           hasError={isLoaded && hasError}
         />
       </Modal>
-      
     </>
   );
 };
 
 const getBunElement = (ingredientData, currentBunId) =>
   ingredientData.find((val) => val._id === currentBunId);
-
-const getOrderSum = (ingredientData, ingedientsList, currentBunElem) => {
-  const sum =
-    ingedientsList.reduce((sumVal, listElem) => {
-      const currentIngredient = ingredientData.find(
-        (ingredientElem) => ingredientElem._id === listElem
-      );
-      return sumVal + (currentIngredient ? currentIngredient.price : 0);
-    }, 0) +
-    (currentBunElem ? currentBunElem.price : 0) * 2;
-
-  return sum;
-};
 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,
