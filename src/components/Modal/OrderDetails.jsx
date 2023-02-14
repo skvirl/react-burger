@@ -3,17 +3,17 @@ import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
 import { sendOrderData } from "../../utils/api";
 import useFetch from "../../hooks/useFetch";
-import { ContructorIngredientsContext } from "../../utils/context";
+import { ConstructorIngredientsContext } from "../../utils/context";
 
 const OrderDetails = () => {
-  const { contructorIngredients } = React.useContext(
-    ContructorIngredientsContext
+  const { constructorIngredients } = React.useContext(
+    ConstructorIngredientsContext
   );
   const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
     sendOrderData([
-      contructorIngredients.bunId,
-      ...contructorIngredients.ingredients,
-      contructorIngredients.bunId,
+      constructorIngredients.bunId,
+      ...constructorIngredients.ingredients,
+      constructorIngredients.bunId,
     ])
   );
 

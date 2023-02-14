@@ -184,4 +184,3 @@ Counter.propTypes = {
 };
 
 export default BurgerIngredients;
-//{(()=>{console.log(name); return 'a'})()}

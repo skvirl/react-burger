@@ -4,11 +4,12 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { initialConstructorIngredientData } from "../../utils/data";
+import { initialConstructorIngredientData} from "../../utils/data";
 import { getIngredientsData } from "../../utils/api";
 import useFetch from "../../hooks/useFetch";
 import {
-  ContructorIngredientsContext,
+  ConstructorIngredientsContext,
+  constructorIngredientsReducer, 
   IngredientsDataContext,
 } from "../../utils/context";
 
@@ -21,24 +22,7 @@ function App() {
   }, []);
  
 
-  function reducer(state, action) {
-    switch (action.type) {
-      case "addBun":
-        return { ...state, bunId:action.ingredientId };
-      case "removeBun":
-        return { ...state, bunId:null };
-      case "addIngredient":
-         state.ingredients.push(action.ingredientId)   
-        return { ...state };
-      case "removeIngredient":
-        const  existingIngredientIndex = state.ingredients.findIndex((val) => val === action.ingredientId )  
-        if(existingIngredientIndex>=0) state.ingredients.splice(existingIngredientIndex,1);  
-        return { ...state };
-      default:
-        throw new Error(`Wrong type of action: ${action.type}`);
-    }
-  }
-  const [contructorIngredients, dispatchContructorIngredients] = React.useReducer(reducer, initialConstructorIngredientData);
+  const [constructorIngredients, dispatchСonstructor] = React.useReducer(constructorIngredientsReducer, initialConstructorIngredientData);
      
   return (
     <>
@@ -59,7 +43,7 @@ function App() {
               </div>
             ) : (
               <div className={styles.container}>
-                <ContructorIngredientsContext.Provider value={{contructorIngredients, dispatchContructorIngredients}}>
+                <ConstructorIngredientsContext.Provider value={{constructorIngredients, dispatchСonstructor}}>
                   <IngredientsDataContext.Provider value={data.data}>
                     <section className={styles.mainSection}>
                       <BurgerIngredients  />
@@ -68,7 +52,7 @@ function App() {
                       <BurgerConstructor  />
                     </section>
                   </IngredientsDataContext.Provider>
-                </ContructorIngredientsContext.Provider>
+                </ConstructorIngredientsContext.Provider>
               </div>
             )}
           </main>

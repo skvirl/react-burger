@@ -12,15 +12,15 @@ import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
 import {
-  ContructorIngredientsContext,
+  ConstructorIngredientsContext,
   IngredientsDataContext,
 } from "../../utils/context";
 
 const BurgerConstructor = () => {
-  const { contructorIngredients } = React.useContext(
-    ContructorIngredientsContext
+  const { constructorIngredients } = React.useContext(
+    ConstructorIngredientsContext
   );
-  const currentBunId = contructorIngredients.bunId;
+  const currentBunId = constructorIngredients.bunId;
 
   return (
     <div className={styles.burgerParts}>
@@ -58,10 +58,10 @@ const BunElem = ({ type, currentBunId }) => {
 
 const IngredientList = () => {
   const ingredientData = React.useContext(IngredientsDataContext);
-  const { contructorIngredients } = React.useContext(
-    ContructorIngredientsContext
+  const { constructorIngredients } = React.useContext(
+    ConstructorIngredientsContext
   );
-  const constructorIngedientsList = contructorIngredients.ingredients;
+  const constructorIngedientsList = constructorIngredients.ingredients;
 
   return (
     <>
@@ -93,10 +93,10 @@ const OrderBtn = () => {
   const modalControl = useModalController();
   const ingredientData = React.useContext(IngredientsDataContext);
 
-  const { contructorIngredients } = React.useContext(
-    ContructorIngredientsContext
+  const { constructorIngredients, dispatchСonstructor } = React.useContext(
+    ConstructorIngredientsContext
   );
-  const constructorIngedientsList = contructorIngredients.ingredients;
+  const constructorIngedientsList = constructorIngredients.ingredients;
 
   const currentBunElem = ingredientData.find((val) => val._id === currentBunId);
   const sum =
@@ -135,12 +135,9 @@ const OrderBtn = () => {
   );
 };
 
- 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,
   currentBunId: PropTypes.string,
 };
-
- 
 
 export default BurgerConstructor;
