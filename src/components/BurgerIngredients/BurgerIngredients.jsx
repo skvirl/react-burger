@@ -9,8 +9,9 @@ import { ingredientType } from "../../utils/types";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
+import {IngredientsDataContext} from "../../utils/context";
 
-const BurgerIngredients = ({ ingredientData }) => {
+const BurgerIngredients = () => {
   const [current, setCurrent] = React.useState("one");
   const [modalElem, setModalElem] = React.useState(null);
 
@@ -55,21 +56,18 @@ const BurgerIngredients = ({ ingredientData }) => {
       <div className={styles.groupsList}>
         <IngredientGroup
           setCurrentIngredient={setCurrentIngredient}
-          ingredientData={ingredientData}
           name="Булки"
           type="bun"
           alt="Булка"
         />
         <IngredientGroup
           setCurrentIngredient={setCurrentIngredient}
-          ingredientData={ingredientData}
           name="Соусы"
           type="sauce"
           alt="Соус"
         />
         <IngredientGroup
           setCurrentIngredient={setCurrentIngredient}
-          ingredientData={ingredientData}
           name="Начинки"
           type="main"
           alt="Начинка"
@@ -86,12 +84,14 @@ const BurgerIngredients = ({ ingredientData }) => {
 };
 
 const IngredientGroup = ({
-  ingredientData,
-  name,
+   name,
   type,
   alt,
   setCurrentIngredient,
 }) => {
+
+  const ingredientData = React.useContext(IngredientsDataContext);
+
   return (
     <div className={styles.ingredientGroup}>
       <div
@@ -105,6 +105,7 @@ const IngredientGroup = ({
             return val.type === type;
           })
           .map((val) => (
+            
             <IngredientView
               elem={val}
               alt={alt}
@@ -162,11 +163,9 @@ const Counter = ({ num }) => {
 };
 
 BurgerIngredients.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
 };
 
 IngredientGroup.propTypes = {
-  ingredientData: PropTypes.arrayOf(ingredientType).isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
@@ -185,4 +184,3 @@ Counter.propTypes = {
 };
 
 export default BurgerIngredients;
-//{(()=>{console.log(name); return 'a'})()}

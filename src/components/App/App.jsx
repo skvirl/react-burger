@@ -1,31 +1,35 @@
 import React from "react";
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./App.module.css";
-// import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { getIngredientsData, cachedData } from "../../utils/data";
+import { initialConstructorIngredientData} from "../../utils/data";
+import { getIngredientsData } from "../../utils/api";
+import useFetch from "../../hooks/useFetch";
+import {
+  ConstructorIngredientsContext,
+  constructorIngredientsReducer, 
+  IngredientsDataContext,
+} from "../../utils/context";
 
 function App() {
-  const [hasError, setHasError] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(false);
-  const [data, setData] = React.useState([]);
-
+ 
+  const {isLoaded,hasError,data,executeApiRequest} = useFetch(getIngredientsData);
+   
   React.useEffect(() => {
-    getIngredientsData(setData, setIsLoaded, setHasError);
+    executeApiRequest();
   }, []);
+ 
 
-  // //devmod  использую если нет доступа к api
-  // if (hasError) {
-  //   setData(cachedData);
-  //   setHasError(false);
-  // }
-
+  const [constructorIngredients, dispatchСonstructor] = React.useReducer(constructorIngredientsReducer, initialConstructorIngredientData);
+     
   return (
     <>
       {isLoaded && (
         <div className={styles.app}>
+ 
+
           <AppHeader />
           <main className={styles.app__main}>
             {hasError ? (
@@ -39,12 +43,16 @@ function App() {
               </div>
             ) : (
               <div className={styles.container}>
-                <section className={styles.mainSection}>
-                  <BurgerIngredients ingredientData={data} />
-                </section>
-                <section className={styles.mainSection}>
-                  <BurgerConstructor ingredientData={data} />
-                </section>
+                <ConstructorIngredientsContext.Provider value={{constructorIngredients, dispatchСonstructor}}>
+                  <IngredientsDataContext.Provider value={data.data}>
+                    <section className={styles.mainSection}>
+                      <BurgerIngredients  />
+                    </section>
+                    <section className={styles.mainSection}>
+                      <BurgerConstructor  />
+                    </section>
+                  </IngredientsDataContext.Provider>
+                </ConstructorIngredientsContext.Provider>
               </div>
             )}
           </main>
