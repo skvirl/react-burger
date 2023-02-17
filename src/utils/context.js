@@ -24,3 +24,5 @@ export const constructorIngredientsReducer = (state, action) => {
       throw new Error(`Wrong type of action: ${action.type}`);
   }
 };
+
+

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerIngredients.module.css";
 import {
@@ -9,19 +9,15 @@ import { ingredientType } from "../../utils/types";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
-import {IngredientsDataContext} from "../../utils/context";
+import { useSelector } from "react-redux";
+import { setIngredientDetails, cleanIngredientDetails } from "../../services/reducers/burgerSlice";
+import { useDispatch } from "react-redux";
 
 const BurgerIngredients = () => {
-  const [current, setCurrent] = React.useState("one");
-  const [modalElem, setModalElem] = React.useState(null);
-
+  const [current, setCurrent] = useState("one");
   const modalControl = useModalController();
-
-  const setCurrentIngredient = (event, elem) => {
-    setModalElem(elem);
-    modalControl.openModal(event);
-  };
-
+  const dispacth = useDispatch();
+  
   return (
     <>
       <h1 className={styles.title + " text text_type_main-large"}>
@@ -55,42 +51,41 @@ const BurgerIngredients = () => {
       </div>
       <div className={styles.groupsList}>
         <IngredientGroup
-          setCurrentIngredient={setCurrentIngredient}
+          openModal={modalControl.openModal}
           name="Булки"
           type="bun"
           alt="Булка"
         />
         <IngredientGroup
-          setCurrentIngredient={setCurrentIngredient}
+          openModal={modalControl.openModal}
           name="Соусы"
           type="sauce"
           alt="Соус"
         />
         <IngredientGroup
-          setCurrentIngredient={setCurrentIngredient}
+          openModal={modalControl.openModal}
           name="Начинки"
           type="main"
           alt="Начинка"
         />
       </div>
-      {modalControl.isModalOpen && <Modal
-        isOpen={modalControl.isModalOpen}
-        closeModal={modalControl.closeModal}
-      >
-        <IngredientDetails ingredient={modalElem} />
-      </Modal>}
+      {modalControl.isModalOpen && (
+        <Modal
+          isOpen={modalControl.isModalOpen}
+          closeModal={()=>{
+            modalControl.closeModal();
+            dispacth(cleanIngredientDetails());
+          }}
+        >
+          <IngredientDetails />
+        </Modal>
+      )}
     </>
   );
 };
 
-const IngredientGroup = ({
-   name,
-  type,
-  alt,
-  setCurrentIngredient,
-}) => {
-
-  const ingredientData = React.useContext(IngredientsDataContext);
+const IngredientGroup = ({ name, type, alt, openModal }) => {
+  const ingredientData = useSelector((state) => state.burger.burgerIngredients);
 
   return (
     <div className={styles.ingredientGroup}>
@@ -105,12 +100,11 @@ const IngredientGroup = ({
             return val.type === type;
           })
           .map((val) => (
-            
             <IngredientView
               elem={val}
               alt={alt}
               quantity={0}
-              setCurrentIngredient={setCurrentIngredient}
+              openModal={openModal}
               key={val._id}
             />
           ))}
@@ -119,14 +113,17 @@ const IngredientGroup = ({
   );
 };
 
-const IngredientView = ({ elem, alt, quantity, setCurrentIngredient }) => {
+const IngredientView = ({ elem, alt, quantity, openModal }) => {
   const { _id, image, price, name } = elem;
+  const dispacth = useDispatch();
+
   return (
     <div
       className={styles.ingredient__Card}
       key={_id}
-      onClick={(e) => {
-        setCurrentIngredient(e, elem);
+      onClick={() => {
+        dispacth(setIngredientDetails(elem));
+        openModal();
       }}
     >
       <img src={image} alt={alt} className={styles.ingredient__Picture} />
@@ -162,21 +159,18 @@ const Counter = ({ num }) => {
   );
 };
 
-BurgerIngredients.propTypes = {
-};
-
 IngredientGroup.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
-  setCurrentIngredient: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
   quantity: PropTypes.number,
-  setCurrentIngredient: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 
 Counter.propTypes = {

@@ -1,9 +1,11 @@
-import React from "react";
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
- 
-const OrderDetails = ({number,hasError}) => {
+import { useSelector } from "react-redux"; 
 
+const OrderDetails = () => {
+  console.log(useSelector(state => state.burger.orderDetails));
+  const {orderNumber,hasError} = useSelector(state => state.burger.orderDetails);
+  
   return (
     <>
     
@@ -21,7 +23,7 @@ const OrderDetails = ({number,hasError}) => {
               `text text_type_digits-large ` + styles.orderDetails__orderNumber
             }
           >
-            {number}
+            {orderNumber}
           </div>
           <div className={`text text_type_main-medium ` + styles.text1}>
             идентификатор заказа

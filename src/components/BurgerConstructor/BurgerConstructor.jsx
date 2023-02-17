@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect} from  "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.css";
 import {
@@ -10,69 +10,69 @@ import {
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
-import {
-  ConstructorIngredientsContext,
-  IngredientsDataContext,
-} from "../../utils/context";
 import { sendOrderData } from "../../utils/api";
 import useFetch from "../../hooks/useFetch";
-
+import { useDispatch, useSelector } from "react-redux";
+import {setOrderDetails} from '../../services/reducers/burgerSlice'
 const BurgerConstructor = () => {
-  const { constructorIngredients } = React.useContext(
-    ConstructorIngredientsContext
-  );
-  const ingredientData = React.useContext(IngredientsDataContext);
-  const currentBunElem = getBunElement(
-    ingredientData,
-    constructorIngredients.bunId
-  );
-
+ 
   return (
     <div className={styles.burgerParts}>
-      <BunElem type="top" currentBunElem={currentBunElem} />
+      <BunElem type="top"/>
 
       <div className={styles.inredientList}>
         <IngredientList />
       </div>
 
-      <BunElem type="bottom" currentBunElem={currentBunElem} />
+      <BunElem type="bottom" />
 
-      <OrderBtn currentBunElem={currentBunElem} />
+      <OrderBtn />
     </div>
   );
 };
 
-const BunElem = ({ type, currentBunElem }) => {
+const BunElem = ({ type }) => {
 
-  if (!currentBunElem) return;
+  const {ingredientData,selectedBunId} = useSelector(state => ({
+    ingredientData:state.burger.burgerIngredients,
+    selectedBunId:state.burger.selectedBunId
+  }));
+
+  const selectedBunElem = getBunElement(
+    ingredientData,
+    selectedBunId
+  );
+
+  if (!selectedBunElem) return;
 
   return (
     <div className={styles.elementBox}>
       <ConstructorElement
         type={type}
         isLocked={true}
-        text={currentBunElem.name + (type === "top" ? " (верх)" : " (низ)")}
-        price={currentBunElem.price}
-        thumbnail={currentBunElem.image}
+        text={selectedBunElem.name + (type === "top" ? " (верх)" : " (низ)")}
+        price={selectedBunElem.price}
+        thumbnail={selectedBunElem.image}
       />
     </div>
   );
 };
 
-const IngredientList = () => {
-  const ingredientData = React.useContext(IngredientsDataContext);
-  const { constructorIngredients } = React.useContext(
-    ConstructorIngredientsContext
-  );
-  const constructorIngedientsList = constructorIngredients.ingredients;
 
+const IngredientList = () => {
+
+  const {ingredientData,constructorIngedientsList} = useSelector(state => ({
+    ingredientData:state.burger.burgerIngredients,
+    constructorIngedientsList:state.burger.burgerConstructor
+  }));
+  
   return (
     <>
       {constructorIngedientsList.map((listElem) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
-        if (!currentIngredient) return <div>ингридиент потерялся</div>;
+        if (!currentIngredient) return <div key={listElem.constructorId} >ингридиент потерялся</div>;
         return (
           <div
             className={styles.elementBox_dragable}
@@ -91,9 +91,9 @@ const IngredientList = () => {
   );
 };
 
-const OrderBtn = ({ currentBunElem }) => {
+const OrderBtn = () => {
 
-  const getOrderSum = (ingredientData, ingedientsList, currentBunElem) => {
+  const getOrderSum = (ingredientData, ingedientsList, selectedBunElem) => {
     const sum =
       ingedientsList.reduce((sumVal, listElem) => {
         const currentIngredient = ingredientData.find(
@@ -101,31 +101,46 @@ const OrderBtn = ({ currentBunElem }) => {
         );
         return sumVal + (currentIngredient ? currentIngredient.price : 0);
       }, 0) +
-      (currentBunElem ? currentBunElem.price : 0) * 2;
+      (selectedBunElem ? selectedBunElem.price : 0) * 2;
   
     return sum;
   };
+  
+  const {ingredientData,constructorIngedientsList,selectedBunId} = useSelector(state => ({
+    ingredientData:state.burger.burgerIngredients,
+    constructorIngedientsList:state.burger.burgerConstructor,
+    selectedBunId:state.burger.selectedBunId
+  }));
+
+  const selectedBunElem = getBunElement(
+    ingredientData,
+    selectedBunId
+  );
     
   const modalControl = useModalController();
-
-  const ingredientData = React.useContext(IngredientsDataContext);
-
-  const { constructorIngredients, dispatchСonstructor } = React.useContext(
-    ConstructorIngredientsContext
-  );
+  
   const оrderSum = getOrderSum(
     ingredientData,
-    constructorIngredients.ingredients,
-    currentBunElem
+    constructorIngedientsList,
+    selectedBunElem
   );
+
+  const dispatch = useDispatch();  
 
   const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
     sendOrderData([
-      constructorIngredients.bunId,
-      ...constructorIngredients.ingredients,
-      constructorIngredients.bunId,
+      selectedBunId,
+      ...constructorIngedientsList,
+      selectedBunId,
     ])
   );
+
+  useEffect(() => {
+    dispatch(setOrderDetails({
+      orderNumber:data?.order?.number,
+      hasError: Boolean(isLoaded) && Boolean(hasError)
+    }));
+  }, [data,isLoaded,hasError]);
 
   return (
     <>
@@ -144,6 +159,11 @@ const OrderBtn = ({ currentBunElem }) => {
           type="primary"
           size="medium"
           onClick={() => {
+            dispatch(setOrderDetails({
+              constructorIngedientsList,
+              selectedBunId,
+              оrderSum,
+            }));
             executeApiRequest();
             modalControl.openModal();
           }}
@@ -155,10 +175,7 @@ const OrderBtn = ({ currentBunElem }) => {
         isOpen={modalControl.isModalOpen}
         closeModal={modalControl.closeModal}
       >
-        <OrderDetails
-          number={data?.order?.number}
-          hasError={isLoaded && hasError}
-        />
+        <OrderDetails/>
       </Modal>
     </>
   );
@@ -169,7 +186,6 @@ const getBunElement = (ingredientData, currentBunId) =>
 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,
-  currentBunId: PropTypes.string,
 };
 
 export default BurgerConstructor;
