@@ -7,12 +7,13 @@ export const constructorIngedientsList = [
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733c9"},
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733ce"},
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733d1"},
-  // {constructorId:v4() ,_id:"60d3b41abdacab0026a733d1"},
+  {constructorId:v4() ,_id:"60d3b41abdacab0026a733d1"},
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733d0"},
 ];
 
 export const initialConstructorIngredientData = {selectedBunId:selectedBunId, ingredients:constructorIngedientsList }
-
+// export const initialConstructorIngredientData = {selectedBunId:null, ingredients:[] }
+ 
 export const cachedData = [
   {
     _id: "60d3b41abdacab0026a733c6",

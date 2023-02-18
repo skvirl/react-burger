@@ -71,3 +71,7 @@
 }
 
  
+.elementBox_dragable{
+  user-select: none;
+
+}

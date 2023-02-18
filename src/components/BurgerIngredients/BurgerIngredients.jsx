@@ -6,18 +6,23 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientType } from "../../utils/types";
+import  {dragItemTypes}  from "../../utils/itemTypes";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import { useSelector } from "react-redux";
-import { setIngredientDetails, cleanIngredientDetails } from "../../services/reducers/burgerSlice";
+import {
+  setIngredientDetails,
+  cleanIngredientDetails,
+} from "../../services/reducers/burgerSlice";
 import { useDispatch } from "react-redux";
+import { useDrag, DragPreviewImage } from "react-dnd";
 
 const BurgerIngredients = () => {
   const [current, setCurrent] = useState("one");
   const modalControl = useModalController();
   const dispacth = useDispatch();
-  
+
   return (
     <>
       <h1 className={styles.title + " text text_type_main-large"}>
@@ -72,7 +77,7 @@ const BurgerIngredients = () => {
       {modalControl.isModalOpen && (
         <Modal
           isOpen={modalControl.isModalOpen}
-          closeModal={()=>{
+          closeModal={() => {
             modalControl.closeModal();
             dispacth(cleanIngredientDetails());
           }}
@@ -85,7 +90,10 @@ const BurgerIngredients = () => {
 };
 
 const IngredientGroup = ({ name, type, alt, openModal }) => {
-  const ingredientData = useSelector((state) => state.burger.burgerIngredients);
+  const { ingredientData, selectedBunId } = useSelector((state) => ({
+    ingredientData: state.burger.burgerIngredients,
+    selectedBunId: state.burger.selectedBunId,
+  }));
 
   return (
     <div className={styles.ingredientGroup}>
@@ -97,13 +105,12 @@ const IngredientGroup = ({ name, type, alt, openModal }) => {
       <div className={styles.ingredientGroup__cards}>
         {ingredientData
           .filter((val) => {
-            return val.type === type;
+            return val.type === type && val._id !== selectedBunId;
           })
           .map((val) => (
             <IngredientView
               elem={val}
               alt={alt}
-              quantity={0}
               openModal={openModal}
               key={val._id}
             />
@@ -113,37 +120,56 @@ const IngredientGroup = ({ name, type, alt, openModal }) => {
   );
 };
 
-const IngredientView = ({ elem, alt, quantity, openModal }) => {
+const IngredientView = ({ elem, alt, openModal }) => {
   const { _id, image, price, name } = elem;
   const dispacth = useDispatch();
+  const constructorIngedientsList = useSelector(
+    (state) => state.burger.burgerConstructor
+  );
+
+  const [{}, drag, preview] = useDrag({
+    type: dragItemTypes.CONSTRUCTOR_LIST,
+    item: { _id, itsBun: elem.type === "bun" },
+  });
+
+  const usedIngredientsCount = () =>
+    constructorIngedientsList.reduce(
+      (sum, val) => sum + (val._id === elem._id ? 1 : 0),
+      0
+    );
 
   return (
-    <div
-      className={styles.ingredient__Card}
-      key={_id}
-      onClick={() => {
-        dispacth(setIngredientDetails(elem));
-        openModal();
-      }}
-    >
-      <img src={image} alt={alt} className={styles.ingredient__Picture} />
-      <div className={styles.ingredient__priceBox}>
+    <>
+      <DragPreviewImage src={image} connect={preview} />
+      <div
+        ref={drag}
+        className={styles.ingredient__Card}
+        onClick={() => {
+          dispacth(setIngredientDetails(elem));
+          openModal();
+        }}
+      >
+        <img src={image} alt={alt} className={styles.ingredient__Picture} />
+        <div className={styles.ingredient__priceBox}>
+          <div
+            className={
+              "text text_type_digits-default " + styles.ingredient__price
+            }
+          >
+            {price}
+          </div>
+          <div className={styles.ingredient__CurrencyIcon}>
+            <CurrencyIcon type="primary" />
+          </div>
+        </div>
         <div
-          className={
-            "text text_type_digits-default " + styles.ingredient__price
-          }
+          className={"text text_type_main-default " + styles.ingredient__name}
         >
-          {price}
+          {name}
         </div>
-        <div className={styles.ingredient__CurrencyIcon}>
-          <CurrencyIcon type="primary" />
-        </div>
+        <Counter num={usedIngredientsCount()} />
       </div>
-      <div className={"text text_type_main-default " + styles.ingredient__name}>
-        {name}
-      </div>
-      <Counter num={quantity} />
-    </div>
+    </>
   );
 };
 

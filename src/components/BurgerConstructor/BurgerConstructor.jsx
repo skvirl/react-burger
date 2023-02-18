@@ -1,4 +1,4 @@
-import {useEffect} from  "react";
+import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.css";
 import {
@@ -11,14 +11,42 @@ import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
 import { sendOrderData } from "../../utils/api";
+import { dragItemTypes } from "../../utils/itemTypes";
 import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
-import {setOrderDetails} from '../../services/reducers/burgerSlice'
+import {
+  setBun,
+  setOrderDetails,
+  addConstrucorIngredient,
+  removeConstrucorIngredient,
+  moveConstructorIngredient,
+} from "../../services/reducers/burgerSlice";
+import { v4 } from "uuid";
+import { useDrop, useDrag, DragPreviewImage } from "react-dnd";
+
 const BurgerConstructor = () => {
- 
+  const dispatch = useDispatch();
+  const [{ isHover }, drop] = useDrop({
+    accept: dragItemTypes.CONSTRUCTOR_LIST,
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+    drop({ _id, itsBun }) {
+      if (itsBun) {
+        dispatch(setBun(_id));
+      } else {
+        dispatch(
+          addConstrucorIngredient({
+            constructorId: v4(),
+            ingredientId: _id,
+          })
+        );
+      }
+    },
+  });
   return (
-    <div className={styles.burgerParts}>
-      <BunElem type="top"/>
+    <div ref={drop} className={styles.burgerParts}>
+      <BunElem type="top" />
 
       <div className={styles.inredientList}>
         <IngredientList />
@@ -32,16 +60,12 @@ const BurgerConstructor = () => {
 };
 
 const BunElem = ({ type }) => {
-
-  const {ingredientData,selectedBunId} = useSelector(state => ({
-    ingredientData:state.burger.burgerIngredients,
-    selectedBunId:state.burger.selectedBunId
+  const { ingredientData, selectedBunId } = useSelector((state) => ({
+    ingredientData: state.burger.burgerIngredients,
+    selectedBunId: state.burger.selectedBunId,
   }));
 
-  const selectedBunElem = getBunElement(
-    ingredientData,
-    selectedBunId
-  );
+  const selectedBunElem = getBunElement(ingredientData, selectedBunId);
 
   if (!selectedBunElem) return;
 
@@ -58,41 +82,114 @@ const BunElem = ({ type }) => {
   );
 };
 
-
 const IngredientList = () => {
+  const { ingredientData, constructorIngedientsList } = useSelector(
+    (state) => ({
+      ingredientData: state.burger.burgerIngredients,
+      constructorIngedientsList: state.burger.burgerConstructor,
+    })
+  );
 
-  const {ingredientData,constructorIngedientsList} = useSelector(state => ({
-    ingredientData:state.burger.burgerIngredients,
-    constructorIngedientsList:state.burger.burgerConstructor
-  }));
-  
   return (
     <>
-      {constructorIngedientsList.map((listElem) => {
+      {constructorIngedientsList.map((listElem, index) => {
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
-        if (!currentIngredient) return <div key={listElem.constructorId} >ингридиент потерялся</div>;
+        if (!currentIngredient)
+          return <div key={listElem.constructorId}>ингридиент потерялся</div>;
         return (
-          <div
-            className={styles.elementBox_dragable}
+          <Ingredient
             key={listElem.constructorId}
-          >
-            <DragIcon type="primary" />
-            <ConstructorElement
-              text={currentIngredient.name}
-              price={currentIngredient.price}
-              thumbnail={currentIngredient.image}
-            />
-          </div>
+            index={index}
+            listElem={listElem}
+            ingredient={currentIngredient}
+          />
         );
       })}
     </>
   );
 };
 
-const OrderBtn = () => {
+const Ingredient = ({ listElem, ingredient, index }) => {
+  const dispatch = useDispatch();
+  const dragRef = useRef(null);
+  const dropRef = useRef(null);
 
+  const [, drag, preview] = useDrag({
+    type: dragItemTypes.CONSTRUCTOR_LIST_SORT,
+    item: () => {
+      return { constructorId: listElem.constructorId, index };
+    },
+  });
+
+  const [, drop] = useDrop({
+    accept: dragItemTypes.CONSTRUCTOR_LIST_SORT,
+    hover(item, monitor) {
+      const dragIndex = item.index;
+      const hoverIndex = index;
+      if (!dragRef.current) {
+        return;
+      }
+
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+      const hoverBoundingRect = dragRef.current?.getBoundingClientRect();
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const clientOffset = monitor.getClientOffset();
+      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+      const indexDiff = Math.abs(hoverIndex - dragIndex);
+
+      if (
+        indexDiff <= 1 &&
+        dragIndex < hoverIndex &&
+        hoverClientY < hoverMiddleY
+      ) {
+        return;
+      }
+      if (
+        indexDiff <= 1 &&
+        dragIndex > hoverIndex &&
+        hoverClientY > hoverMiddleY
+      ) {
+        return;
+      }
+
+      dispatch(moveConstructorIngredient({ dragIndex, hoverIndex }));
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
+    },
+  });
+
+  drag(drop(dragRef));
+  preview(drop(dropRef));
+
+  return (
+    <div className={styles.elementBox_dragable} ref={dropRef}>
+      <div ref={dragRef}>
+        <DragIcon type="primary" />
+      </div>
+      <ConstructorElement
+        draggable="false"
+        text={ingredient.name}
+        price={ingredient.price}
+        thumbnail={ingredient.image}
+        handleClose={() => {
+          dispatch(removeConstrucorIngredient(listElem.constructorId));
+        }}
+      />
+    </div>
+  );
+};
+
+const OrderBtn = () => {
   const getOrderSum = (ingredientData, ingedientsList, selectedBunElem) => {
     const sum =
       ingedientsList.reduce((sumVal, listElem) => {
@@ -102,45 +199,41 @@ const OrderBtn = () => {
         return sumVal + (currentIngredient ? currentIngredient.price : 0);
       }, 0) +
       (selectedBunElem ? selectedBunElem.price : 0) * 2;
-  
+
     return sum;
   };
-  
-  const {ingredientData,constructorIngedientsList,selectedBunId} = useSelector(state => ({
-    ingredientData:state.burger.burgerIngredients,
-    constructorIngedientsList:state.burger.burgerConstructor,
-    selectedBunId:state.burger.selectedBunId
-  }));
 
-  const selectedBunElem = getBunElement(
-    ingredientData,
-    selectedBunId
-  );
-    
+  const { ingredientData, constructorIngedientsList, selectedBunId } =
+    useSelector((state) => ({
+      ingredientData: state.burger.burgerIngredients,
+      constructorIngedientsList: state.burger.burgerConstructor,
+      selectedBunId: state.burger.selectedBunId,
+    }));
+
+  const selectedBunElem = getBunElement(ingredientData, selectedBunId);
+
   const modalControl = useModalController();
-  
+
   const оrderSum = getOrderSum(
     ingredientData,
     constructorIngedientsList,
     selectedBunElem
   );
 
-  const dispatch = useDispatch();  
+  const dispatch = useDispatch();
 
   const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
-    sendOrderData([
-      selectedBunId,
-      ...constructorIngedientsList,
-      selectedBunId,
-    ])
+    sendOrderData([selectedBunId, ...constructorIngedientsList, selectedBunId])
   );
 
   useEffect(() => {
-    dispatch(setOrderDetails({
-      orderNumber:data?.order?.number,
-      hasError: Boolean(isLoaded) && Boolean(hasError)
-    }));
-  }, [data,isLoaded,hasError]);
+    dispatch(
+      setOrderDetails({
+        orderNumber: data?.order?.number,
+        hasError: Boolean(isLoaded) && Boolean(hasError),
+      })
+    );
+  }, [data, isLoaded, hasError]);
 
   return (
     <>
@@ -159,11 +252,13 @@ const OrderBtn = () => {
           type="primary"
           size="medium"
           onClick={() => {
-            dispatch(setOrderDetails({
-              constructorIngedientsList,
-              selectedBunId,
-              оrderSum,
-            }));
+            dispatch(
+              setOrderDetails({
+                constructorIngedientsList,
+                selectedBunId,
+                оrderSum,
+              })
+            );
             executeApiRequest();
             modalControl.openModal();
           }}
@@ -175,7 +270,7 @@ const OrderBtn = () => {
         isOpen={modalControl.isModalOpen}
         closeModal={modalControl.closeModal}
       >
-        <OrderDetails/>
+        <OrderDetails />
       </Modal>
     </>
   );

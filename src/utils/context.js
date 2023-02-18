@@ -6,7 +6,7 @@ export const IngredientsDataContext = React.createContext();
 
 export const constructorIngredientsReducer = (state, action) => {
   switch (action.type) {
-    case "addBun":
+    case "setBun":
       return { ...state, bunId: action.ingredientId };
     case "removeBun":
       return { ...state, bunId: null };

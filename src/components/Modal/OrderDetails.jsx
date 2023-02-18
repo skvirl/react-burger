@@ -3,8 +3,7 @@ import "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux"; 
 
 const OrderDetails = () => {
-  console.log(useSelector(state => state.burger.orderDetails));
-  const {orderNumber,hasError} = useSelector(state => state.burger.orderDetails);
+   const {orderNumber,hasError} = useSelector(state => state.burger.orderDetails);
   
   return (
     <>

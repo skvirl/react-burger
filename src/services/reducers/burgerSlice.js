@@ -16,7 +16,7 @@ const burgerSlice = createSlice({
     setBurgerIngredients(state, action) {
       state.burgerIngredients = action.payload;
     },
-    addBun(state, action) {
+    setBun(state, action) {
       state.selectedBunId = action.payload;
     },
     addConstrucorIngredient(state, action) {
@@ -27,6 +27,17 @@ const burgerSlice = createSlice({
           _id: action.payload.ingredientId,
         },
       ];
+    },
+    moveConstructorIngredient(state, action) {
+      const {dragIndex, hoverIndex}= action.payload;
+ 
+      const movingElement = state.burgerConstructor[dragIndex];
+      state.burgerConstructor.splice(dragIndex, 1);
+      state.burgerConstructor.splice(
+        hoverIndex,
+        0,
+        movingElement
+      );
     },
     removeConstrucorIngredient(state, action) {
       state.burgerConstructor = state.burgerConstructor.filter(
@@ -41,9 +52,8 @@ const burgerSlice = createSlice({
       state.ingredientDetails = null;
     },
 
-    
     setOrderDetails(state, action) {
-      state.orderDetails = {...state.orderDetails,...action.payload};
+      state.orderDetails = { ...state.orderDetails, ...action.payload };
     },
   },
 });
@@ -52,8 +62,9 @@ export default burgerSlice.reducer;
 
 export const {
   setBurgerIngredients,
-  addBun,
+  setBun,
   addConstrucorIngredient,
+  moveConstructorIngredient,
   removeConstrucorIngredient,
   setIngredientDetails,
   cleanIngredientDetails,
