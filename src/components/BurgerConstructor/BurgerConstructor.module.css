@@ -75,3 +75,7 @@
   user-select: none;
 
 }
+
+.elementBox_dragIcon{
+   cursor:   grab;
+}

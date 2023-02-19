@@ -229,3 +229,8 @@ export const cachedData = [
   },
 ];
 
+export const ingredientTabs = [
+  {value:'bun', name: 'Булки',    alt:'Булка'},
+  {value:'sauce', name: 'Соусы',  alt:'Соус'},
+  {value:'main', name: 'Начинки', alt:'Начинка'}
+];

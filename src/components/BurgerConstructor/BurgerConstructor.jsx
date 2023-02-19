@@ -173,7 +173,7 @@ const Ingredient = ({ listElem, ingredient, index }) => {
 
   return (
     <div className={styles.elementBox_dragable} ref={dropRef}>
-      <div ref={dragRef}>
+      <div ref={dragRef} className={styles.elementBox_dragIcon}>
         <DragIcon type="primary" />
       </div>
       <ConstructorElement

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerIngredients.module.css";
 import {
@@ -6,7 +6,7 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientType } from "../../utils/types";
-import  {dragItemTypes}  from "../../utils/itemTypes";
+import { dragItemTypes } from "../../utils/itemTypes";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
 import useModalController from "../../hooks/ModalController";
@@ -17,11 +17,38 @@ import {
 } from "../../services/reducers/burgerSlice";
 import { useDispatch } from "react-redux";
 import { useDrag, DragPreviewImage } from "react-dnd";
+import { ingredientTabs } from "../../utils/data";
 
 const BurgerIngredients = () => {
   const [current, setCurrent] = useState("one");
+  const [observer, setObserver] = useState();
   const modalControl = useModalController();
   const dispacth = useDispatch();
+
+  const ingredientViewport = useRef();
+
+    
+
+  useEffect(() => {
+    setObserver(
+      new IntersectionObserver(
+        (entries,obs) => {
+          console.log(entries.length);
+          entries.forEach((group) => {
+
+            const res = group.isIntersecting?
+             group.target.firstChild.innerText :  
+             group.target.nextSibling.firstChild.innerText;
+             console.log(res);
+          });
+        },
+        { 
+          root: ingredientViewport.current,
+           threshold: 0.5
+        }
+      )
+    );
+  }, [ingredientViewport]);
 
   return (
     <>
@@ -29,50 +56,29 @@ const BurgerIngredients = () => {
         Соберите бургер
       </h1>
       <div className={styles.tabs}>
-        <Tab
-          className={styles.tab + " "}
-          value="one"
-          active={current === "one"}
-          onClick={setCurrent}
-        >
-          Булки
-        </Tab>
-        <Tab
-          className={styles.tab}
-          value="two"
-          active={current === "two"}
-          onClick={setCurrent}
-        >
-          Соусы
-        </Tab>
-        <Tab
-          className={styles.tab}
-          value="three"
-          active={current === "three"}
-          onClick={setCurrent}
-        >
-          Начинки
-        </Tab>
+        {ingredientTabs.map((tab) => (
+          <Tab
+            className={styles.tab}
+            value={tab.value}
+            active={current === tab.value}
+            onClick={setCurrent}
+            key={tab.value}
+          >
+            {tab.name}
+          </Tab>
+        ))}
       </div>
-      <div className={styles.groupsList}>
-        <IngredientGroup
-          openModal={modalControl.openModal}
-          name="Булки"
-          type="bun"
-          alt="Булка"
-        />
-        <IngredientGroup
-          openModal={modalControl.openModal}
-          name="Соусы"
-          type="sauce"
-          alt="Соус"
-        />
-        <IngredientGroup
-          openModal={modalControl.openModal}
-          name="Начинки"
-          type="main"
-          alt="Начинка"
-        />
+      <div ref={ingredientViewport} className={styles.groupsList}>
+        {ingredientTabs.map((tab) => (
+          <IngredientGroup
+            openModal={modalControl.openModal}
+            name={tab.name}
+            type={tab.value}
+            alt={tab.alt}
+            observer={observer}
+            key={tab.value}
+          />
+        ))}
       </div>
       {modalControl.isModalOpen && (
         <Modal
@@ -89,15 +95,28 @@ const BurgerIngredients = () => {
   );
 };
 
-const IngredientGroup = ({ name, type, alt, openModal }) => {
+const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
   const { ingredientData, selectedBunId } = useSelector((state) => ({
     ingredientData: state.burger.burgerIngredients,
     selectedBunId: state.burger.selectedBunId,
   }));
 
+  const groupRef = useRef();
+
+  useEffect(() => {
+    if (!observer) return;
+
+    const ingredientGroupElement = groupRef.current;
+    console.log(ingredientGroupElement);
+    ingredientGroupElement && observer.observe(ingredientGroupElement);
+    return () =>
+      ingredientGroupElement && observer.unobserve(ingredientGroupElement);
+  }, [observer, groupRef]);
+
   return (
-    <div className={styles.ingredientGroup}>
+    <div className={styles.ingredientGroup} ref={groupRef}>
       <div
+        
         className={"text text_type_main-medium " + styles.ingredientGroup__name}
       >
         {name}
