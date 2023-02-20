@@ -23,6 +23,7 @@ import {
 } from "../../services/reducers/burgerSlice";
 import { v4 } from "uuid";
 import { useDrop, useDrag } from "react-dnd";
+import { ingredientType } from "../../utils/types";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -93,16 +94,17 @@ const IngredientList = () => {
   return (
     <>
       {constructorIngedientsList.map((listElem, index) => {
+        const constructorId = listElem.constructorId;
         const currentIngredient = ingredientData.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
         if (!currentIngredient)
-          return <div key={listElem.constructorId}>ингридиент потерялся</div>;
+          return <div key={constructorId}>ингридиент потерялся</div>;
         return (
           <Ingredient
-            key={listElem.constructorId}
+            key={constructorId}
             index={index}
-            listElem={listElem}
+            constructorId={constructorId}
             ingredient={currentIngredient}
           />
         );
@@ -111,7 +113,7 @@ const IngredientList = () => {
   );
 };
 
-const Ingredient = ({ listElem, ingredient, index }) => {
+const Ingredient = ({ constructorId, ingredient, index }) => {
   const dispatch = useDispatch();
   const dragRef = useRef(null);
   const dropRef = useRef(null);
@@ -119,7 +121,7 @@ const Ingredient = ({ listElem, ingredient, index }) => {
   const [, drag, preview] = useDrag({
     type: dragItemTypes.CONSTRUCTOR_LIST_SORT,
     item: () => {
-      return { constructorId: listElem.constructorId, index };
+      return { constructorId: constructorId, index };
     },
   });
 
@@ -182,7 +184,7 @@ const Ingredient = ({ listElem, ingredient, index }) => {
         price={ingredient.price}
         thumbnail={ingredient.image}
         handleClose={() => {
-          dispatch(removeConstrucorIngredient(listElem.constructorId));
+          dispatch(removeConstrucorIngredient(constructorId));
         }}
       />
     </div>
@@ -281,6 +283,12 @@ const getBunElement = (ingredientData, currentBunId) =>
 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,
+};
+
+Ingredient.propTypes = {
+  ingredient: ingredientType.isRequired,
+  constructorId: PropTypes.string,
+  index: PropTypes.number,
 };
 
 export default BurgerConstructor;

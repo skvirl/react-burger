@@ -20,8 +20,8 @@ import { useDrag, DragPreviewImage } from "react-dnd";
 import { ingredientTabs } from "../../utils/data";
 
 const BurgerIngredients = () => {
-  const [current, setCurrent] = useState("bun");
-  const [observer, setObserver] = useState();
+  const [currentTab, setCurrentTab] = useState("bun");
+  const [observer, setObserver] = useState(null);
   const modalControl = useModalController();
   const dispacth = useDispatch();
 
@@ -30,29 +30,21 @@ const BurgerIngredients = () => {
   useEffect(() => {
     setObserver(
       new IntersectionObserver(
-        (entries, obs) => {
-          console.log("~~~~~~~~~~~");
-          entries.forEach((group) => {
-            const target = group?.target;
-            const nextSib = group?.target?.nextSibling;
-            const prevSib = group?.target?.previousSibling;
+        (entries) => {
+          const group = entries[0];
+          const target = group?.target;
+          const nextSib = target?.nextSibling;
 
-            let curRatio = group.intersectionRatio;
+          // filter out lower viewport bound crossings
+          if (group.boundingClientRect.top > group.rootBounds.top) {
+            return;
+          }
 
-            const res = group.isIntersecting
-              ? target?.dataset?.type
-              : (curRatio < 0.5 ? nextSib : prevSib)?.dataset?.type;
+          const result = group.isIntersecting
+            ? target?.dataset?.type
+            : nextSib?.dataset?.type;
 
-            setCurrent(res);
-
-            console.log(
-              `${group.target.firstChild.innerText} ${group.isIntersecting} ${curRatio} ${res}`
-            );
-            const upperCut =
-              group.intersectionRect.top > group.rootBounds.top &&
-              group.rootBounds.top > group.rootBounds.bottom;
-            console.log(upperCut);
-          });
+            setCurrentTab(result);
         },
         {
           root: ingredientViewport.current,
@@ -60,6 +52,7 @@ const BurgerIngredients = () => {
         }
       )
     );
+    console.log(typeof observer);
   }, [ingredientViewport]);
 
   return (
@@ -72,8 +65,8 @@ const BurgerIngredients = () => {
           <Tab
             className={styles.tab}
             value={tab.value}
-            active={current === tab.value}
-            onClick={setCurrent}
+            active={currentTab === tab.value}
+            onClick={setCurrentTab}
             key={tab.value}
           >
             {tab.name}
@@ -119,7 +112,6 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
     if (!observer) return;
 
     const ingredientGroupElement = groupRef.current;
-    console.log(ingredientGroupElement);
     ingredientGroupElement && observer.observe(ingredientGroupElement);
     return () =>
       ingredientGroupElement && observer.unobserve(ingredientGroupElement);
@@ -220,12 +212,12 @@ IngredientGroup.propTypes = {
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
   openModal: PropTypes.func.isRequired,
+  observer: PropTypes.object 
 };
 
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
-  quantity: PropTypes.number,
   openModal: PropTypes.func.isRequired,
 };
 
