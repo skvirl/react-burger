@@ -22,11 +22,11 @@ import {
   moveConstructorIngredient,
 } from "../../services/reducers/burgerSlice";
 import { v4 } from "uuid";
-import { useDrop, useDrag, DragPreviewImage } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
-  const [{ isHover }, drop] = useDrop({
+  const [, drop] = useDrop({
     accept: dragItemTypes.CONSTRUCTOR_LIST,
     collect: (monitor) => ({
       isHover: monitor.isOver(),

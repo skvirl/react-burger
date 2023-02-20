@@ -20,31 +20,43 @@ import { useDrag, DragPreviewImage } from "react-dnd";
 import { ingredientTabs } from "../../utils/data";
 
 const BurgerIngredients = () => {
-  const [current, setCurrent] = useState("one");
+  const [current, setCurrent] = useState("bun");
   const [observer, setObserver] = useState();
   const modalControl = useModalController();
   const dispacth = useDispatch();
 
   const ingredientViewport = useRef();
 
-    
-
   useEffect(() => {
     setObserver(
       new IntersectionObserver(
-        (entries,obs) => {
-          console.log(entries.length);
+        (entries, obs) => {
+          console.log("~~~~~~~~~~~");
           entries.forEach((group) => {
+            const target = group?.target;
+            const nextSib = group?.target?.nextSibling;
+            const prevSib = group?.target?.previousSibling;
 
-            const res = group.isIntersecting?
-             group.target.firstChild.innerText :  
-             group.target.nextSibling.firstChild.innerText;
-             console.log(res);
+            let curRatio = group.intersectionRatio;
+
+            const res = group.isIntersecting
+              ? target?.dataset?.type
+              : (curRatio < 0.5 ? nextSib : prevSib)?.dataset?.type;
+
+            setCurrent(res);
+
+            console.log(
+              `${group.target.firstChild.innerText} ${group.isIntersecting} ${curRatio} ${res}`
+            );
+            const upperCut =
+              group.intersectionRect.top > group.rootBounds.top &&
+              group.rootBounds.top > group.rootBounds.bottom;
+            console.log(upperCut);
           });
         },
-        { 
+        {
           root: ingredientViewport.current,
-           threshold: 0.5
+          threshold: 0.5,
         }
       )
     );
@@ -114,9 +126,8 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
   }, [observer, groupRef]);
 
   return (
-    <div className={styles.ingredientGroup} ref={groupRef}>
+    <div className={styles.ingredientGroup} ref={groupRef} data-type={type}>
       <div
-        
         className={"text text_type_main-medium " + styles.ingredientGroup__name}
       >
         {name}
@@ -146,7 +157,7 @@ const IngredientView = ({ elem, alt, openModal }) => {
     (state) => state.burger.burgerConstructor
   );
 
-  const [{}, drag, preview] = useDrag({
+  const [, drag, preview] = useDrag({
     type: dragItemTypes.CONSTRUCTOR_LIST,
     item: { _id, itsBun: elem.type === "bun" },
   });
