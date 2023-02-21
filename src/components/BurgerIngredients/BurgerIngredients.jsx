@@ -9,13 +9,11 @@ import { ingredientType } from "../../utils/types";
 import { dragItemTypes } from "../../utils/itemTypes";
 import IngredientDetails from "../Modal/IngredientDetails";
 import Modal from "../Modal/Modal";
-import useModalController from "../../hooks/ModalController";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   setIngredientDetails,
   cleanIngredientDetails,
 } from "../../services/reducers/burgerSlice";
-import { useDispatch } from "react-redux";
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { ingredientTabs } from "../../utils/data";
 import { ingredientTypes } from "../../utils/itemTypes";
@@ -23,8 +21,10 @@ import { ingredientTypes } from "../../utils/itemTypes";
 const BurgerIngredients = () => {
   const [currentTab, setCurrentTab] = useState(ingredientTypes.BUN);
   const [observer, setObserver] = useState(null);
-  const modalControl = useModalController();
-  const dispacth = useDispatch();
+  const dispatch = useDispatch();
+  const isModalOpen = useSelector((state) =>
+    Boolean(state.burger.ingredientDetails)
+  );
 
   const ingredientViewport = useRef();
 
@@ -76,7 +76,6 @@ const BurgerIngredients = () => {
       <div ref={ingredientViewport} className={styles.groupsList}>
         {ingredientTabs.map((tab) => (
           <IngredientGroup
-            openModal={modalControl.openModal}
             name={tab.name}
             type={tab.value}
             alt={tab.alt}
@@ -85,22 +84,21 @@ const BurgerIngredients = () => {
           />
         ))}
       </div>
-      {modalControl.isModalOpen && (
+      {
         <Modal
-          isOpen={modalControl.isModalOpen}
+          isOpen={isModalOpen}
           closeModal={() => {
-            modalControl.closeModal();
-            dispacth(cleanIngredientDetails());
+            dispatch(cleanIngredientDetails());
           }}
         >
           <IngredientDetails />
         </Modal>
-      )}
+      }
     </>
   );
 };
 
-const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
+const IngredientGroup = ({ name, type, alt, observer }) => {
   const { ingredientData, selectedBunId } = useSelector((state) => ({
     ingredientData: state.burger.burgerIngredients,
     selectedBunId: state.burger.selectedBunId,
@@ -122,7 +120,7 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
       ingredientData?.filter((val) => {
         return val.type === type && val._id !== selectedBunId;
       }),
-    [ingredientData]
+    [ingredientData,type,selectedBunId]
   );
 
   return (
@@ -137,7 +135,6 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
           <IngredientView
             elem={val}
             alt={alt}
-            openModal={openModal}
             key={val._id}
           />
         ))}
@@ -146,7 +143,7 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
   );
 };
 
-const IngredientView = ({ elem, alt, openModal }) => {
+const IngredientView = ({ elem, alt }) => {
   const { _id, image, price, name } = elem;
   const dispacth = useDispatch();
   const constructorIngedientsList = useSelector(
@@ -155,15 +152,15 @@ const IngredientView = ({ elem, alt, openModal }) => {
 
   const [, drag, preview] = useDrag({
     type: dragItemTypes.CONSTRUCTOR_LIST,
-    item: { _id, itsBun: elem.type === "bun" },
+    item: { _id, itsBun: elem.type === ingredientTypes.BUN },
   });
 
-  const usedIngredientsCount = useMemo(
-    () =>
+  const ingredientsCount = useMemo(
+    () => constructorIngedientsList ?
       constructorIngedientsList.reduce(
         (sum, val) => sum + (val._id === elem._id ? 1 : 0),
         0
-      ),
+      ) : 0,
     [constructorIngedientsList, elem]
   );
 
@@ -175,7 +172,6 @@ const IngredientView = ({ elem, alt, openModal }) => {
         className={styles.ingredient__Card}
         onClick={() => {
           dispacth(setIngredientDetails(elem));
-          openModal();
         }}
       >
         <img src={image} alt={alt} className={styles.ingredient__Picture} />
@@ -196,7 +192,7 @@ const IngredientView = ({ elem, alt, openModal }) => {
         >
           {name}
         </div>
-        <Counter num={usedIngredientsCount} />
+        <Counter num={ingredientsCount} />
       </div>
     </>
   );
@@ -218,14 +214,12 @@ IngredientGroup.propTypes = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
-  openModal: PropTypes.func.isRequired,
   observer: PropTypes.object,
 };
 
 IngredientView.propTypes = {
   elem: ingredientType.isRequired,
   alt: PropTypes.string,
-  openModal: PropTypes.func.isRequired,
 };
 
 Counter.propTypes = {

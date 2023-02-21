@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.css";
 import {
@@ -8,7 +8,6 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../Modal/Modal";
-import useModalController from "../../hooks/ModalController";
 import OrderDetails from "../Modal/OrderDetails";
 import { sendOrderData } from "../../utils/api";
 import { dragItemTypes } from "../../utils/itemTypes";
@@ -17,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setBun,
   setOrderDetails,
+  cleanOrderDetails,
   addConstrucorIngredient,
   removeConstrucorIngredient,
   moveConstructorIngredient,
@@ -93,7 +93,7 @@ const IngredientList = () => {
 
   return (
     <>
-      {constructorIngedientsList.map((listElem, index) => {
+      {constructorIngedientsList?.map((listElem, index) => {
         const constructorId = listElem.constructorId;
         const currentIngredient = ingredientData?.find(
           (ingredientElem) => ingredientElem._id === listElem._id
@@ -192,49 +192,52 @@ const Ingredient = ({ constructorId, ingredient, index }) => {
 };
 
 const OrderBtn = () => {
-  const getOrderSum = (ingredientData, ingedientsList, selectedBunElem) => {
-    const sum =
-      ingedientsList.reduce((sumVal, listElem) => {
-        const currentIngredient = ingredientData?.find(
-          (ingredientElem) => ingredientElem._id === listElem._id
-        );
-        return sumVal + (currentIngredient ? currentIngredient.price : 0);
-      }, 0) +
-      (selectedBunElem ? selectedBunElem.price : 0) * 2;
-
-    return sum;
-  };
-
-  const { ingredientData, constructorIngedientsList, selectedBunId } =
-    useSelector((state) => ({
-      ingredientData: state.burger.burgerIngredients,
-      constructorIngedientsList: state.burger.burgerConstructor,
-      selectedBunId: state.burger.selectedBunId,
-    }));
+  const {
+    ingredientData,
+    constructorIngedientsList,
+    selectedBunId,
+    isModalOpen,
+  } = useSelector((state) => ({
+    ingredientData: state.burger.burgerIngredients,
+    constructorIngedientsList: state.burger.burgerConstructor,
+    selectedBunId: state.burger.selectedBunId,
+    isModalOpen: Boolean(state.burger.orderDetails),
+  }));
 
   const selectedBunElem = getBunElement(ingredientData, selectedBunId);
 
-  const modalControl = useModalController();
-
-  const оrderSum = getOrderSum(
-    ingredientData,
-    constructorIngedientsList,
-    selectedBunElem
+  const оrderSum = useMemo(
+    () =>
+      (constructorIngedientsList
+        ? constructorIngedientsList.reduce((sumVal, listElem) => {
+            const currentIngredient = ingredientData?.find(
+              (ingredientElem) => ingredientElem._id === listElem._id
+            );
+            return sumVal + (currentIngredient ? currentIngredient.price : 0);
+          }, 0)
+        : 0) +
+      (selectedBunElem ? selectedBunElem.price : 0) * 2,
+    [selectedBunElem, constructorIngedientsList, ingredientData]
   );
 
   const dispatch = useDispatch();
 
   const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
-    sendOrderData([selectedBunId, ...constructorIngedientsList, selectedBunId])
+    sendOrderData([
+      selectedBunId,
+      ...constructorIngedientsList.map((val) => val._id),
+      selectedBunId,
+    ])
   );
 
   useEffect(() => {
-    dispatch(
-      setOrderDetails({
-        orderNumber: data?.order?.number,
-        hasError: Boolean(isLoaded) && Boolean(hasError),
-      })
-    );
+    data &&
+      dispatch(
+        setOrderDetails({
+          orderNumber: data?.order?.number,
+          hasError: Boolean(isLoaded) && Boolean(hasError),
+        })
+      );
   }, [data, isLoaded, hasError]);
 
   return (
@@ -254,23 +257,17 @@ const OrderBtn = () => {
           type="primary"
           size="medium"
           onClick={() => {
-            dispatch(
-              setOrderDetails({
-                constructorIngedientsList,
-                selectedBunId,
-                оrderSum,
-              })
-            );
-            executeApiRequest();
-            modalControl.openModal();
+            constructorIngedientsList && selectedBunId && executeApiRequest();
           }}
         >
           Оформить заказ
         </Button>
       </div>
       <Modal
-        isOpen={modalControl.isModalOpen}
-        closeModal={modalControl.closeModal}
+        isOpen={isModalOpen}
+        closeModal={() => {
+          dispatch(cleanOrderDetails());
+        }}
       >
         <OrderDetails />
       </Modal>

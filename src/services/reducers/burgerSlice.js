@@ -3,10 +3,10 @@ import { initialConstructorIngredientData } from "../../utils/data";
 
 const initialState = {
   burgerIngredients: null,
+  burgerConstructor: null,
+  selectedBunId: null,
   // burgerConstructor: initialConstructorIngredientData.ingredients,
   // selectedBunId: initialConstructorIngredientData.selectedBunId,
-  burgerConstructor: initialConstructorIngredientData.ingredients,
-  selectedBunId: initialConstructorIngredientData.selectedBunId,
   ingredientDetails: null,
   orderDetails: null,
 };
@@ -22,8 +22,8 @@ const burgerSlice = createSlice({
       state.selectedBunId = action.payload;
     },
     addConstrucorIngredient(state, action) {
-      state.burgerConstructor = [
-        ...state.burgerConstructor,
+       state.burgerConstructor = [
+        ...(state.burgerConstructor? (state.burgerConstructor): [] ),
         {
           constructorId: action.payload.constructorId,
           _id: action.payload.ingredientId,
@@ -70,4 +70,5 @@ export const {
   setIngredientDetails,
   cleanIngredientDetails,
   setOrderDetails,
+  cleanOrderDetails
 } = burgerSlice.actions;
