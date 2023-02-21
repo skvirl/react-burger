@@ -95,7 +95,7 @@ const IngredientList = () => {
     <>
       {constructorIngedientsList.map((listElem, index) => {
         const constructorId = listElem.constructorId;
-        const currentIngredient = ingredientData.find(
+        const currentIngredient = ingredientData?.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
         if (!currentIngredient)
@@ -195,7 +195,7 @@ const OrderBtn = () => {
   const getOrderSum = (ingredientData, ingedientsList, selectedBunElem) => {
     const sum =
       ingedientsList.reduce((sumVal, listElem) => {
-        const currentIngredient = ingredientData.find(
+        const currentIngredient = ingredientData?.find(
           (ingredientElem) => ingredientElem._id === listElem._id
         );
         return sumVal + (currentIngredient ? currentIngredient.price : 0);
@@ -279,7 +279,7 @@ const OrderBtn = () => {
 };
 
 const getBunElement = (ingredientData, currentBunId) =>
-  ingredientData.find((val) => val._id === currentBunId);
+  ingredientData?.find((val) => val._id === currentBunId);
 
 BunElem.propTypes = {
   type: PropTypes.string.isRequired,

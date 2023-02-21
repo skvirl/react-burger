@@ -2,11 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { initialConstructorIngredientData } from "../../utils/data";
 
 const initialState = {
-  burgerIngredients: [],
+  burgerIngredients: null,
+  // burgerConstructor: initialConstructorIngredientData.ingredients,
+  // selectedBunId: initialConstructorIngredientData.selectedBunId,
   burgerConstructor: initialConstructorIngredientData.ingredients,
   selectedBunId: initialConstructorIngredientData.selectedBunId,
-  ingredientDetails: {},
-  orderDetails: {},
+  ingredientDetails: null,
+  orderDetails: null,
 };
 
 const burgerSlice = createSlice({
@@ -29,15 +31,11 @@ const burgerSlice = createSlice({
       ];
     },
     moveConstructorIngredient(state, action) {
-      const {dragIndex, hoverIndex}= action.payload;
- 
+      const { dragIndex, hoverIndex } = action.payload;
+
       const movingElement = state.burgerConstructor[dragIndex];
       state.burgerConstructor.splice(dragIndex, 1);
-      state.burgerConstructor.splice(
-        hoverIndex,
-        0,
-        movingElement
-      );
+      state.burgerConstructor.splice(hoverIndex, 0, movingElement);
     },
     removeConstrucorIngredient(state, action) {
       state.burgerConstructor = state.burgerConstructor.filter(
@@ -54,6 +52,9 @@ const burgerSlice = createSlice({
 
     setOrderDetails(state, action) {
       state.orderDetails = { ...state.orderDetails, ...action.payload };
+    },
+    cleanOrderDetails(state, action) {
+      state.orderDetails = null;
     },
   },
 });

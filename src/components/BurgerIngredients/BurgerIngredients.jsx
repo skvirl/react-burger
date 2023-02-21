@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerIngredients.module.css";
 import {
@@ -18,9 +18,10 @@ import {
 import { useDispatch } from "react-redux";
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { ingredientTabs } from "../../utils/data";
+import { ingredientTypes } from "../../utils/itemTypes";
 
 const BurgerIngredients = () => {
-  const [currentTab, setCurrentTab] = useState("bun");
+  const [currentTab, setCurrentTab] = useState(ingredientTypes.BUN);
   const [observer, setObserver] = useState(null);
   const modalControl = useModalController();
   const dispacth = useDispatch();
@@ -44,7 +45,7 @@ const BurgerIngredients = () => {
             ? target?.dataset?.type
             : nextSib?.dataset?.type;
 
-            setCurrentTab(result);
+          setCurrentTab(result);
         },
         {
           root: ingredientViewport.current,
@@ -52,7 +53,6 @@ const BurgerIngredients = () => {
         }
       )
     );
-    console.log(typeof observer);
   }, [ingredientViewport]);
 
   return (
@@ -117,6 +117,14 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
       ingredientGroupElement && observer.unobserve(ingredientGroupElement);
   }, [observer, groupRef]);
 
+  const filteredIngedientData = useMemo(
+    () =>
+      ingredientData?.filter((val) => {
+        return val.type === type && val._id !== selectedBunId;
+      }),
+    [ingredientData]
+  );
+
   return (
     <div className={styles.ingredientGroup} ref={groupRef} data-type={type}>
       <div
@@ -125,18 +133,14 @@ const IngredientGroup = ({ name, type, alt, openModal, observer }) => {
         {name}
       </div>
       <div className={styles.ingredientGroup__cards}>
-        {ingredientData
-          .filter((val) => {
-            return val.type === type && val._id !== selectedBunId;
-          })
-          .map((val) => (
-            <IngredientView
-              elem={val}
-              alt={alt}
-              openModal={openModal}
-              key={val._id}
-            />
-          ))}
+        {filteredIngedientData?.map((val) => (
+          <IngredientView
+            elem={val}
+            alt={alt}
+            openModal={openModal}
+            key={val._id}
+          />
+        ))}
       </div>
     </div>
   );
@@ -154,11 +158,14 @@ const IngredientView = ({ elem, alt, openModal }) => {
     item: { _id, itsBun: elem.type === "bun" },
   });
 
-  const usedIngredientsCount = () =>
-    constructorIngedientsList.reduce(
-      (sum, val) => sum + (val._id === elem._id ? 1 : 0),
-      0
-    );
+  const usedIngredientsCount = useMemo(
+    () =>
+      constructorIngedientsList.reduce(
+        (sum, val) => sum + (val._id === elem._id ? 1 : 0),
+        0
+      ),
+    [constructorIngedientsList, elem]
+  );
 
   return (
     <>
@@ -189,7 +196,7 @@ const IngredientView = ({ elem, alt, openModal }) => {
         >
           {name}
         </div>
-        <Counter num={usedIngredientsCount()} />
+        <Counter num={usedIngredientsCount} />
       </div>
     </>
   );
@@ -212,7 +219,7 @@ IngredientGroup.propTypes = {
   type: PropTypes.string.isRequired,
   alt: PropTypes.string,
   openModal: PropTypes.func.isRequired,
-  observer: PropTypes.object 
+  observer: PropTypes.object,
 };
 
 IngredientView.propTypes = {
