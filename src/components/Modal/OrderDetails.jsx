@@ -1,18 +1,29 @@
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux"; 
+import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
-   const {orderNumber,hasError} = useSelector(state => state.burger.orderDetails);
-  
+  const { orderNumber, hasError } = useSelector(
+    (state) => state.burger.orderDetails
+  );
+
   return (
     <>
-    
-      {  hasError ? (
+      {hasError ? (
         <div className={styles.orderDetails}>
-          <div className={`text text_type_main-medium ` + styles.text1}>
+          <div
+            className={`text text_type_main-medium ` + styles.text_errorHeader}
+          >
             Ничего не вышло. Попробуйте повторить заказ чуть позже.
           </div>
+          <div
+            className={
+              `text text_type_main-small text_color_inactive ` + styles.text3
+            }
+          >
+            {hasError}
+          </div>
+
           <div className={styles.image}></div>
         </div>
       ) : (

@@ -8,24 +8,20 @@ import { getIngredientsData } from "../../utils/api";
 import useFetch from "../../hooks/useFetch";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch } from "react-redux";
-import { setBurgerIngredients } from "../../services/reducers/burgerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBurgerIngredients } from "../../services/reducers/burgerSlice";
 
 function App() {
-  const { isLoaded, hasError, data, executeApiRequest } =
-    useFetch(getIngredientsData);
-
   const dispacth = useDispatch();
+  const { isLoaded, hasError } = useSelector((state) => ({
+    isLoaded: Boolean(state.burger.burgerIngredients),
+    hasError: state.burger.burgerIngredientsLoadingError,
+  }));
 
   React.useEffect(() => {
-    if (data) {
-      dispacth(setBurgerIngredients(data.data));
-    } else {
-      executeApiRequest();
-    }
-  }, [data]);
+    dispacth(fetchBurgerIngredients());
+  }, []);
 
- 
   return (
     <>
       {isLoaded && (

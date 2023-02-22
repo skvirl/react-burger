@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./BurgerConstructor.module.css";
 import {
@@ -9,13 +9,11 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import Modal from "../Modal/Modal";
 import OrderDetails from "../Modal/OrderDetails";
-import { sendOrderData } from "../../utils/api";
 import { dragItemTypes } from "../../utils/itemTypes";
-import useFetch from "../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setBun,
-  setOrderDetails,
+  fetchOrder,
   cleanOrderDetails,
   addConstrucorIngredient,
   removeConstrucorIngredient,
@@ -204,6 +202,8 @@ const OrderBtn = () => {
     isModalOpen: Boolean(state.burger.orderDetails),
   }));
 
+  const dispatch = useDispatch();
+
   const selectedBunElem = getBunElement(ingredientData, selectedBunId);
 
   const оrderSum = useMemo(
@@ -219,26 +219,6 @@ const OrderBtn = () => {
       (selectedBunElem ? selectedBunElem.price : 0) * 2,
     [selectedBunElem, constructorIngedientsList, ingredientData]
   );
-
-  const dispatch = useDispatch();
-
-  const { isLoaded, hasError, data, executeApiRequest } = useFetch(() =>
-    sendOrderData([
-      selectedBunId,
-      ...constructorIngedientsList.map((val) => val._id),
-      selectedBunId,
-    ])
-  );
-
-  useEffect(() => {
-    data &&
-      dispatch(
-        setOrderDetails({
-          orderNumber: data?.order?.number,
-          hasError: Boolean(isLoaded) && Boolean(hasError),
-        })
-      );
-  }, [data, isLoaded, hasError]);
 
   return (
     <>
@@ -257,7 +237,15 @@ const OrderBtn = () => {
           type="primary"
           size="medium"
           onClick={() => {
-            constructorIngedientsList && selectedBunId && executeApiRequest();
+            constructorIngedientsList &&
+              selectedBunId &&
+              dispatch(
+                fetchOrder([
+                  selectedBunId,
+                  ...constructorIngedientsList.map((val) => val._id),
+                  selectedBunId,
+                ])
+              );
           }}
         >
           Оформить заказ
