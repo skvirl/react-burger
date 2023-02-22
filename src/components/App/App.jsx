@@ -4,23 +4,21 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { getIngredientsData } from "../../utils/api";
-import useFetch from "../../hooks/useFetch";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBurgerIngredients } from "../../services/reducers/burgerSlice";
+import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
 
 function App() {
   const dispacth = useDispatch();
   const { isLoaded, hasError } = useSelector((state) => ({
-    isLoaded: Boolean(state.burger.burgerIngredients),
-    hasError: state.burger.burgerIngredientsLoadingError,
+    isLoaded: Boolean(state.burgerIngredients.burgerIngredients),
+    hasError: state.burgerIngredients.burgerIngredientsLoadingError,
   }));
 
   React.useEffect(() => {
     dispacth(fetchBurgerIngredients());
-  }, []);
+  }, [dispacth]);
 
   return (
     <>

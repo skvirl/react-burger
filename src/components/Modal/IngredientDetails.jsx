@@ -2,12 +2,11 @@
 import PropTypes from "prop-types";
 import styles from "./IngredientDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientType } from "../../utils/types";
 import { useSelector } from "react-redux";
 
 const IngredientDetails = () => {
  
-    const { image_large, name, calories, proteins ,fat ,carbohydrates } = useSelector(state => state.burger.ingredientDetails)
+    const { image_large, name, calories, proteins ,fat ,carbohydrates } = useSelector(state => state.ingredientDetails.ingredientDetails)
 
     return (
       <div className={styles.ingredientDetails}>

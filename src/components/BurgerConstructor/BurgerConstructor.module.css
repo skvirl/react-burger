@@ -16,22 +16,7 @@
   min-height: 80px;
 }
 
-.elementBox {
-  display: flex;
-  justify-content: end;
-  align-items: center;
 
-  width: 568px;
-  height: 80px;
-}
-.elementBox_dragable {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  width: 568px;
-  height: 80px;
-}
 
 /* Works on Firefox */
 .inredientList {
@@ -52,29 +37,4 @@
   background-color: #8585ad;
 }
 
-.orderBtn {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  margin-top: 40px;
-  gap: 30px;
-  padding-right: 40px;
-}
 
-.orderBtn__ico {
-  display: inline-block;
-  margin-left: 10px;
-}
-.orderBtn__total {
-  display: inline-block;
-}
-
- 
-.elementBox_dragable{
-  user-select: none;
-
-}
-
-.elementBox_dragIcon{
-   cursor:   grab;
-}

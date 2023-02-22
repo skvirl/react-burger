@@ -1,0 +1,17 @@
+.orderBtn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 40px;
+    gap: 30px;
+    padding-right: 40px;
+  }
+  
+  .orderBtn__ico {
+    display: inline-block;
+    margin-left: 10px;
+  }
+  .orderBtn__total {
+    display: inline-block;
+  }
+  

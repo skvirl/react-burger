@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
   const { orderNumber, hasError } = useSelector(
-    (state) => state.burger.orderDetails
-  );
+    (state) => ({orderNumber:state.orderDetails.orderNumber,
+      hasError: state.orderDetails.orderDetailsLoadingError })
+   );
 
   return (
     <>
