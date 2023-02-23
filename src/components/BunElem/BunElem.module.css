@@ -1,0 +1,8 @@
+.elementBox {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  
+    width: 568px;
+    height: 80px;
+  }

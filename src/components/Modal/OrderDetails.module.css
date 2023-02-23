@@ -12,6 +12,11 @@
 .text1 {
   margin-top: 32px;
 }
+.text_errorHeader {
+  margin-top: 100px;
+  margin-left: 32px;
+  margin-right: 32px;
+}
 .text2 {
   margin-top: 60px;
   font-size: 16px;

@@ -4,32 +4,26 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { initialConstructorIngredientData} from "../../utils/data";
-import { getIngredientsData } from "../../utils/api";
-import useFetch from "../../hooks/useFetch";
-import {
-  ConstructorIngredientsContext,
-  constructorIngredientsReducer, 
-  IngredientsDataContext,
-} from "../../utils/context";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
 
 function App() {
- 
-  const {isLoaded,hasError,data,executeApiRequest} = useFetch(getIngredientsData);
-   
-  React.useEffect(() => {
-    executeApiRequest();
-  }, []);
- 
+  const dispacth = useDispatch();
+  const { isLoaded, hasError } = useSelector((state) => ({
+    isLoaded: Boolean(state.burgerIngredients.burgerIngredients),
+    hasError: state.burgerIngredients.burgerIngredientsLoadingError,
+  }));
 
-  const [constructorIngredients, dispatchСonstructor] = React.useReducer(constructorIngredientsReducer, initialConstructorIngredientData);
-     
+  React.useEffect(() => {
+    dispacth(fetchBurgerIngredients());
+  }, [dispacth]);
+
   return (
     <>
       {isLoaded && (
         <div className={styles.app}>
- 
-
           <AppHeader />
           <main className={styles.app__main}>
             {hasError ? (
@@ -42,18 +36,16 @@ function App() {
                 всё обязательно получится!
               </div>
             ) : (
-              <div className={styles.container}>
-                <ConstructorIngredientsContext.Provider value={{constructorIngredients, dispatchСonstructor}}>
-                  <IngredientsDataContext.Provider value={data.data}>
-                    <section className={styles.mainSection}>
-                      <BurgerIngredients  />
-                    </section>
-                    <section className={styles.mainSection}>
-                      <BurgerConstructor  />
-                    </section>
-                  </IngredientsDataContext.Provider>
-                </ConstructorIngredientsContext.Provider>
-              </div>
+              <DndProvider backend={HTML5Backend}>
+                <div className={styles.container}>
+                  <section className={styles.mainSection}>
+                    <BurgerIngredients />
+                  </section>
+                  <section className={styles.mainSection}>
+                    <BurgerConstructor />
+                  </section>
+                </div>
+              </DndProvider>
             )}
           </main>
         </div>

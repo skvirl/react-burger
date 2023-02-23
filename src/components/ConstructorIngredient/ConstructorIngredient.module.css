@@ -1,0 +1,19 @@
+.elementBox_dragIcon {
+    cursor: grab;
+  }
+  
+  .elementBox_dragable {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    width: 568px;
+    height: 80px;
+    user-select: none;
+  }
+  
+  .elementBox_dragable__hidden {
+    visibility: hidden;
+  }
+  
+  

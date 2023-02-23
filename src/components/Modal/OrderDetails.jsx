@@ -1,17 +1,30 @@
-import React from "react";
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
- 
-const OrderDetails = ({number,hasError}) => {
+import { useSelector } from "react-redux";
+
+const OrderDetails = () => {
+  const { orderNumber, hasError } = useSelector(
+    (state) => ({orderNumber:state.orderDetails.orderNumber,
+      hasError: state.orderDetails.orderDetailsLoadingError })
+   );
 
   return (
     <>
-    
-      {  hasError ? (
+      {hasError ? (
         <div className={styles.orderDetails}>
-          <div className={`text text_type_main-medium ` + styles.text1}>
+          <div
+            className={`text text_type_main-medium ` + styles.text_errorHeader}
+          >
             Ничего не вышло. Попробуйте повторить заказ чуть позже.
           </div>
+          <div
+            className={
+              `text text_type_main-small text_color_inactive ` + styles.text3
+            }
+          >
+            {hasError}
+          </div>
+
           <div className={styles.image}></div>
         </div>
       ) : (
@@ -21,7 +34,7 @@ const OrderDetails = ({number,hasError}) => {
               `text text_type_digits-large ` + styles.orderDetails__orderNumber
             }
           >
-            {number}
+            {orderNumber}
           </div>
           <div className={`text text_type_main-medium ` + styles.text1}>
             идентификатор заказа

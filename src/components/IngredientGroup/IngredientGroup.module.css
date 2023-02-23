@@ -1,0 +1,8 @@
+.ingredientGroup__cards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 24px;
+}

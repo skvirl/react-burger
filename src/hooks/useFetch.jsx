@@ -2,7 +2,7 @@ import React from "react";
  
 const useFetch = (requestFn) => {
   const [hasError, setHasError] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(null);
   const [data, setData] = React.useState();
 
   const executeApiRequest = ()=>{

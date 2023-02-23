@@ -1,7 +1,7 @@
 import { v4} from 'uuid';
 
 
-export const currentBunId = "60d3b41abdacab0026a733c6";
+export const selectedBunId = "60d3b41abdacab0026a733c6";
 
 export const constructorIngedientsList = [
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733c9"},
@@ -11,8 +11,9 @@ export const constructorIngedientsList = [
   {constructorId:v4() ,_id:"60d3b41abdacab0026a733d0"},
 ];
 
-export const initialConstructorIngredientData = {bunId:currentBunId, ingredients:constructorIngedientsList }
-
+export const initialConstructorIngredientData = {selectedBunId:selectedBunId, ingredients:constructorIngedientsList }
+// export const initialConstructorIngredientData = {selectedBunId:null, ingredients:[] }
+ 
 export const cachedData = [
   {
     _id: "60d3b41abdacab0026a733c6",
@@ -228,3 +229,8 @@ export const cachedData = [
   },
 ];
 
+export const ingredientTabs = [
+  {value:'bun', name: 'Булки',    alt:'Булка'},
+  {value:'sauce', name: 'Соусы',  alt:'Соус'},
+  {value:'main', name: 'Начинки', alt:'Начинка'}
+];
