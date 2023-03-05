@@ -1,57 +1,38 @@
-import React from "react";
-import "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./App.module.css";
-import AppHeader from "../AppHeader/AppHeader";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
+import {
+  BurgerConstructorPage,
+  NotFound404Page,
+  LoginPage,
+  ProfilePage,
+  IngredientsPage,
+  ForgotPasswordPage,
+  RegisterPage,
+  ResetPasswordPage,
+  Layout,
+} from "./pages";
 
-function App() {
-  const dispacth = useDispatch();
-  const { isLoaded, hasError } = useSelector((state) => ({
-    isLoaded: Boolean(state.burgerIngredients.burgerIngredients),
-    hasError: state.burgerIngredients.burgerIngredientsLoadingError,
-  }));
-
-  React.useEffect(() => {
-    dispacth(fetchBurgerIngredients());
-  }, [dispacth]);
+export default function App() {
+  const router = (
+    <Route path="/" element={<Layout />} errorElement={<NotFound404Page />}>
+      <Route index element={<BurgerConstructorPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/ingredients/:id" element={<IngredientsPage />} />
+      <Route path="*" element={<NotFound404Page />} />
+     </Route>
+  );
 
   return (
-    <>
-      {isLoaded && (
-        <div className={styles.app}>
-          <AppHeader />
-          <main className={styles.app__main}>
-            {hasError ? (
-              <div
-                className={
-                  "text text_type_main-large " + styles.dataLoadingError
-                }
-              >
-                Ошибка получения данных. <br /> Не паникуйте. В следующий раз
-                всё обязательно получится!
-              </div>
-            ) : (
-              <DndProvider backend={HTML5Backend}>
-                <div className={styles.container}>
-                  <section className={styles.mainSection}>
-                    <BurgerIngredients />
-                  </section>
-                  <section className={styles.mainSection}>
-                    <BurgerConstructor />
-                  </section>
-                </div>
-              </DndProvider>
-            )}
-          </main>
-        </div>
-      )}
-    </>
+    <RouterProvider
+      router={createBrowserRouter(createRoutesFromElements(router))}
+    />
   );
 }
-
-export default App;
