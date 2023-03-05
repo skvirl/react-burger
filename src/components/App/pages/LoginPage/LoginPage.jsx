@@ -1,10 +1,10 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./LoginPage.module.css";
- import { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   PasswordInput,
-  Input,
+  EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -14,10 +14,10 @@ const LoginPage = () => {
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
-   
+
   const navigate = useNavigate();
- 
-  let login = useCallback(
+
+  let submit = useCallback(
     (e) => {
       e.preventDefault();
       console.log(form);
@@ -34,7 +34,7 @@ const LoginPage = () => {
       <form className={styles.form}>
         <p className="text text_type_main-default">Вход</p>
 
-        <Input
+        <EmailInput
           type={"text"}
           placeholder={"E-mail"}
           onChange={onChange}
@@ -47,25 +47,33 @@ const LoginPage = () => {
           name="password"
           onChange={onChange}
         />
-        <Button htmlType="button" type="primary" size="medium" onClick={login}>
-        Войти
+        <Button htmlType="button" type="primary" size="medium" onClick={submit}>
+          Войти
         </Button>
-
       </form>
 
       <div className="pt-10 text text_type_main-small text_color_inactive">
-          Вы новый пользователь?
-          <Button htmlType="button" type="secondary" size="small" onClick={e=>navigate('/register')} >
-            Зарегистрироваться
-          </Button>
-        </div>
-        <div className="  text text_type_main-small text_color_inactive">
-          Забыли пароль?
-          <Button htmlType="button" type="secondary" size="small" onClick={e=>navigate('/forgot-password')} >
-            Восстановить пароль
-          </Button>
-        </div>
-
+        Вы новый пользователь?
+        <Button
+          htmlType="button"
+          type="secondary"
+          size="small"
+          onClick={(e) => navigate("/register")}
+        >
+          Зарегистрироваться
+        </Button>
+      </div>
+      <div className="  text text_type_main-small text_color_inactive">
+        Забыли пароль?
+        <Button
+          htmlType="button"
+          type="secondary"
+          size="small"
+          onClick={(e) => navigate("/forgot-password")}
+        >
+          Восстановить пароль
+        </Button>
+      </div>
     </div>
   );
 };

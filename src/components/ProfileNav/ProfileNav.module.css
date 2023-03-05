@@ -1,0 +1,9 @@
+.button{
+    background: none;
+    border: none;
+    color: aqua;
+  }
+
+.button[active]{
+    color: blueviolet;
+}

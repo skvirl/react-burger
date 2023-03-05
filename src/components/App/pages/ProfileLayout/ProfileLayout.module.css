@@ -1,0 +1,23 @@
+.container {
+  padding-top: 120px;
+  width: 100%;
+  max-width: 1240px;
+
+  margin-left: 2%;
+  margin-right: 2%;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+ 
+}
+
+
+.main {
+  height: calc(100% - 128px);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+

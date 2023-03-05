@@ -7,6 +7,7 @@ import ForgotPasswordPage from "./ForgotPasswordPage/ForgotPasswordPage";
 import RegisterPage from "./RegisterPage/RegisterPage";
 import ResetPasswordPage from "./ResetPasswordPage/ResetPasswordPage";
 import Layout from "./Layout/Layout";
+import ProfileLayout from "./ProfileLayout/ProfileLayout";
 
 export {
   BurgerConstructorPage,
@@ -18,4 +19,5 @@ export {
   RegisterPage,
   ResetPasswordPage,
   Layout,
+  ProfileLayout
 };

@@ -6,8 +6,12 @@ import {
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-
+import { useNavigate } from "react-router";
 const AppHeader = () => {
+
+  const navigate = useNavigate(); 
+
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -31,6 +35,7 @@ const AppHeader = () => {
             type="secondary"
             ico={<ProfileIcon type="secondary" />}
             title="Личный кабинет"
+            onClick = {()=>navigate('/profile')}
           />
         </nav>
       </div>
@@ -38,9 +43,9 @@ const AppHeader = () => {
   );
 };
 
-const HeaderButton = ({ type, ico, title }) => {
+const HeaderButton = ({ type, ico, title, onClick }) => {
   return (
-    <div className={styles.button}>
+    <button className={styles.button} onClick={onClick}>
       <div className={styles.button__logo}>{ico}</div>
       <span
         className={
@@ -51,7 +56,7 @@ const HeaderButton = ({ type, ico, title }) => {
       >
         {title}
       </span>
-    </div>
+    </button>
   );
 };
 
