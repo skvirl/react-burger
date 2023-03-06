@@ -9,12 +9,13 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-between;
+  justify-content: initial;
  
 }
 
 
 .main {
+   
   height: calc(100% - 128px);
   flex-shrink: 0;
   display: flex;

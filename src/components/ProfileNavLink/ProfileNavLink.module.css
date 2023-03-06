@@ -1,16 +1,11 @@
 .nav__link {
-  /* Frame 3 */
-
-  width: 320px;
-  height: 64px;
-
   background: none;
-  border: 2px dashed #4c4cff;
-  text-align: left;
+  display: flex;
+  justify-content: left;
   align-items: center;
-  /* flex: none; */
-
-  /* text/primary-light (standart text) */
+  flex-basis: 64px;
+  flex-shrink: 0;
+  text-decoration:none;
   color: #8585ad;
 }
 

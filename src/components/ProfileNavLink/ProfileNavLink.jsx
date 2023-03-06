@@ -5,9 +5,10 @@ const ProfileNavLink = ({ to, children }) => {
   return (
     <Link
       to={to}
-      className={`${Style.nav__link} ${
-        useMatch({ path: to }) && Style.nav__link_active
-      }`}
+      className={`text
+        text_type_main-default
+        ${Style.nav__link}
+        ${useMatch({ path: to }) && Style.nav__link_active}`}
     >
       {children}
     </Link>

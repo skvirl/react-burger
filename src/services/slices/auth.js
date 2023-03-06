@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { registerUrl,loginUrl,logoutUrl,tokenUrl } from "../../utils/api";
+import { registerUrl, loginUrl, logoutUrl, tokenUrl } from "../../utils/api";
 
 const initialState = {
   errorMessage: null,
@@ -8,15 +8,14 @@ const initialState = {
   refreshToken: null,
   user: {
     email: null,
-    name: null
-  }
-} ;
+    name: null,
+  },
+};
 
-const cloneObject = sourceObj => JSON.parse(JSON.stringify(initialState))
- 
-const fetchAuth = (actionType,url) => createAsyncThunk(
-  actionType,
-  async function (body, { rejectWithValue }) {
+const cloneObject = (sourceObj) => JSON.parse(JSON.stringify(initialState));
+
+const fetchAuth = (actionType, url) =>
+  createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -25,7 +24,7 @@ const fetchAuth = (actionType,url) => createAsyncThunk(
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-       if (!res.ok) {
+      if (!res.ok) {
         throw new Error(`Server Error: ${res.status}`);
       }
 
@@ -33,35 +32,41 @@ const fetchAuth = (actionType,url) => createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
-);
- 
-export const fetchRegister = fetchAuth("burger/fetchRegister",registerUrl);
-export const fetchLogin = fetchAuth("burger/login",loginUrl);
-export const fetchLogout = fetchAuth("burger/logout",logoutUrl);
-export const fetchToken = fetchAuth("burger/token",tokenUrl);
+  });
 
+export const fetchRegister = fetchAuth("burger/fetchRegister", registerUrl);
+export const fetchLogin = fetchAuth("burger/login", loginUrl);
+export const fetchLogout = fetchAuth("burger/logout", logoutUrl);
+export const fetchToken = fetchAuth("burger/token", tokenUrl);
 
 const pendingCB = (state, action) => {
-  console.log('auth pending');
-
-  state = cloneObject(initialState);
+  state.user = {
+    email: null,
+    name: null,
+  };
+  state.accessToken = null ;
+  state.refreshToken =  null;
+  state.success =  null ;
   state.errorMessage = null;
-}
+};
+
 const fulfilledCB = (state, action) => {
-  console.log('auth fulfilled');
-
-  state = {...state, ...action.payload}
+  state.user = { ...state.user, ...action.payload.user };
+  state.accessToken = action.payload.accessToken ;
+  state.refreshToken =  action.payload.refreshToken ;
+  state.success =  action.payload.success ;
   state.errorMessage = null;
-}
+};
 const rejectedCB = (state, action) => {
-  console.log('auth rejected');
-  console.log(action.payload);
-
-  state = cloneObject(initialState);
-  state.errorMessage =  action.payload;
- }
-
+  state.user = {
+    email: null,
+    name: null,
+  };
+  state.accessToken = null ;
+  state.refreshToken =  null;
+  state.success =  null ;
+  state.errorMessage = action.payload;
+};
 
 const authSlice = createSlice({
   name: "auth",
@@ -69,15 +74,15 @@ const authSlice = createSlice({
   reducers: {
     cleanAuthData(state, action) {
       state = cloneObject(initialState);
-     },
+    },
   },
 
   extraReducers: (builder) => {
-    [fetchRegister,fetchLogin,fetchLogout,fetchToken].forEach(thunk=>{
+    [fetchRegister, fetchLogin, fetchLogout, fetchToken].forEach((thunk) => {
       builder
-      .addCase(thunk.pending, pendingCB )
-      .addCase(thunk.fulfilled, fulfilledCB)
-      .addCase(thunk.rejected, rejectedCB)
+        .addCase(thunk.pending, pendingCB)
+        .addCase(thunk.fulfilled, fulfilledCB)
+        .addCase(thunk.rejected, rejectedCB);
     });
     // builder
     //   .addCase(fetchRegister.pending, pendingCB )
@@ -97,6 +102,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
-export const {
-  cleanAuthData,
-} = authSlice.actions;
+export const { cleanAuthData } = authSlice.actions;

@@ -8,6 +8,8 @@ import RegisterPage from "./RegisterPage/RegisterPage";
 import ResetPasswordPage from "./ResetPasswordPage/ResetPasswordPage";
 import Layout from "./Layout/Layout";
 import ProfileLayout from "./ProfileLayout/ProfileLayout";
+import Logout from "./Logout/Logout";
+import ProfileOrders from "./ProfileOrders/ProfileOrders";
 
 export {
   BurgerConstructorPage,
@@ -19,5 +21,7 @@ export {
   RegisterPage,
   ResetPasswordPage,
   Layout,
-  ProfileLayout
+  ProfileLayout,
+  Logout,
+  ProfileOrders
 };

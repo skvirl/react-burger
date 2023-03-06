@@ -6,13 +6,10 @@ export const orderApiUrl = new URL("orders", baseUrl);
 export const forgotPasswordUrl = new URL("password-reset", baseUrl);
 export const resetPasswordUrl = new URL("password-reset/reset", baseUrl);
 
-const authUrl = new URL("auth", baseUrl);
-export const registerUrl = new URL("register", authUrl);
-export const loginUrl = new URL("login", authUrl);
-export const logoutUrl = new URL("logout", authUrl);
-export const tokenUrl = new URL("token", authUrl);
-     
-
+export const registerUrl = new URL("auth/register", baseUrl);
+export const loginUrl = new URL("auth/login", baseUrl);
+export const logoutUrl = new URL("auth/logout", baseUrl);
+export const tokenUrl = new URL("auth/token", baseUrl);
 
 
  export const getIngredientsData = async () => {

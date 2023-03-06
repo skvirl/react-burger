@@ -14,7 +14,9 @@ import {
   RegisterPage,
   ResetPasswordPage,
   Layout,
-  ProfileLayout
+  ProfileLayout,
+  Logout,
+  ProfileOrders
 } from "./pages";
 
 export default function App() {
@@ -27,6 +29,8 @@ export default function App() {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/profile" element={<ProfileLayout />}>
         <Route index element={<ProfilePage />} />
+        <Route path="orders" element={<ProfileOrders />} />
+        <Route path="logout" element={<Logout />} />
       </Route>
       <Route path="/ingredients/:id" element={<IngredientsPage />} />
       <Route path="*" element={<NotFound404Page />} />
