@@ -1,0 +1,19 @@
+.nav__link {
+  /* Frame 3 */
+
+  width: 320px;
+  height: 64px;
+
+  background: none;
+  border: 2px dashed #4c4cff;
+  text-align: left;
+  align-items: center;
+  /* flex: none; */
+
+  /* text/primary-light (standart text) */
+  color: #8585ad;
+}
+
+.nav__link_active {
+  color: #f2f2f3;
+}

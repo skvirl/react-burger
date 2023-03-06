@@ -1,9 +1,19 @@
-.button{
-    background: none;
-    border: none;
-    color: aqua;
-  }
+.menu {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 320px;
+  justify-content: space-between;
+}
 
-.button[active]{
-    color: blueviolet;
+.menu__nav {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 64px;
+}
+
+.menu__description {
+  width: 320px;
+  height: 48px;
 }

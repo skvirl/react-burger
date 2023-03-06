@@ -1,24 +1,15 @@
 import Style from "./ProfileNav.module.css";
+import ProfileNavLink from "../ProfileNavLink/ProfileNavLink";
 
-export const ProfileNav = () => {
-  return (
-    <div>
-      <NavButton text="Профиль" isActive />
-      <NavButton text="История"  />
-      <NavButton text="Выход"  />
+export const ProfileNav = () => (
+  <div className={Style.menu}>
+    <div className={Style.menu__nav}>
+      <ProfileNavLink to="/profile">Профиль</ProfileNavLink>
+      <ProfileNavLink to="/orderHistory">История</ProfileNavLink>
+      <ProfileNavLink to="/logout">Выход</ProfileNavLink>
     </div>
-  );
-};
-
-const NavButton = ({ text, onClick, isActive }) => {
-  return (
-    <button
-      className={Style.button}
-      {...(isActive ? { active: "" } : {})}
-      onClick={onClick}
-      pewpew ={isActive}
-    >
-      {text}
-    </button>
-  );
-};
+    <div className={Style.menu__description}>
+      В этом разделе вы можете изменить свои персональные данные
+    </div>
+  </div>
+);
