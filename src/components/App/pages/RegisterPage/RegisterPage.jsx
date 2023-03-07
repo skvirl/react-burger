@@ -1,6 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./RegisterPage.module.css";
-import { useCallback, useState , useEffect} from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRegister } from "../../../../services/slices/auth";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const RegisterPage = () => {
   }));
 
   useEffect(() => {
-    authSuccess && navigate("/login");
+    // authSuccess && navigate("/login");
   }, [authSuccess]);
 
   let submit = useCallback(
