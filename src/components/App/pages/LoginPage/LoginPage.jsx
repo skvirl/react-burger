@@ -1,7 +1,11 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./LoginPage.module.css";
-import { useCallback, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useState,useEffect } from "react";
+import { useLocation,useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLogin } from "../../../../services/slices/auth";
+import { cachedAuthData } from "../../../../utils/data";
+
 import {
   PasswordInput,
   EmailInput,
@@ -9,28 +13,48 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const LoginPage = () => {
-  const [form, setValue] = useState({ email: "", password: "" });
+  const [form, setValue] = useState({ email: cachedAuthData.email, password: cachedAuthData.password });
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
   };
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const fromPage = location?.state?.from?.pathname || "/";
+  
+  const { authSuccess, authErrorMessage } = useSelector((state) => ({
+    authSuccess: state?.auth?.success,
+    authErrorMessage: state?.auth?.errorMessage,
+  }));
 
   let submit = useCallback(
     (e) => {
       e.preventDefault();
-      console.log(form);
-      //   auth.signIn(form);
+      dispatch(
+        fetchLogin({
+          email: form.email,
+          password: form.password,
+        })
+      );
     },
-    [
-      //auth,
-      form,
-    ]
+    [form]
   );
+
+  useEffect(() => {
+    console.log(location);
+    authSuccess && navigate(fromPage, { replace: true });
+  }, [authSuccess]);
+
+
 
   return (
     <div className={styles.container}>
+            {authErrorMessage ? (
+        <div className="text text_type_main-default">{authErrorMessage}</div>
+      ) : (
+        <>
       <form className={styles.form}>
         <p className="text text_type_main-default">Вход</p>
 
@@ -74,6 +98,8 @@ const LoginPage = () => {
           Восстановить пароль
         </Button>
       </div>
+      </>
+      )}
     </div>
   );
 };

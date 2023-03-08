@@ -10,9 +10,11 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { cachedAuthData } from "../../../../utils/data";
 
 const RegisterPage = () => {
-  const [form, setValue] = useState({ name: "", password: "", email: "" });
+  // const [form, setValue] = useState({ name: "", password: "", email: "" });
+  const [form, setValue] = useState(cachedAuthData);
 
   const onChange = (e) => {
     setValue({ ...form, [e.target.name]: e.target.value });
@@ -26,7 +28,7 @@ const RegisterPage = () => {
   }));
 
   useEffect(() => {
-    // authSuccess && navigate("/login");
+     authSuccess && navigate("/");
   }, [authSuccess]);
 
   let submit = useCallback(

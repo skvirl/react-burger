@@ -10,7 +10,7 @@ export const registerUrl = new URL("auth/register", baseUrl);
 export const loginUrl = new URL("auth/login", baseUrl);
 export const logoutUrl = new URL("auth/logout", baseUrl);
 export const tokenUrl = new URL("auth/token", baseUrl);
-
+export const userUrl = new URL("auth/user", baseUrl);
 
  export const getIngredientsData = async () => {
   const res = await fetch(ingredientsApiUrl);

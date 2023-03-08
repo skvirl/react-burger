@@ -62,6 +62,7 @@ const OrderBtn = () => {
             </div>
           </div>
           <Button
+            htmlType="button"
             type="primary"
             size="medium"
             onClick={() => {

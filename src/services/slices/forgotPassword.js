@@ -11,7 +11,6 @@ export const fetchForgotPassword = createAsyncThunk(
 
   async function (body, { rejectWithValue }) {
     try {
-      console.log(JSON.stringify({ body }));
       const res = await fetch(forgotPasswordUrl, {
         method: "POST",
         body: JSON.stringify( body ),
@@ -19,7 +18,6 @@ export const fetchForgotPassword = createAsyncThunk(
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      console.log(res);
       if (!res.ok) {
         throw new Error(`Server Error: ${res.status}`);
       }

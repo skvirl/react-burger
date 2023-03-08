@@ -24,7 +24,6 @@ const RegisterPage = () => {
   let submit = useCallback(
     (e) => {
       e.preventDefault();
-      //   console.log(form);
       dispatch(fetchForgotPassword({ email: form.email }));
     },
     [form]

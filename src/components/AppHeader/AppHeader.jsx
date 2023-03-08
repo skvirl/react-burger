@@ -20,6 +20,7 @@ const AppHeader = () => {
             type="primary"
             ico={<BurgerIcon type="primary" />}
             title="Конструктор"
+            onClick = {()=>navigate('/')}
           />
           <HeaderButton
             type="secondary"

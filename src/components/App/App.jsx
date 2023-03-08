@@ -16,8 +16,9 @@ import {
   Layout,
   ProfileLayout,
   Logout,
-  ProfileOrders
+  ProfileOrders,
 } from "./pages";
+import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
 
 export default function App() {
   const router = (
@@ -27,7 +28,14 @@ export default function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/profile" element={<ProfileLayout />}>
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfileLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<ProfilePage />} />
         <Route path="orders" element={<ProfileOrders />} />
         <Route path="logout" element={<Logout />} />
