@@ -67,7 +67,6 @@ const getAuth = (actionType, url) =>
 
 const patchAuth = (actionType, url) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
-    console.log(1111111);
 
     try {
       const res = await fetch(url, {
