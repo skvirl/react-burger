@@ -29,7 +29,7 @@ const RegisterPage = () => {
     [form]
   );
   useEffect(() => {
-    forgotPasswordSuccess && navigate("/reset-password");
+    forgotPasswordSuccess && navigate("/reset-password",{state:{from: '/forgot-password' }});
   }, [forgotPasswordSuccess]);
 
   return (

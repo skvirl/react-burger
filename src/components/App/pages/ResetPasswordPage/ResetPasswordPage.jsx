@@ -1,9 +1,9 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ResetPasswordPage.module.css";
-import { useCallback, useState } from "react";
+import { useCallback, useState , useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchResetPassword } from "../../../../services/slices/resetPassword";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   PasswordInput,
   Input,
@@ -11,7 +11,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const RegisterPage = () => {
+  
+  
   const navigate = useNavigate();
+  const location = useLocation();
+  useEffect(() => {
+    console.log(location);
+    location?.state?.from !== '/forgot-password' && navigate('/')
+  }, []);
+  
   const dispatch = useDispatch();
   const { resetPasswordSuccess,resetPasswordMessage } = useSelector((state) => ({
     resetPasswordSuccess: state?.resetPassword?.resetPasswordSuccess,

@@ -41,9 +41,14 @@ const LoginPage = () => {
           password: form.password,
         })
       );
-    },
+     }
+    ,
     [form]
   );
+
+  useEffect(() => {
+    authenticated && navigate(-1);
+  }, []);
 
   useEffect(() => {
     authenticated && navigate(fromPage, { replace: true });

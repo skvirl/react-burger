@@ -40,6 +40,7 @@ const postAuth = (actionType, url) =>
 
 const getAuth = (actionType, url) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
+    console.log('getUSR'); 
     try {
       const res = await fetch(url, {
         method: "GET",
@@ -105,6 +106,8 @@ const pendingAuthCB = (state, action) => {
 };
 
 const fulfilledAuthCB = (state, action) => {
+  console.log("fulfilledAuthCB");
+
   state.user = { ...state.user, ...action.payload.user };
   state.success = action.payload.success;
   state.errorMessage = null;
