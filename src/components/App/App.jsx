@@ -19,12 +19,20 @@ import {
   ProfileOrders,
 } from "./pages";
 import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
+import UnauthorizedRoute from "../../hoc/UnauthorizedRoute/UnauthorizedRoute";
 
 export default function App() {
   const router = (
     <Route path="/" element={<Layout />}>
       <Route index element={<BurgerConstructorPage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={
+          <UnauthorizedRoute>
+            <LoginPage />
+          </UnauthorizedRoute>
+        }
+      />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />

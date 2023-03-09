@@ -41,7 +41,6 @@ const postAuth = (actionType, url) =>
 const getAuth = (actionType, url) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
- 
       const res = await fetch(url, {
         method: "GET",
         mode: "cors",
@@ -67,7 +66,6 @@ const getAuth = (actionType, url) =>
 
 const patchAuth = (actionType, url) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
-
     try {
       const res = await fetch(url, {
         method: "PATCH",
@@ -97,6 +95,7 @@ export const fetchGetUser = getAuth("auth/getUser", userUrl);
 export const fetchPatchUser = patchAuth("auth/patchUser", userUrl);
 
 const pendingAuthCB = (state, action) => {
+  console.log("pendingAuthCB");
   state.user = {
     email: null,
     name: null,
@@ -116,6 +115,8 @@ const fulfilledAuthCB = (state, action) => {
 };
 
 const rejectedAuthCB = (state, action) => {
+  console.log("rejectedAuthCB");
+
   state.user = {
     email: null,
     name: null,
@@ -131,24 +132,18 @@ const authSlice = createSlice({
   initialState,
 
   extraReducers: (builder) => {
-    
-    [ fetchRegister,
-      fetchLogin,
-      fetchToken,
-    ].forEach((thunk) => {
+    [fetchRegister, fetchLogin, fetchToken].forEach((thunk) => {
       builder
         .addCase(thunk.pending, pendingAuthCB)
         .addCase(thunk.fulfilled, fulfilledAuthCB)
         .addCase(thunk.rejected, rejectedAuthCB);
     });
 
-    [ fetchPatchUser,
-      fetchGetUser,
-    ].forEach((thunk) => {
+    [fetchPatchUser, fetchGetUser].forEach((thunk) => {
       builder
         .addCase(thunk.fulfilled, fulfilledAuthCB)
         .addCase(thunk.rejected, rejectedAuthCB);
-    });    
+    });
 
     builder
       .addCase(fetchLogout.pending, (state, action) => {
@@ -159,9 +154,9 @@ const authSlice = createSlice({
         pendingAuthCB(state, action);
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
-      })
-  
-     // .addCase(fetchToken.pending, pendingCB )
+      });
+
+    // .addCase(fetchToken.pending, pendingCB )
     // .addCase(fetchToken.fulfilled, fulfilledCB)
     // .addCase(fetchToken.rejected, rejectedCB)
   },
