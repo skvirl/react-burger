@@ -40,7 +40,8 @@ export default function App() {
         <Route path="orders" element={<ProfileOrders />} />
         <Route path="logout" element={<Logout />} />
       </Route>
-      <Route path="/ingredients/:id" element={<IngredientsPage />} />
+      {/* <Route path="/ingredients/:id" element={<IngredientsPage />} /> */}
+
       <Route path="*" element={<NotFound404Page />} />
     </Route>
   );

@@ -1,65 +1,47 @@
-function App() {
-  const ModalSwitch = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    let background = location.state && location.state.background;
+import { Route, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import IngredientDetails from "../Modal/IngredientDetails";
+import { BurgerConstructorPage, NotFound404Page } from "./pages";
+import Modal from "../Modal/Modal";
 
-    const handleModalClose = () => {
-      dispatch({
-        type: RESET_ITEM_TO_VIEW,
-      });
-      navigate(-1);
-    };
+import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
 
-    return (
-      <>
-        <AppHeader />
-        <Routes location={background || location}>
-          <Route path="/" element={<Main />} />
-          <Route
-            path="/profile/orders/:orderNumber"
-            element={
-              <ProtectedRoute>
-                <OrderPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/ingredients/:ingredientId"
-            element={<IngredientsDetails />}
-          />
-          <Route element={<NotFound404 />} />
-        </Routes>
+const ModalSwitch = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  let background = location.state && location.state.background;
 
-        {background && (
-          <Route
-            path="/ingredients/:ingredientId"
-            element={
-              <Modal onClose={handleModalClose}>
-                <IngredientsDetails />
-              </Modal>
-            }
-          />
-        )}
-        {background && (
-          <Route
-            path="/profile/orders/:orderNumber"
-            element={
-              <ProtectedRoute>
-                <Modal onClose={handleModalClose}>
-                  <OrderPage />
-                </Modal>
-              </ProtectedRoute>
-            }
-          />
-        )}
-      </>
-    );
+  const handleModalClose = () => {
+    dispatch(cleanIngredientDetails());
+    navigate(-1);
   };
 
   return (
-    <Router>
-      <ModalSwitch />
-    </Router>
+    <>
+      {/* <AppHeader /> */}
+      <Route path={background || location}>
+        <Route path="/" element={<BurgerConstructorPage />} />
+        <Route
+          path="/ingredients/:ingredientId"
+          element={<IngredientDetails />}
+        />
+
+        <Route element={<NotFound404Page />} />
+      </Route>
+
+      {background && (
+        <Route
+          path="/ingredients/:ingredientId"
+          element={
+            <Modal onClose={handleModalClose}>
+              <IngredientDetails />
+            </Modal>
+          }
+        />
+      )}
+    </>
   );
-}
+};
+
+export default ModalSwitch;
