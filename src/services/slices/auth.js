@@ -6,7 +6,7 @@ import {
   tokenUrl,
   userUrl,
 } from "../../utils/api";
-import { setCookie, deleteCookie } from "../../utils/cookies";
+import { setCookie, deleteCookie, getCookie } from "../../utils/cookies";
 
 const initialState = {
   errorMessage: null,
@@ -17,86 +17,101 @@ const initialState = {
   },
 };
 
-const postAuth = (actionType, url) =>
+const tryToRefreshToken = async (errMessage) => {
+  const jwtExpiredMes = "jwt expired";
+  const refreshToken = getCookie("refreshToken");
+
+  if (errMessage !== jwtExpiredMes || !refreshToken) return false;
+ 
+  try {
+    const res = await fetch(tokenUrl, {
+      method: "POST",
+      body: JSON.stringify({
+        token: refreshToken,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    if (res.ok) {
+      const { success, accessToken, refreshToken } = await res.json();
+      if (success) {
+        accessToken &&
+          setCookie("accessToken", accessToken.split("Bearer ")[1]);
+        refreshToken && setCookie("refreshToken", refreshToken);
+      }
+      return true;
+    }
+
+    const resBody = await res.json();
+    throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
+  } catch (error) {
+    return false;
+  }
+};
+
+const tryToFetch_POST = async (body,url) =>
+  await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(body),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+
+const tryToFetch_GET = async (body,url) =>
+  await fetch(url, {
+    method: "GET",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: "Bearer " + body,
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+  });
+
+const tryToFetch_PATCH = async (body,url) =>
+  await fetch(url, {
+    method: "PATCH",
+    body: JSON.stringify(body.userData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      authorization: "Bearer " + body.accessToken,
+    },
+  });
+
+const fetchAuth = (actionType, url, fetchCB) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
-      const res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
+      let res = await fetchCB(body,url);
+      let resBody = await res.json();
+
+      if (!res.ok && tryToRefreshToken(resBody?.message)) {
+        res = await fetchCB(body,url);
+        resBody = await res.json();
+      }
+
       if (!res.ok) {
-        const resBody = await res.json();
         throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
       }
 
-      return await res.json();
+      return resBody;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   });
 
-const getAuth = (actionType, url) =>
-  createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
-    console.log('getUSR'); 
-    try {
-      const res = await fetch(url, {
-        method: "GET",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: "Bearer " + body,
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
-      });
-      if (!res.ok) {
-        const resBody = await res.json();
-        throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
-      }
+export const fetchRegister = fetchAuth("auth/register", registerUrl, tryToFetch_POST);
+export const fetchLogin = fetchAuth("auth/login", loginUrl, tryToFetch_POST);
+export const fetchLogout = fetchAuth("auth/logout", logoutUrl, tryToFetch_POST);
+export const fetchGetUser = fetchAuth("auth/getUser", userUrl, tryToFetch_GET);
+export const fetchPatchUser = fetchAuth("auth/patchUser", userUrl, tryToFetch_PATCH);
 
-      return await res.json();
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  });
-
-const patchAuth = (actionType, url) =>
-  createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
-    try {
-      const res = await fetch(url, {
-        method: "PATCH",
-        body: JSON.stringify(body.userData),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          authorization: "Bearer " + body.accessToken,
-        },
-      });
-
-      if (!res.ok) {
-        const resBody = await res.json();
-        throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
-      }
-
-      return await res.json();
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  });
-
-export const fetchRegister = postAuth("auth/register", registerUrl);
-export const fetchLogin = postAuth("auth/login", loginUrl);
-export const fetchLogout = postAuth("auth/logout", logoutUrl);
-export const fetchToken = postAuth("auth/token", tokenUrl);
-export const fetchGetUser = getAuth("auth/getUser", userUrl);
-export const fetchPatchUser = patchAuth("auth/patchUser", userUrl);
 
 const pendingAuthCB = (state, action) => {
-  console.log("pendingAuthCB");
   state.user = {
     email: null,
     name: null,
@@ -106,7 +121,6 @@ const pendingAuthCB = (state, action) => {
 };
 
 const fulfilledAuthCB = (state, action) => {
-  console.log("fulfilledAuthCB");
 
   state.user = { ...state.user, ...action.payload.user };
   state.success = action.payload.success;
@@ -118,7 +132,6 @@ const fulfilledAuthCB = (state, action) => {
 };
 
 const rejectedAuthCB = (state, action) => {
-  console.log("rejectedAuthCB");
 
   state.user = {
     email: null,
@@ -135,7 +148,7 @@ const authSlice = createSlice({
   initialState,
 
   extraReducers: (builder) => {
-    [fetchRegister, fetchLogin, fetchToken].forEach((thunk) => {
+    [fetchRegister, fetchLogin].forEach((thunk) => {
       builder
         .addCase(thunk.pending, pendingAuthCB)
         .addCase(thunk.fulfilled, fulfilledAuthCB)
@@ -158,10 +171,6 @@ const authSlice = createSlice({
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
       });
-
-    // .addCase(fetchToken.pending, pendingCB )
-    // .addCase(fetchToken.fulfilled, fulfilledCB)
-    // .addCase(fetchToken.rejected, rejectedCB)
   },
 });
 

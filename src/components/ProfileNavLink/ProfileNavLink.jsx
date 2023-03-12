@@ -1,5 +1,6 @@
 import Style from "./ProfileNavLink.module.css";
 import { Link, useMatch } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const ProfileNavLink = ({ to, children }) => {
   return (
@@ -15,3 +16,8 @@ const ProfileNavLink = ({ to, children }) => {
   );
 };
 export default ProfileNavLink;
+
+ProfileNavLink.propTypes = {
+  to: PropTypes.string,
+  children: PropTypes.string,
+};

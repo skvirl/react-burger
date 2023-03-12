@@ -25,12 +25,23 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  const fromPage = location?.state?.from?.pathname || "/";
+
+  let fromPage = location?.state?.from?.pathname || "/";
+  fromPage = (fromPage==='/profile/logout')?'/profile':fromPage;
+  fromPage = (fromPage==='/order-details')?'/':fromPage;
 
   const { authenticated, authErrorMessage } = useSelector((state) => ({
     authenticated: Boolean(state?.auth?.user?.name),
     authErrorMessage: state?.auth?.errorMessage,
   }));
+  
+  useEffect(() => {
+    authenticated && navigate(-1);
+  }, []);
+
+  useEffect(() => {
+    authenticated && navigate(fromPage, { replace: true });
+  }, [authenticated]);
 
   let submit = useCallback(
     (e) => {
@@ -45,14 +56,6 @@ const LoginPage = () => {
     ,
     [form]
   );
-
-  useEffect(() => {
-    authenticated && navigate(-1);
-  }, []);
-
-  useEffect(() => {
-    authenticated && navigate(fromPage, { replace: true });
-  }, [authenticated]);
 
   return (
     <div className={styles.container}>
@@ -87,12 +90,13 @@ const LoginPage = () => {
           </form>
 
           <div className="pt-10 text text_type_main-small text_color_inactive">
-            Вы новый пользователь?
+            Вы - новый пользователь?
             <Button
               htmlType="button"
               type="secondary"
               size="small"
               onClick={(e) => navigate("/register")}
+              extraClass="p-2"
             >
               Зарегистрироваться
             </Button>
@@ -104,6 +108,7 @@ const LoginPage = () => {
               type="secondary"
               size="small"
               onClick={(e) => navigate("/forgot-password")}
+              extraClass="p-2"
             >
               Восстановить пароль
             </Button>

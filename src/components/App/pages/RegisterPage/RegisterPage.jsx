@@ -13,7 +13,6 @@ import {
 import { cachedAuthData } from "../../../../utils/data";
 
 const RegisterPage = () => {
-  // const [form, setValue] = useState({ name: "", password: "", email: "" });
   const [form, setValue] = useState(cachedAuthData);
 
   const onChange = (e) => {
@@ -22,13 +21,20 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { authSuccess, authErrorMessage } = useSelector((state) => ({
-    authSuccess: state?.auth?.success,
-    authErrorMessage: state?.auth?.errorMessage,
-  }));
+  const { authSuccess, authErrorMessage, authenticated } = useSelector(
+    (state) => ({
+      authSuccess: state?.auth?.success,
+      authErrorMessage: state?.auth?.errorMessage,
+      authenticated: Boolean(state?.auth?.user?.name),
+    })
+  );
 
   useEffect(() => {
-     authSuccess && navigate("/");
+    authenticated && navigate(-1);
+  }, []);
+
+  useEffect(() => {
+    authSuccess && navigate("/");
   }, [authSuccess]);
 
   let submit = useCallback(
@@ -91,6 +97,7 @@ const RegisterPage = () => {
               type="secondary"
               size="small"
               onClick={(e) => navigate("/login")}
+              extraClass="p-2"
             >
               Нажми на меня
             </Button>

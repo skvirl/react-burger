@@ -1,5 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import AppHeader from "../../../AppHeader/AppHeader";
+import { Outlet } from "react-router-dom";
 import styles from "./ProfileLayout.module.css";
 import { ProfileNav } from "../../../ProfileNav/ProfileNav";
 

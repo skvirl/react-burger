@@ -12,9 +12,14 @@ import {
 const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { forgotPasswordSuccess } = useSelector((state) => ({
+  const { forgotPasswordSuccess, authenticated } = useSelector((state) => ({
     forgotPasswordSuccess: state?.forgotPassword?.forgotPasswordSuccess,
+    authenticated: Boolean(state?.auth?.user?.name),
   }));
+
+  useEffect(() => {
+    authenticated && navigate(-1);
+  }, []);
 
   const [form, setValue] = useState({ email: "" });
   const onChange = (e) => {
@@ -29,7 +34,8 @@ const RegisterPage = () => {
     [form]
   );
   useEffect(() => {
-    forgotPasswordSuccess && navigate("/reset-password",{state:{from: '/forgot-password' }});
+    forgotPasswordSuccess &&
+      navigate("/reset-password", { state: { from: "/forgot-password" } });
   }, [forgotPasswordSuccess]);
 
   return (
@@ -54,6 +60,7 @@ const RegisterPage = () => {
           type="secondary"
           size="small"
           onClick={(e) => navigate("/login")}
+          extraClass="p-2"
         >
           Войти
         </Button>

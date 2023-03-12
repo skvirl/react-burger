@@ -7,7 +7,12 @@
 
 .ingredientDetails__title {
     height: 40px;
+}
+.ingredientDetails__title_modal {
     align-self:flex-start;
+}
+.ingredientDetails__title_page {
+    margin-top: 80px;
 }
 
 .ingredientDetails__Picture {

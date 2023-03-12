@@ -6,9 +6,10 @@ import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const modalsElement = document.getElementById("modal");
 
-const Modal = ({ children, isOpen, closeModal }) => {
+const Modal = ({ children,  closeModal }) => {
+
   return (
-    isOpen &&
+    
     ReactDOM.createPortal(
       <div className={styles.modal}>
         <ModalOverlay closeModal={closeModal} />
@@ -51,7 +52,6 @@ export default Modal;
 
 Modal.propTypes = {
   children: PropTypes.node,
-  isOpen: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 

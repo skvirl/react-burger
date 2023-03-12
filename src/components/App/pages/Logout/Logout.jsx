@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchLogout } from "../../../../services/slices/auth";
 import { getCookie } from "../../../../utils/cookies";  
@@ -16,8 +15,7 @@ const Logout = () => {
     );
   
   }, []);
- 
-   return <Navigate to="/login" replace />;
+  return <div className={`text text_type_main-medium `}> logout in process...</div>
 };
 
 export default Logout;

@@ -16,7 +16,6 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => { 
     !authenticated && accessToken && dispatch(fetchGetUser(accessToken));
   }, []);
-  
   return authenticated ? (
     children
   ) : (

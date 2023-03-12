@@ -16,15 +16,19 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
-    console.log(location);
     location?.state?.from !== '/forgot-password' && navigate('/')
   }, []);
   
   const dispatch = useDispatch();
-  const { resetPasswordSuccess,resetPasswordMessage } = useSelector((state) => ({
+  const { resetPasswordSuccess,resetPasswordMessage,authenticated } = useSelector((state) => ({
     resetPasswordSuccess: state?.resetPassword?.resetPasswordSuccess,
     resetPasswordMessage: state?.resetPassword?.resetPasswordMessage,
+    authenticated: Boolean(state?.auth?.user?.name),
   }));
+ 
+  useEffect(() => {
+    authenticated && navigate(-1);
+  }, []);
 
   const [form, setValue] = useState({ num: "", password: "" });
   const onChange = (e) => {
@@ -46,7 +50,7 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.container}>
-    {resetPasswordSuccess ? <div className="text text_type_main-default">resetPasswordMessage</div> :  (<><form className={styles.form}>
+    {resetPasswordSuccess ? <div className="text text_type_main-default">{resetPasswordMessage}</div> :  (<><form className={styles.form}>
         <p className="text text_type_main-default">Восстановление пароля</p>
         <PasswordInput
           placeholder={"Введите новый пароль"}
@@ -72,7 +76,7 @@ const RegisterPage = () => {
           htmlType="button"
           type="secondary"
           size="small"
-          extraClass="p-1"
+          extraClass="p-2"
           onClick={(e) => navigate("/login")}
         >
           Войти

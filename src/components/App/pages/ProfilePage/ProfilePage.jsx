@@ -12,7 +12,6 @@ import { fetchGetUser, fetchPatchUser } from "../../../../services/slices/auth";
 import { getCookie } from "../../../../utils/cookies";
 
 const ProfilePage = () => {
-  // const { storedName, storedEmail } = {storedName:'qwe', storedEmail:'ewq'}
 
   const dispatch = useDispatch();
   const { storedName, storedEmail } = useSelector((state) => ({

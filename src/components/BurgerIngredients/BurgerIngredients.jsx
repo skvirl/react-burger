@@ -75,7 +75,7 @@ const BurgerIngredients = () => {
           />
         ))}
       </div>
-      {
+      {/* {
         <Modal
           isOpen={isModalOpen}
           closeModal={() => {
@@ -84,7 +84,7 @@ const BurgerIngredients = () => {
         >
           <IngredientDetails />
         </Modal>
-      }
+      } */}
     </>
   );
 };

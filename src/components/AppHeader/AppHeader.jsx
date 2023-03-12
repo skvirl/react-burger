@@ -7,24 +7,24 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from "react-router";
+import { useMatch } from "react-router-dom";
+import React from "react";
+
+
 const AppHeader = () => {
-
-  const navigate = useNavigate(); 
-
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <nav className={styles.leftNav}>
           <HeaderButton
-            type="primary"
-            ico={<BurgerIcon type="primary" />}
+            to="/"
+            ico={BurgerIcon}
             title="Конструктор"
-            onClick = {()=>navigate('/')}
           />
           <HeaderButton
-            type="secondary"
-            ico={<ListIcon type="secondary" />}
+            to="/orders"
+            ico={ListIcon}
             title="Лента заказов"
           />
         </nav>
@@ -33,10 +33,9 @@ const AppHeader = () => {
         </div>
         <nav className={styles.rightNav}>
           <HeaderButton
-            type="secondary"
-            ico={<ProfileIcon type="secondary" />}
+            to="/profile"
+            ico={ProfileIcon}
             title="Личный кабинет"
-            onClick = {()=>navigate('/profile')}
           />
         </nav>
       </div>
@@ -44,13 +43,15 @@ const AppHeader = () => {
   );
 };
 
-const HeaderButton = ({ type, ico, title, onClick }) => {
+const HeaderButton = ({ to, ico, title }) => {
+  const navigate = useNavigate();
+  const isActive = useMatch({ path: to, end: to.length === 1 });
   return (
-    <button className={styles.button} onClick={onClick}>
-      <div className={styles.button__logo}>{ico}</div>
+    <button className={styles.button} onClick={() => navigate(to)}>
+      <div className={styles.button__logo}>{React.createElement(ico, {type:(isActive?"primary":"secondary")}, null)}</div>
       <span
         className={
-          (type === "primary"
+          (isActive
             ? styles.button__title_primary
             : styles.button__title_secondary) + " text text_type_main-small"
         }
@@ -62,9 +63,9 @@ const HeaderButton = ({ type, ico, title, onClick }) => {
 };
 
 HeaderButton.propTypes = {
-  type: PropTypes.string,
+  to: PropTypes.string,
   title: PropTypes.string,
-  ico: PropTypes.element,
+  ico: PropTypes.func,
 };
 
 export default AppHeader;
