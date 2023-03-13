@@ -22,7 +22,7 @@ const tryToRefreshToken = async (errMessage) => {
   const refreshToken = getCookie("refreshToken");
 
   if (errMessage !== jwtExpiredMes || !refreshToken) return false;
- 
+
   try {
     const res = await fetch(tokenUrl, {
       method: "POST",
@@ -50,47 +50,44 @@ const tryToRefreshToken = async (errMessage) => {
   }
 };
 
-const tryToFetch_POST = async (body,url) =>
-  await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(body),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  });
+const options_POST = (body) => ({
+  method: "POST",
+  body: JSON.stringify(body),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+  },
+});
 
-const tryToFetch_GET = async (body,url) =>
-  await fetch(url, {
-    method: "GET",
-    mode: "cors",
-    cache: "no-cache",
-    credentials: "same-origin",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: "Bearer " + body,
-    },
-    redirect: "follow",
-    referrerPolicy: "no-referrer",
-  });
+const options_GET = (body) => ({
+  method: "GET",
+  mode: "cors",
+  cache: "no-cache",
+  credentials: "same-origin",
+  headers: {
+    "Content-Type": "application/json",
+    authorization: "Bearer " + body,
+  },
+  redirect: "follow",
+  referrerPolicy: "no-referrer",
+});
 
-const tryToFetch_PATCH = async (body,url) =>
-  await fetch(url, {
-    method: "PATCH",
-    body: JSON.stringify(body.userData),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      authorization: "Bearer " + body.accessToken,
-    },
-  });
+const options_PATCH = (body) => ({
+  method: "PATCH",
+  body: JSON.stringify(body.userData),
+  headers: {
+    "Content-type": "application/json; charset=UTF-8",
+    authorization: "Bearer " + body.accessToken,
+  },
+});
 
-const fetchAuth = (actionType, url, fetchCB) =>
+const fetchAuth = (actionType, url, fetchOptions) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
-      let res = await fetchCB(body,url);
+      let res = await fetch(url, fetchOptions(body));
       let resBody = await res.json();
 
       if (!res.ok && tryToRefreshToken(resBody?.message)) {
-        res = await fetchCB(body,url);
+        res = await fetch(url, fetchOptions(body));
         resBody = await res.json();
       }
 
@@ -104,12 +101,19 @@ const fetchAuth = (actionType, url, fetchCB) =>
     }
   });
 
-export const fetchRegister = fetchAuth("auth/register", registerUrl, tryToFetch_POST);
-export const fetchLogin = fetchAuth("auth/login", loginUrl, tryToFetch_POST);
-export const fetchLogout = fetchAuth("auth/logout", logoutUrl, tryToFetch_POST);
-export const fetchGetUser = fetchAuth("auth/getUser", userUrl, tryToFetch_GET);
-export const fetchPatchUser = fetchAuth("auth/patchUser", userUrl, tryToFetch_PATCH);
-
+export const fetchRegister = fetchAuth(
+  "auth/register",
+  registerUrl,
+  options_POST
+);
+export const fetchLogin = fetchAuth("auth/login", loginUrl, options_POST);
+export const fetchLogout = fetchAuth("auth/logout", logoutUrl, options_POST);
+export const fetchGetUser = fetchAuth("auth/getUser", userUrl, options_GET);
+export const fetchPatchUser = fetchAuth(
+  "auth/patchUser",
+  userUrl,
+  options_PATCH
+);
 
 const pendingAuthCB = (state, action) => {
   state.user = {
@@ -121,7 +125,6 @@ const pendingAuthCB = (state, action) => {
 };
 
 const fulfilledAuthCB = (state, action) => {
-
   state.user = { ...state.user, ...action.payload.user };
   state.success = action.payload.success;
   state.errorMessage = null;
@@ -132,7 +135,6 @@ const fulfilledAuthCB = (state, action) => {
 };
 
 const rejectedAuthCB = (state, action) => {
-
   state.user = {
     email: null,
     name: null,

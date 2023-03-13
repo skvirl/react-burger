@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "../../../../services/slices/auth";
 import { cachedAuthData } from "../../../../utils/data";
-
+import { useForm } from "../../../../hooks/useForm";
 import {
   PasswordInput,
   EmailInput,
@@ -13,28 +13,24 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const LoginPage = () => {
-  const [form, setValue] = useState({
+  const { form, onChange } = useForm({
     email: cachedAuthData.email,
     password: cachedAuthData.password,
   });
-
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
 
   let fromPage = location?.state?.from?.pathname || "/";
-  fromPage = (fromPage==='/profile/logout')?'/profile':fromPage;
-  fromPage = (fromPage==='/order-details')?'/':fromPage;
+  fromPage = fromPage === "/profile/logout" ? "/profile" : fromPage;
+  fromPage = fromPage === "/order-details" ? "/" : fromPage;
 
   const { authenticated, authErrorMessage } = useSelector((state) => ({
     authenticated: Boolean(state?.auth?.user?.name),
     authErrorMessage: state?.auth?.errorMessage,
   }));
-  
+
   useEffect(() => {
     authenticated && navigate(-1);
   }, []);
@@ -52,8 +48,7 @@ const LoginPage = () => {
           password: form.password,
         })
       );
-     }
-    ,
+    },
     [form]
   );
 
@@ -63,7 +58,7 @@ const LoginPage = () => {
         <div className="text text_type_main-default">{authErrorMessage}</div>
       ) : (
         <>
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={submit}>
             <p className="text text_type_main-default">Вход</p>
 
             <EmailInput
@@ -79,12 +74,7 @@ const LoginPage = () => {
               name="password"
               onChange={onChange}
             />
-            <Button
-              htmlType="button"
-              type="primary"
-              size="medium"
-              onClick={submit}
-            >
+            <Button htmlType="submit" type="primary" size="medium">
               Войти
             </Button>
           </form>

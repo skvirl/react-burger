@@ -8,6 +8,7 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useForm } from "../../../../hooks/useForm";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -21,12 +22,9 @@ const RegisterPage = () => {
     authenticated && navigate(-1);
   }, []);
 
-  const [form, setValue] = useState({ email: "" });
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
+  const { form, onChange } = useForm({ email: "" });
 
-  let submit = useCallback(
+  const submit = useCallback(
     (e) => {
       e.preventDefault();
       dispatch(fetchForgotPassword({ email: form.email }));
@@ -40,7 +38,7 @@ const RegisterPage = () => {
 
   return (
     <div className={styles.container}>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={submit}>
         <p className="text text_type_main-default">Восстановление пароля</p>
         <EmailInput
           type={"text"}
@@ -49,7 +47,7 @@ const RegisterPage = () => {
           value={form.email}
           name={"email"}
         />
-        <Button htmlType="button" type="primary" size="medium" onClick={submit}>
+        <Button htmlType="submit" type="primary" size="medium">
           Восстановить
         </Button>
       </form>

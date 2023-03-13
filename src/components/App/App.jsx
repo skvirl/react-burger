@@ -13,29 +13,50 @@ import {
   ProfileOrders,
 } from "./pages";
 import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
 import Modal from "../Modal/Modal";
 import IngredientsDetails from "../Modal/IngredientDetails";
 import OrderDetails from "../Modal/OrderDetails";
+import { useEffect } from "react";
+import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let background = location.state && location.state.background;
+  const background = location.state && location.state.background;
   const handleModalClose = () => {
     navigate(-1);
     dispatch(cleanIngredientDetails());
   };
+
+  useEffect(() => {
+    dispatch(fetchBurgerIngredients());
+  }, []);
+
   return (
     <>
       <Routes location={background || location}>
         <Route path="/" element={<Layout />}>
           <Route index element={<BurgerConstructorPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute anonymous>
+                <RegisterPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <ProtectedRoute anonymous>
+                <ForgotPasswordPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route
             path="/profile"
@@ -54,7 +75,7 @@ export default function App() {
           <Route path="*" element={<NotFound404Page />} />
         </Route>
       </Routes>
-      
+
       {background && (
         <Routes>
           <Route

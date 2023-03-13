@@ -10,9 +10,9 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { fetchGetUser, fetchPatchUser } from "../../../../services/slices/auth";
 import { getCookie } from "../../../../utils/cookies";
+import { useForm } from "../../../../hooks/useForm";
 
 const ProfilePage = () => {
-
   const dispatch = useDispatch();
   const { storedName, storedEmail } = useSelector((state) => ({
     storedName: state?.auth?.user?.name,
@@ -20,7 +20,7 @@ const ProfilePage = () => {
   }));
 
   const [formModified, setFormModified] = useState(false);
-  const [form, setFormValue] = useState({
+  const { form, onChange, setFormValue } = useForm({
     name: storedName ? storedName : "",
     email: storedEmail ? storedEmail : "",
     password: "",
@@ -66,13 +66,9 @@ const ProfilePage = () => {
     );
   };
 
-  const onChange = (e) => {
-    setFormValue({ ...form, [e.target.name]: e.target.value });
-   };
-
   return (
     <>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={sendChanges}>
         <Input
           type={"text"}
           placeholder={"Имя"}
@@ -97,27 +93,28 @@ const ProfilePage = () => {
           name="password"
           onChange={onChange}
         />
+        {formModified && (
+          <div>
+            <Button
+              htmlType="submit"
+              type="primary"
+              size="small"
+              extraClass="mt-5"
+            >
+              Сохранить
+            </Button>
+            <Button
+              htmlType="button"
+              type="primary"
+              size="small"
+              onClick={cancelChanges}
+              extraClass="mt-5 ml-5"
+            >
+              Отменить
+            </Button>
+          </div>
+        )}
       </form>
-      {formModified && (<div className="ml-15">
-        <Button
-          htmlType="button"
-          type="primary"
-          size="small"
-          onClick={sendChanges}
-          extraClass="mt-5"
-        >
-          Сохранить
-        </Button>
-        <Button
-          htmlType="button"
-          type="primary"
-          size="small"
-          onClick={cancelChanges}
-          extraClass="mt-5 ml-5"
-        >
-          Отменить
-        </Button>
-      </div>)}
     </>
   );
 };

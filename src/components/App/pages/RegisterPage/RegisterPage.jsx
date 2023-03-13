@@ -11,13 +11,9 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { cachedAuthData } from "../../../../utils/data";
-
+import { useForm } from "../../../../hooks/useForm";
 const RegisterPage = () => {
-  const [form, setValue] = useState(cachedAuthData);
-
-  const onChange = (e) => {
-    setValue({ ...form, [e.target.name]: e.target.value });
-  };
+  const { form, onChange } = useForm(cachedAuthData);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

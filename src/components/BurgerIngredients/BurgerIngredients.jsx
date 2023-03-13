@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./BurgerIngredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import IngredientDetails from "../Modal/IngredientDetails";
-import Modal from "../Modal/Modal";
-import { useSelector, useDispatch } from "react-redux";
-import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
 import { ingredientTabs } from "../../utils/data";
 import { ingredientTypes } from "../../utils/itemTypes";
 import IngredientGroup from "../IngredientGroup/IngredientGroup";
@@ -12,10 +8,6 @@ import IngredientGroup from "../IngredientGroup/IngredientGroup";
 const BurgerIngredients = () => {
   const [currentTab, setCurrentTab] = useState(ingredientTypes.BUN);
   const [observer, setObserver] = useState(null);
-  const dispatch = useDispatch();
-  const isModalOpen = useSelector((state) =>
-    Boolean(state.ingredientDetails.ingredientDetails)
-  );
 
   const ingredientViewport = useRef();
 
@@ -75,16 +67,6 @@ const BurgerIngredients = () => {
           />
         ))}
       </div>
-      {/* {
-        <Modal
-          isOpen={isModalOpen}
-          closeModal={() => {
-            dispatch(cleanIngredientDetails());
-          }}
-        >
-          <IngredientDetails />
-        </Modal>
-      } */}
     </>
   );
 };

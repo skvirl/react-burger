@@ -17,8 +17,6 @@
 }
 
 .tabs div {
-  /* border: 1px dashed #4c4cff; */
-  box-shadow: inset 0px -1px 0px #2f2f37;
   flex: none;
   max-width: 200px;
   flex-grow: 1;

@@ -3,20 +3,12 @@ import styles from "./IngredientDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
 
 const IngredientDetails = ({ modalUse }) => {
-  const dispatch = useDispatch();
   const { id } = useParams();
   const burgerIngredients = useSelector(
     (state) => state.burgerIngredients.burgerIngredients
   );
-
-  useEffect(() => {
-    !burgerIngredients && dispatch(fetchBurgerIngredients());
-  }, [burgerIngredients]);
 
   if (!burgerIngredients) {
     return <></>;
