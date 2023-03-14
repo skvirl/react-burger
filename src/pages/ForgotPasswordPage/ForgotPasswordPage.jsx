@@ -3,12 +3,12 @@ import styles from "./ForgotPasswordPage.module.css";
 import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchForgotPassword } from "../../../../services/slices/forgotPassword";
+import { fetchForgotPassword } from "../../services/slices/forgotPassword";
 import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useForm } from "../../../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 
 const RegisterPage = () => {
   const navigate = useNavigate();

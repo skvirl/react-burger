@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import styles from "./ProfileLayout.module.css";
-import { ProfileNav } from "../../../ProfileNav/ProfileNav";
+import { ProfileNav } from "../../components/ProfileNav/ProfileNav";
 
 function ProfileLayout() {
   return (

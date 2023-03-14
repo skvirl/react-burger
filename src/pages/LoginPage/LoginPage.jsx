@@ -3,9 +3,9 @@ import styles from "./LoginPage.module.css";
 import { useCallback, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogin } from "../../../../services/slices/auth";
-import { cachedAuthData } from "../../../../utils/data";
-import { useForm } from "../../../../hooks/useForm";
+import { fetchLogin } from "../../services/slices/auth";
+import { cachedAuthData } from "../../utils/data";
+import { useForm } from "../../hooks/useForm";
 import {
   PasswordInput,
   EmailInput,

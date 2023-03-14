@@ -2,14 +2,14 @@ import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ResetPasswordPage.module.css";
 import { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchResetPassword } from "../../../../services/slices/resetPassword";
+import { fetchResetPassword } from "../../services/slices/resetPassword";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   PasswordInput,
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useForm } from "../../../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 
 const RegisterPage = () => {
   const navigate = useNavigate();

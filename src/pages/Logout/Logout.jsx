@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { fetchLogout } from "../../../../services/slices/auth";
-import { getCookie } from "../../../../utils/cookies";  
+import { fetchLogout } from "../../services/slices/auth";
+import { getCookie } from "../../utils/cookies";  
 import { useEffect } from "react"; 
 
 const Logout = () => {

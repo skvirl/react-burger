@@ -2,7 +2,7 @@ import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./RegisterPage.module.css";
 import { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchRegister } from "../../../../services/slices/auth";
+import { fetchRegister } from "../../services/slices/auth";
 import { useNavigate } from "react-router-dom";
 import {
   EmailInput,
@@ -10,8 +10,8 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { cachedAuthData } from "../../../../utils/data";
-import { useForm } from "../../../../hooks/useForm";
+import { cachedAuthData } from "../../utils/data";
+import { useForm } from "../../hooks/useForm";
 const RegisterPage = () => {
   const { form, onChange } = useForm(cachedAuthData);
 

@@ -8,9 +8,9 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { fetchGetUser, fetchPatchUser } from "../../../../services/slices/auth";
-import { getCookie } from "../../../../utils/cookies";
-import { useForm } from "../../../../hooks/useForm";
+import { fetchGetUser, fetchPatchUser } from "../../services/slices/auth";
+import { getCookie } from "../../utils/cookies";
+import { useForm } from "../../hooks/useForm";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();

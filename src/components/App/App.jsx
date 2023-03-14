@@ -11,7 +11,7 @@ import {
   ProfileLayout,
   Logout,
   ProfileOrders,
-} from "./pages";
+} from "../../pages";
 import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
 import { useDispatch } from "react-redux";
 import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
