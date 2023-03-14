@@ -12,6 +12,7 @@ import React from "react";
 
 
 const AppHeader = () => {
+  const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
@@ -28,9 +29,9 @@ const AppHeader = () => {
             title="Лента заказов"
           />
         </nav>
-        <div className={styles.logo + " header__logo"}>
+        <button className={styles.logo + " header__logo"} onClick={() => navigate("/")}>
           <Logo />
-        </div>
+        </button>
         <nav className={styles.rightNav}>
           <HeaderButton
             to="/profile"

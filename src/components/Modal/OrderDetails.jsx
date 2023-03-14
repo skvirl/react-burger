@@ -3,6 +3,7 @@ import "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { LoaderSpinner } from "../LoaderSpinner/LoaderSpinner";
 
 const OrderDetails = ({ modalUse }) => {
   const { orderNumber, hasError } = useSelector((state) => ({
@@ -16,7 +17,13 @@ const OrderDetails = ({ modalUse }) => {
     <Navigate to="/" replace />
   ) : (
     <>
-      {hasError ? (
+      {!hasError && !orderNumber ? (
+        <div
+          className={styles.orderDetails_spinner}
+        ><LoaderSpinner/>
+          
+        </div>
+      ) : hasError ? (
         <div
           className={`${styles.orderDetails} ${
             modalUse ? styles.orderDetails_modal : styles.orderDetails_page

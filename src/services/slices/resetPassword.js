@@ -12,24 +12,13 @@ export const fetchResetPassword = createAsyncThunk(
 
   async function (body, { rejectWithValue }) {
     try {
-      // const res = await fetch(resetPasswordUrl, {
-      //   method: "POST",
-      //   body: JSON.stringify(body),
-      //   headers: {
-      //     "Content-type": "application/json; charset=UTF-8",
-      //   },
-      // });
-      //  if (!res.ok) {
-      //   throw new Error(`Server Error: ${res.status}`);
-      // }
-
       return await request(resetPasswordUrl, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      });
+      }).catch(err=>rejectWithValue(err));
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -17,19 +17,8 @@ export const fetchForgotPassword = createAsyncThunk(
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      });
-      // const res = await fetch(forgotPasswordUrl, {
-      //   method: "POST",
-      //   body: JSON.stringify( body ),
-      //   headers: {
-      //     "Content-type": "application/json; charset=UTF-8",
-      //   },
-      // });
-      // if (!res.ok) {
-      //   throw new Error(`Server Error: ${res.status}`);
-      // }
+      }).catch(err=>rejectWithValue(err));
 
-      // return await res.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }

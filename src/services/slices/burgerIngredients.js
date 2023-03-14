@@ -11,7 +11,7 @@ export const fetchBurgerIngredients = createAsyncThunk(
 
   async function (_, { rejectWithValue }) {
     try {
-      return (await request(ingredientsApiUrl)).data;
+      return (await request(ingredientsApiUrl).catch(err=>rejectWithValue(err))).data;
     } catch (error) {
       return rejectWithValue(error.message);
     }

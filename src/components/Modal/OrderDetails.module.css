@@ -4,6 +4,14 @@
   align-items: center;
   
 }
+.orderDetails_spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 695px;
+  width: 720px;
+}
 .orderDetails_modal {
   width: 720px;
 }

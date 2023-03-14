@@ -72,23 +72,28 @@ export const requestWithTokenRefresh = (endpoint, options) => {
 };
 
 export const checkResponseAuth = (res) => {
-  if (!res.ok && res.status === "403") {
+  if (!res.ok && res.status === 403) {
     try {
       return res.json();
     } catch (error) {
       return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
     }
   } else if (res.ok) {
+
     return res.json();
   }
+
   return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
 };
 
 const checkSuccessAuth = (res) => {
   if (res && res.success) {
+
     return res;
   } else if (res && !res.success && tryToRefreshToken(res.message)) {
+
     return Promise.reject(`token refresh succes`);
   }
+
   return Promise.reject(`Ответ не success: ${res}`);
 };

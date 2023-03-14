@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  requestWithTokenRefresh,
   registerUrl,
   loginUrl,
   logoutUrl,
@@ -17,39 +18,6 @@ const initialState = {
   },
 };
 
-const tryToRefreshToken = async (errMessage) => {
-  const jwtExpiredMes = "jwt expired";
-  const refreshToken = getCookie("refreshToken");
-
-  if (errMessage !== jwtExpiredMes || !refreshToken) return false;
-
-  try {
-    const res = await fetch(tokenUrl, {
-      method: "POST",
-      body: JSON.stringify({
-        token: refreshToken,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-    if (res.ok) {
-      const { success, accessToken, refreshToken } = await res.json();
-      if (success) {
-        accessToken &&
-          setCookie("accessToken", accessToken.split("Bearer ")[1]);
-        refreshToken && setCookie("refreshToken", refreshToken);
-      }
-      return true;
-    }
-
-    const resBody = await res.json();
-    throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
-  } catch (error) {
-    return false;
-  }
-};
-
 const options_POST = (body) => ({
   method: "POST",
   body: JSON.stringify(body),
@@ -58,14 +26,14 @@ const options_POST = (body) => ({
   },
 });
 
-const options_GET = (body) => ({
+const options_GET = () => ({
   method: "GET",
   mode: "cors",
   cache: "no-cache",
   credentials: "same-origin",
   headers: {
     "Content-Type": "application/json",
-    authorization: "Bearer " + body,
+    authorization: "Bearer " + getCookie('accessToken'),
   },
   redirect: "follow",
   referrerPolicy: "no-referrer",
@@ -83,24 +51,20 @@ const options_PATCH = (body) => ({
 const fetchAuth = (actionType, url, fetchOptions) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
-      let res = await fetch(url, fetchOptions(body));
-      console.log(res);
-      console.log(444444444444);
-      let resBody = await res.json();
-      console.log(111111111111);
-      console.log(resBody);
-      if (!res.ok && tryToRefreshToken(resBody?.message)) {
-        console.log(22222222222);
 
-        res = await fetch(url, fetchOptions(body));
-        resBody = await res.json();
-      }
+      return requestWithTokenRefresh(url, fetchOptions(body))
+        .then((val) => val)
+        .catch((reason) => {
 
-      if (!res.ok) {
-        throw new Error(`Server Error: ${res.status}. ${resBody?.message} `);
-      }
-
-      return resBody;
+          if (reason === `token refresh succes`) {
+            return requestWithTokenRefresh(url, fetchOptions(body));
+          } else {
+            return rejectWithValue(reason);
+          }
+        })
+        .catch((reason) => {
+          return rejectWithValue(reason);
+        });
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { orderApiUrl, request } from "../../utils/api";
-
+import { cleanConstructor } from "./burgerConstructor";
 const initialState = {
   orderNumber: null,
   orderDetailsLoadingError: null,
@@ -11,25 +11,21 @@ export const fetchOrder = createAsyncThunk(
 
   async function (ingredients, { rejectWithValue, dispatch }) {
     try {
-      // const res = await fetch(orderApiUrl, {
-      //   method: "POST",
-      //   body: JSON.stringify({ ingredients }),
-      //   headers: {
-      //     "Content-type": "application/json; charset=UTF-8",
-      //   },
-      // });
+       const result = await request(
+        orderApiUrl,
+        {
+          method: "POST",
+          body: JSON.stringify({ ingredients }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      ).catch(err=>rejectWithValue(err));
+      
+      result?.success && dispatch(cleanConstructor());
+      
+      return result
 
-      // if (!res.ok) {
-      //   throw new Error(`Server Error: ${res.status}`);
-      // }
-
-      return await request(orderApiUrl, {
-        method: "POST",
-        body: JSON.stringify({ ingredients }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      });
     } catch (error) {
       return rejectWithValue(error.message);
     }
