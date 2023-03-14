@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { resetPasswordUrl } from "../../utils/api";
+import { resetPasswordUrl, request } from "../../utils/api";
 
 const initialState = {
   resetPasswordSuccess: null,
@@ -12,24 +12,29 @@ export const fetchResetPassword = createAsyncThunk(
 
   async function (body, { rejectWithValue }) {
     try {
-      const res = await fetch(resetPasswordUrl, {
+      // const res = await fetch(resetPasswordUrl, {
+      //   method: "POST",
+      //   body: JSON.stringify(body),
+      //   headers: {
+      //     "Content-type": "application/json; charset=UTF-8",
+      //   },
+      // });
+      //  if (!res.ok) {
+      //   throw new Error(`Server Error: ${res.status}`);
+      // }
+
+      return await request(resetPasswordUrl, {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-       if (!res.ok) {
-        throw new Error(`Server Error: ${res.status}`);
-      }
-
-      return await res.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
-
 
 const authSlice = createSlice({
   name: "resetPassword",
@@ -49,20 +54,18 @@ const authSlice = createSlice({
         state.resetPasswordError = null;
       })
       .addCase(fetchResetPassword.fulfilled, (state, action) => {
-        state.resetPasswordSuccess = action.payload?.success
-        state.resetPasswordMessage = action.payload?.message
+        state.resetPasswordSuccess = action.payload?.success;
+        state.resetPasswordMessage = action.payload?.message;
         state.resetPasswordError = null;
       })
       .addCase(fetchResetPassword.rejected, (state, action) => {
         state.resetPasswordSuccess = null;
         state.resetPasswordMessage = null;
-        state.resetPasswordError =  action.payload;
-       });
+        state.resetPasswordError = action.payload;
+      });
   },
 });
 
 export default authSlice.reducer;
 
-export const {
-  cleanResetPasswordData,
-} = authSlice.actions;
+export const { cleanResetPasswordData } = authSlice.actions;

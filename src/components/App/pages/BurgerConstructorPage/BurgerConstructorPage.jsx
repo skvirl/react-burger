@@ -7,6 +7,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBurgerIngredients } from "../../../../services/slices/burgerIngredients";
+import { useEffect } from "react";
 
 function BurgerConstructorPage() {
   const dispacth = useDispatch();
@@ -15,38 +16,30 @@ function BurgerConstructorPage() {
     hasError: state.burgerIngredients.burgerIngredientsLoadingError,
   }));
 
-  React.useEffect(() => {
-    dispacth(fetchBurgerIngredients());
-  }, [dispacth]);
-
   return (
     <>
       {isLoaded && (
-
-          <main className={styles.main}>
-            {hasError ? (
-              <div
-                className={
-                  "text text_type_main-large " + styles.dataLoadingError
-                }
-              >
-                Ошибка получения данных. <br /> Не паникуйте. В следующий раз
-                всё обязательно получится!
+        <main className={styles.main}>
+          {hasError ? (
+            <div
+              className={"text text_type_main-large " + styles.dataLoadingError}
+            >
+              Ошибка получения данных. <br /> Не паникуйте. В следующий раз всё
+              обязательно получится!
+            </div>
+          ) : (
+            <DndProvider backend={HTML5Backend}>
+              <div className={styles.container}>
+                <section className={styles.mainSection}>
+                  <BurgerIngredients />
+                </section>
+                <section className={styles.mainSection}>
+                  <BurgerConstructor />
+                </section>
               </div>
-            ) : (
-              <DndProvider backend={HTML5Backend}>
-                <div className={styles.container}>
-                  <section className={styles.mainSection}>
-                    <BurgerIngredients />
-                  </section>
-                  <section className={styles.mainSection}>
-                    <BurgerConstructor />
-                  </section>
-                </div>
-              </DndProvider>
-            )}
-          </main>
-        
+            </DndProvider>
+          )}
+        </main>
       )}
     </>
   );

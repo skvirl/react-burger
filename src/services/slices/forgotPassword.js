@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { forgotPasswordUrl } from "../../utils/api";
+import { forgotPasswordUrl, request } from "../../utils/api";
 
 const initialState = {
   forgotPasswordSuccess: null,
-  forgotPasswordError: null
+  forgotPasswordError: null,
 };
 
 export const fetchForgotPassword = createAsyncThunk(
@@ -11,24 +11,30 @@ export const fetchForgotPassword = createAsyncThunk(
 
   async function (body, { rejectWithValue }) {
     try {
-      const res = await fetch(forgotPasswordUrl, {
+      return await request(forgotPasswordUrl, {
         method: "POST",
-        body: JSON.stringify( body ),
+        body: JSON.stringify(body),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
       });
-      if (!res.ok) {
-        throw new Error(`Server Error: ${res.status}`);
-      }
+      // const res = await fetch(forgotPasswordUrl, {
+      //   method: "POST",
+      //   body: JSON.stringify( body ),
+      //   headers: {
+      //     "Content-type": "application/json; charset=UTF-8",
+      //   },
+      // });
+      // if (!res.ok) {
+      //   throw new Error(`Server Error: ${res.status}`);
+      // }
 
-      return await res.json();
+      // return await res.json();
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
-
 
 const authSlice = createSlice({
   name: "forgotPassword",
@@ -47,18 +53,16 @@ const authSlice = createSlice({
         state.forgotPasswordError = null;
       })
       .addCase(fetchForgotPassword.fulfilled, (state, action) => {
-        state.forgotPasswordSuccess = action.payload?.success
+        state.forgotPasswordSuccess = action.payload?.success;
         state.forgotPasswordError = null;
       })
       .addCase(fetchForgotPassword.rejected, (state, action) => {
         state.forgotPasswordSuccess = null;
-        state.forgotPasswordError =  action.payload;
-       });
+        state.forgotPasswordError = action.payload;
+      });
   },
 });
 
 export default authSlice.reducer;
 
-export const {
-  cleanForgotPasswordData,
-} = authSlice.actions;
+export const { cleanForgotPasswordData } = authSlice.actions;

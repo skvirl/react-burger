@@ -84,9 +84,14 @@ const fetchAuth = (actionType, url, fetchOptions) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
       let res = await fetch(url, fetchOptions(body));
+      console.log(res);
+      console.log(444444444444);
       let resBody = await res.json();
-
+      console.log(111111111111);
+      console.log(resBody);
       if (!res.ok && tryToRefreshToken(resBody?.message)) {
+        console.log(22222222222);
+
         res = await fetch(url, fetchOptions(body));
         resBody = await res.json();
       }
