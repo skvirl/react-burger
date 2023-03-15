@@ -22,7 +22,7 @@ export const fetchOrder = createAsyncThunk(
         }
       ).catch(err=>rejectWithValue(err));
       
-      result?.success && dispatch(cleanConstructor());
+      // result?.success && dispatch(cleanConstructor());
       
       return result
 

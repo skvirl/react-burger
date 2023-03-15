@@ -13,6 +13,7 @@ const burgerSlice = createSlice({
       state.selectedBunId = action.payload;
     },
     cleanConstructor(state, action) {
+      console.log(`cleanConstructor`);
       state.burgerConstructor = null;
       state.selectedBunId = null;
     },

@@ -20,16 +20,14 @@ import IngredientsDetails from "../Modal/IngredientDetails";
 import OrderDetails from "../Modal/OrderDetails";
 import { useEffect } from "react";
 import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
+import { cleanOrderDetails } from "../../services/slices/orderDetails";
+import { cleanConstructor } from "../../services/slices/burgerConstructor";
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const background = location.state && location.state.background;
-  const handleModalClose = () => {
-    navigate(-1);
-    dispatch(cleanIngredientDetails());
-  };
 
   useEffect(() => {
     dispatch(fetchBurgerIngredients());
@@ -81,7 +79,12 @@ export default function App() {
           <Route
             path="/ingredients/:id"
             element={
-              <Modal closeModal={handleModalClose}>
+              <Modal
+                closeModal={() => {
+                  navigate(-1);
+                  dispatch(cleanIngredientDetails());
+                }}
+              >
                 <IngredientsDetails modalUse />
               </Modal>
             }
@@ -90,7 +93,13 @@ export default function App() {
             path="/order-details"
             element={
               <ProtectedRoute>
-                <Modal closeModal={handleModalClose}>
+                <Modal
+                  closeModal={() => {
+                    navigate(-1);
+                    dispatch(cleanOrderDetails());
+                    dispatch(cleanConstructor());
+                  }}
+                >
                   <OrderDetails modalUse />
                 </Modal>
               </ProtectedRoute>

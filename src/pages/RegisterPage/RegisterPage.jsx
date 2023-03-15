@@ -33,7 +33,7 @@ const RegisterPage = () => {
     authSuccess && navigate("/");
   }, [authSuccess]);
 
-  let submit = useCallback(
+  const submit = useCallback(
     (e) => {
       e.preventDefault();
       dispatch(

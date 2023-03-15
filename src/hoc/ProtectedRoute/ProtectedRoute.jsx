@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children, anonymous  }) => {
   const dispatch = useDispatch();
   const accessToken = getCookie('accessToken');
  
-  let fromPage = location?.state?.from?.pathname || "/";
+  const fromPage = location?.state?.from?.pathname || "/";
 
   const authenticated = useSelector((state) =>
     state?.auth?.user?.name

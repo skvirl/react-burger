@@ -39,7 +39,7 @@ const LoginPage = () => {
     authenticated && navigate(fromPage, { replace: true });
   }, [authenticated]);
 
-  let submit = useCallback(
+  const submit = useCallback(
     (e) => {
       e.preventDefault();
       dispatch(

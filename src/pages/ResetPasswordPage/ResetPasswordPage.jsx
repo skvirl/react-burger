@@ -32,7 +32,7 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ num: "", password: "" });
 
-  let submit = useCallback(
+  const submit = useCallback(
     (e) => {
       e.preventDefault();
       dispatch(

@@ -51,7 +51,6 @@ const options_PATCH = (body) => ({
 const fetchAuth = (actionType, url, fetchOptions) =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
-
       return requestWithTokenRefresh(url, fetchOptions(body))
         .then((val) => val)
         .catch((reason) => {
