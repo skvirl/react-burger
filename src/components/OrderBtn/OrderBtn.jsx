@@ -11,6 +11,7 @@ import {
   fetchOrder,
   cleanOrderDetails,
 } from "../../services/slices/orderDetails";
+import { useLocation,useNavigate } from "react-router-dom";
 
 const OrderBtn = () => {
     const {
@@ -28,7 +29,9 @@ const OrderBtn = () => {
     }));
   
     const dispatch = useDispatch();
-  
+    const location = useLocation();
+    const navigate = useNavigate();
+    
     const selectedBunElem = useMemo(
       () => ingredientData?.find((val) => val._id === selectedBunId),
       [ingredientData, selectedBunId]
@@ -62,6 +65,7 @@ const OrderBtn = () => {
             </div>
           </div>
           <Button
+            htmlType="button"
             type="primary"
             size="medium"
             onClick={() => {
@@ -73,6 +77,10 @@ const OrderBtn = () => {
                     selectedBunId,
                   ])
                 );
+                navigate(`order-details`, {
+                  state: { background: location },
+                });
+
               } else {
                 dispatch(cleanOrderDetails());
               }
@@ -81,14 +89,6 @@ const OrderBtn = () => {
             Оформить заказ
           </Button>
         </div>
-        <Modal
-          isOpen={isModalOpen || Boolean(orderDetailsLoadingError)}
-          closeModal={() => {
-            dispatch(cleanOrderDetails());
-          }}
-        >
-          <OrderDetails />
-        </Modal>
       </>
     );
   };

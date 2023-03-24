@@ -2,8 +2,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  
+}
+.orderDetails_spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 695px;
   width: 720px;
 }
+.orderDetails_modal {
+  width: 720px;
+}
+.orderDetails_page {
+  width: 100%;
+}
+
 .orderDetails__orderNumber {
   margin-top: 100px;
   text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25),

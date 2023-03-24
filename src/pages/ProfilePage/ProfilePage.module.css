@@ -1,0 +1,12 @@
+
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* align-items: center; */
+    gap: 20px;
+    min-width: 480px;
+    padding-left: 60px;
+  }
+  

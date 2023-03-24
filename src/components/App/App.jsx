@@ -1,57 +1,112 @@
-import React from "react";
-import "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./App.module.css";
-import AppHeader from "../AppHeader/AppHeader";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {
+  BurgerConstructorPage,
+  NotFound404Page,
+  LoginPage,
+  ProfilePage,
+  ForgotPasswordPage,
+  RegisterPage,
+  ResetPasswordPage,
+  Layout,
+  ProfileLayout,
+  Logout,
+  ProfileOrders,
+} from "../../pages";
+import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
+import { useDispatch } from "react-redux";
+import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
+import Modal from "../Modal/Modal";
+import IngredientsDetails from "../Modal/IngredientDetails";
+import OrderDetails from "../Modal/OrderDetails";
+import { useEffect } from "react";
 import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
+import { cleanOrderDetails } from "../../services/slices/orderDetails";
+import { cleanConstructor } from "../../services/slices/burgerConstructor";
 
-function App() {
-  const dispacth = useDispatch();
-  const { isLoaded, hasError } = useSelector((state) => ({
-    isLoaded: Boolean(state.burgerIngredients.burgerIngredients),
-    hasError: state.burgerIngredients.burgerIngredientsLoadingError,
-  }));
+export default function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const background = location.state && location.state.background;
 
-  React.useEffect(() => {
-    dispacth(fetchBurgerIngredients());
-  }, [dispacth]);
+  useEffect(() => {
+    dispatch(fetchBurgerIngredients());
+  }, []);
 
   return (
     <>
-      {isLoaded && (
-        <div className={styles.app}>
-          <AppHeader />
-          <main className={styles.app__main}>
-            {hasError ? (
-              <div
-                className={
-                  "text text_type_main-large " + styles.dataLoadingError
-                }
+      <Routes location={background || location}>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<BurgerConstructorPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute anonymous>
+                <RegisterPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <ProtectedRoute anonymous>
+                <ForgotPasswordPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfileLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<ProfilePage />} />
+            <Route path="orders" element={<ProfileOrders />} />
+            <Route path="logout" element={<Logout />} />
+          </Route>
+          <Route path="/ingredients/:id" element={<IngredientsDetails />} />
+          <Route path="/order-details" element={<OrderDetails />} />
+          <Route path="*" element={<NotFound404Page />} />
+        </Route>
+      </Routes>
+
+      {background && (
+        <Routes>
+          <Route
+            path="/ingredients/:id"
+            element={
+              <Modal
+                closeModal={() => {
+                  navigate(-1);
+                  dispatch(cleanIngredientDetails());
+                }}
               >
-                Ошибка получения данных. <br /> Не паникуйте. В следующий раз
-                всё обязательно получится!
-              </div>
-            ) : (
-              <DndProvider backend={HTML5Backend}>
-                <div className={styles.container}>
-                  <section className={styles.mainSection}>
-                    <BurgerIngredients />
-                  </section>
-                  <section className={styles.mainSection}>
-                    <BurgerConstructor />
-                  </section>
-                </div>
-              </DndProvider>
-            )}
-          </main>
-        </div>
+                <IngredientsDetails modalUse />
+              </Modal>
+            }
+          />
+          <Route
+            path="/order-details"
+            element={
+              <ProtectedRoute>
+                <Modal
+                  closeModal={() => {
+                    navigate(-1);
+                    dispatch(cleanOrderDetails());
+                    dispatch(cleanConstructor());
+                  }}
+                >
+                  <OrderDetails modalUse />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       )}
     </>
   );
 }
-
-export default App;

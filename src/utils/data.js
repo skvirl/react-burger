@@ -234,3 +234,9 @@ export const ingredientTabs = [
   {value:'sauce', name: 'Соусы',  alt:'Соус'},
   {value:'main', name: 'Начинки', alt:'Начинка'}
 ];
+
+export const cachedAuthData = {
+  name: 'qqweqweqw2',
+  email: 'qweqweqweqw2@yandex.ru',
+  password: 'qweqweqweqwe2',
+}

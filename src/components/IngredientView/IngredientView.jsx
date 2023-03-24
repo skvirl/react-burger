@@ -3,14 +3,18 @@ import PropTypes from "prop-types";
 import styles from "./IngredientView.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientType } from "../../utils/types";
-import { dragItemTypes,ingredientTypes } from "../../utils/itemTypes";
+import { dragItemTypes, ingredientTypes } from "../../utils/itemTypes";
 import { useSelector, useDispatch } from "react-redux";
-import { setIngredientDetails } from "../../services/slices/ingredientDetails";
 import { useDrag, DragPreviewImage } from "react-dnd";
- 
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { setIngredientDetails } from "../../services/slices/ingredientDetails";
+
 const IngredientView = ({ elem, alt }) => {
   const { _id, image, price, name } = elem;
   const dispacth = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const constructorIngedientsList = useSelector(
     (state) => state.burgerConstructor.burgerConstructor
   );
@@ -38,7 +42,9 @@ const IngredientView = ({ elem, alt }) => {
         ref={drag}
         className={styles.ingredient__Card}
         onClick={() => {
-          dispacth(setIngredientDetails(elem));
+          navigate(`/ingredients/${elem._id}`, {
+            state: { background: location },
+          });
         }}
       >
         <img src={image} alt={alt} className={styles.ingredient__Picture} />

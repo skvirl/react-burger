@@ -1,17 +1,34 @@
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import PropTypes from "prop-types";
+import { LoaderSpinner } from "../LoaderSpinner/LoaderSpinner";
 
-const OrderDetails = () => {
-  const { orderNumber, hasError } = useSelector(
-    (state) => ({orderNumber:state.orderDetails.orderNumber,
-      hasError: state.orderDetails.orderDetailsLoadingError })
-   );
+const OrderDetails = ({ modalUse }) => {
+  const { orderNumber, hasError } = useSelector((state) => ({
+    orderNumber: state.orderDetails.orderNumber,
+    hasError: state.orderDetails.orderDetailsLoadingError,
+  }));
 
-  return (
+  const noData = !modalUse && !orderNumber && !hasError;
+
+  return noData ? (
+    <Navigate to="/" replace />
+  ) : (
     <>
-      {hasError ? (
-        <div className={styles.orderDetails}>
+      {!hasError && !orderNumber ? (
+        <div
+          className={styles.orderDetails_spinner}
+        ><LoaderSpinner/>
+          
+        </div>
+      ) : hasError ? (
+        <div
+          className={`${styles.orderDetails} ${
+            modalUse ? styles.orderDetails_modal : styles.orderDetails_page
+          }`}
+        >
           <div
             className={`text text_type_main-medium ` + styles.text_errorHeader}
           >
@@ -28,7 +45,11 @@ const OrderDetails = () => {
           <div className={styles.image}></div>
         </div>
       ) : (
-        <div className={styles.orderDetails}>
+        <div
+          className={`${styles.orderDetails} ${
+            modalUse ? styles.orderDetails_modal : styles.orderDetails_page
+          }`}
+        >
           <div
             className={
               `text text_type_digits-large ` + styles.orderDetails__orderNumber
@@ -57,3 +78,7 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
+
+OrderDetails.propTypes = {
+  modalUse: PropTypes.bool,
+};

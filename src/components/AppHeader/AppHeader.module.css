@@ -45,8 +45,9 @@
   height: 40px;
 
   background: #1c1c21;
-
+  border: none;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .logo svg {
@@ -72,6 +73,7 @@
   order: 0;
   flex-grow: 0;
 
+  border: none;
   cursor: pointer;
 }
 

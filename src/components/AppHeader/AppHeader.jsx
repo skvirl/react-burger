@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import styles from "./AppHeader.module.css";
 import {
@@ -7,30 +6,36 @@ import {
   ListIcon,
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useNavigate } from "react-router";
+import { useMatch } from "react-router-dom";
+import React from "react";
+
 
 const AppHeader = () => {
+  const navigate = useNavigate();
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <nav className={styles.leftNav}>
           <HeaderButton
-            type="primary"
-            ico={<BurgerIcon type="primary" />}
+            to="/"
+            ico={BurgerIcon}
             title="Конструктор"
           />
           <HeaderButton
-            type="secondary"
-            ico={<ListIcon type="secondary" />}
+            to="/orders"
+            ico={ListIcon}
             title="Лента заказов"
           />
         </nav>
-        <div className={styles.logo + " header__logo"}>
+        <button className={styles.logo + " header__logo"} onClick={() => navigate("/")}>
           <Logo />
-        </div>
+        </button>
         <nav className={styles.rightNav}>
           <HeaderButton
-            type="secondary"
-            ico={<ProfileIcon type="secondary" />}
+            to="/profile"
+            ico={ProfileIcon}
             title="Личный кабинет"
           />
         </nav>
@@ -39,27 +44,29 @@ const AppHeader = () => {
   );
 };
 
-const HeaderButton = ({ type, ico, title }) => {
+const HeaderButton = ({ to, ico, title }) => {
+  const navigate = useNavigate();
+  const isActive = useMatch({ path: to, end: to.length === 1 });
   return (
-    <div className={styles.button}>
-      <div className={styles.button__logo}>{ico}</div>
+    <button className={styles.button} onClick={() => navigate(to)}>
+      <div className={styles.button__logo}>{React.createElement(ico, {type:(isActive?"primary":"secondary")}, null)}</div>
       <span
         className={
-          (type === "primary"
+          (isActive
             ? styles.button__title_primary
             : styles.button__title_secondary) + " text text_type_main-small"
         }
       >
         {title}
       </span>
-    </div>
+    </button>
   );
 };
 
 HeaderButton.propTypes = {
-  type: PropTypes.string,
+  to: PropTypes.string,
   title: PropTypes.string,
-  ico: PropTypes.element,
+  ico: PropTypes.func,
 };
 
 export default AppHeader;

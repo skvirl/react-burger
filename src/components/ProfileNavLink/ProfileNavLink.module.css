@@ -1,0 +1,14 @@
+.nav__link {
+  background: none;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex-basis: 64px;
+  flex-shrink: 0;
+  text-decoration:none;
+  color: #8585ad;
+}
+
+.nav__link_active {
+  color: #f2f2f3;
+}

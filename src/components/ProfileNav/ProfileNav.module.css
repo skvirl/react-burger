@@ -1,0 +1,30 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 320px;
+  justify-content: space-between;
+}
+
+.menu__nav {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 64px;
+}
+
+.menu__description {
+  width: 320px;
+  height: 48px;
+  text-align: left;
+  color: #8585ad;
+
+  /* desktop/text */
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+
+  opacity: 0.4;
+}

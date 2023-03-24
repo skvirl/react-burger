@@ -12,6 +12,11 @@ const burgerSlice = createSlice({
     setBun(state, action) {
       state.selectedBunId = action.payload;
     },
+    cleanConstructor(state, action) {
+      console.log(`cleanConstructor`);
+      state.burgerConstructor = null;
+      state.selectedBunId = null;
+    },
     addConstrucorIngredient(state, action) {
       state.burgerConstructor = [
         ...(state.burgerConstructor ? state.burgerConstructor : []),
@@ -43,4 +48,5 @@ export const {
   addConstrucorIngredient,
   moveConstructorIngredient,
   removeConstrucorIngredient,
+  cleanConstructor
 } = burgerSlice.actions;
