@@ -1,16 +1,16 @@
 import React from "react";
  
-const useFetch = (requestFn) => {
-  const [hasError, setHasError] = React.useState(null);
-  const [isLoaded, setIsLoaded] = React.useState(null);
-  const [data, setData] = React.useState();
+const useFetch = (requestFn:Function) => {
+  const [hasError, setHasError] = React.useState<boolean|null>(null);
+  const [isLoaded, setIsLoaded] = React.useState<boolean|null>(null);
+  const [data, setData] = React.useState<unknown>();
 
   const executeApiRequest = ()=>{
     requestFn()
-      .then((result) => {
+      .then((result:unknown) => {
         setData(result);
       })
-      .catch((error) => {
+      .catch((error:any) => {
         setHasError(error);
       })
       .finally(() => {

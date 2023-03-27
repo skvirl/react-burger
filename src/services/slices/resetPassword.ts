@@ -1,13 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { resetPasswordUrl, request } from "../../utils/api";
 
-const initialState = {
+const initialState: {
+  resetPasswordSuccess: null;
+  resetPasswordError: string|null|unknown;
+  resetPasswordMessage: null | string;
+} = {
   resetPasswordSuccess: null,
   resetPasswordError: null,
   resetPasswordMessage: null,
 };
 
-export const fetchResetPassword = createAsyncThunk(
+export const fetchResetPassword:any = createAsyncThunk(
   "burger/fetchResetPassword",
 
   async function (body, { rejectWithValue }) {
@@ -18,8 +22,8 @@ export const fetchResetPassword = createAsyncThunk(
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      }).catch(err=>rejectWithValue(err));
-    } catch (error) {
+      }).catch((err) => rejectWithValue(err));
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -50,7 +54,7 @@ const authSlice = createSlice({
       .addCase(fetchResetPassword.rejected, (state, action) => {
         state.resetPasswordSuccess = null;
         state.resetPasswordMessage = null;
-        state.resetPasswordError = action.payload;
+        state.resetPasswordError = String(action.payload);
       });
   },
 });

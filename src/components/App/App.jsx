@@ -82,7 +82,7 @@ export default function App() {
               <Modal
                 closeModal={() => {
                   navigate(-1);
-                  dispatch(cleanIngredientDetails());
+                  // dispatch(cleanIngredientDetails());
                 }}
               >
                 <IngredientsDetails modalUse />

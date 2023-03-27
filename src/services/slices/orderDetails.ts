@@ -1,32 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { orderApiUrl, request } from "../../utils/api";
-import { cleanConstructor } from "./burgerConstructor";
-const initialState = {
+
+const initialState: {
+  orderNumber: null | string;
+  orderDetailsLoadingError: string|null|unknown;
+} = {
   orderNumber: null,
   orderDetailsLoadingError: null,
 };
 
-export const fetchOrder = createAsyncThunk(
+export const fetchOrder:any = createAsyncThunk(
   "burger/fetchOrder",
 
   async function (ingredients, { rejectWithValue, dispatch }) {
     try {
-       const result = await request(
-        orderApiUrl,
-        {
-          method: "POST",
-          body: JSON.stringify({ ingredients }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      ).catch(err=>rejectWithValue(err));
-      
-      // result?.success && dispatch(cleanConstructor());
-      
-      return result
+      const result = await request(orderApiUrl, {
+        method: "POST",
+        body: JSON.stringify({ ingredients }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }).catch((err) => rejectWithValue(err));
 
-    } catch (error) {
+      return result;
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -54,7 +51,7 @@ const burgerSlice = createSlice({
       })
       .addCase(fetchOrder.rejected, (state, action) => {
         state.orderNumber = null;
-        state.orderDetailsLoadingError = action.payload;
+        state.orderDetailsLoadingError = String(action.payload);
       });
   },
 });

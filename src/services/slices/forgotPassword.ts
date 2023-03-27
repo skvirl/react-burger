@@ -1,7 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { forgotPasswordUrl, request } from "../../utils/api";
 
-const initialState = {
+
+
+const initialState:{
+  forgotPasswordSuccess:boolean|null,
+  forgotPasswordError:string|null|unknown,
+} = {
   forgotPasswordSuccess: null,
   forgotPasswordError: null,
 };
@@ -19,7 +24,9 @@ export const fetchForgotPassword = createAsyncThunk(
         },
       }).catch(err=>rejectWithValue(err));
 
-    } catch (error) {
+    } catch (error:any) {
+      console.log(error);
+      
       return rejectWithValue(error.message);
     }
   }
@@ -42,7 +49,7 @@ const authSlice = createSlice({
         state.forgotPasswordError = null;
       })
       .addCase(fetchForgotPassword.fulfilled, (state, action) => {
-        state.forgotPasswordSuccess = action.payload?.success;
+        state.forgotPasswordSuccess = !!action.payload?.success;
         state.forgotPasswordError = null;
       })
       .addCase(fetchForgotPassword.rejected, (state, action) => {

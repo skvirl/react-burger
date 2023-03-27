@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+type TConstructorElement = { constructorId: string; _id: string };
+type TInitialState = {
+  burgerConstructor: null | TConstructorElement[];
+  selectedBunId: null | string;
+};
+
+const initialState: TInitialState = {
   burgerConstructor: null,
   selectedBunId: null,
 };
@@ -27,6 +33,8 @@ const burgerSlice = createSlice({
       ];
     },
     moveConstructorIngredient(state, action) {
+      if (state.burgerConstructor === null) return;
+
       const { dragIndex, hoverIndex } = action.payload;
 
       const movingElement = state.burgerConstructor[dragIndex];
@@ -34,6 +42,8 @@ const burgerSlice = createSlice({
       state.burgerConstructor.splice(hoverIndex, 0, movingElement);
     },
     removeConstrucorIngredient(state, action) {
+      if (state.burgerConstructor === null) return;
+
       state.burgerConstructor = state.burgerConstructor.filter(
         (val) => val.constructorId !== action.payload
       );
@@ -48,5 +58,5 @@ export const {
   addConstrucorIngredient,
   moveConstructorIngredient,
   removeConstrucorIngredient,
-  cleanConstructor
+  cleanConstructor,
 } = burgerSlice.actions;

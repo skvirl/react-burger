@@ -1,3 +1,4 @@
+import { Url } from "url";
 import { setCookie, getCookie } from "./cookies";
 
 export const baseUrl = new URL("https://norma.nomoreparties.space/api/");
@@ -14,25 +15,28 @@ export const logoutUrl = new URL("auth/logout", baseUrl);
 export const tokenUrl = new URL("auth/token", baseUrl);
 export const userUrl = new URL("auth/user", baseUrl);
 
-export const request = (endpoint, options) => {
+export const request = (
+  endpoint: string | URL,
+  options?: RequestInit | undefined
+) => {
   return fetch(endpoint, options).then(checkResponse).then(checkSuccess);
 };
 
-const checkResponse = (res) => {
+const checkResponse = (res: Response) => {
   if (res.ok) {
     return res.json();
   }
   return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
 };
 
-const checkSuccess = (res) => {
+const checkSuccess = (res: { [key: string]: number | string | boolean }) => {
   if (res && res.success) {
     return res;
   }
   return Promise.reject(`Ответ не success: ${res}`);
 };
 
-export const tryToRefreshToken = async (errMessage) => {
+export const tryToRefreshToken = async (errMessage: string) => {
   const jwtExpiredMes = "jwt expired";
   const refreshToken = getCookie("refreshToken");
 
@@ -65,13 +69,16 @@ export const tryToRefreshToken = async (errMessage) => {
   }
 };
 
-export const requestWithTokenRefresh = (endpoint, options) => {
+export const requestWithTokenRefresh = (
+  endpoint: string | URL,
+  options?: RequestInit | undefined
+) => {
   return fetch(endpoint, options)
     .then(checkResponseAuth)
     .then(checkSuccessAuth);
 };
 
-export const checkResponseAuth = (res) => {
+export const checkResponseAuth = (res: Response) => {
   if (!res.ok && res.status === 403) {
     try {
       return res.json();
@@ -79,19 +86,19 @@ export const checkResponseAuth = (res) => {
       return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
     }
   } else if (res.ok) {
-
     return res.json();
   }
 
   return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
 };
 
-const checkSuccessAuth = (res) => {
+const checkSuccessAuth = async (res: {
+  [key: string]: number | string | boolean;
+  message: string;
+}) => {
   if (res && res.success) {
-
     return res;
-  } else if (res && !res.success && tryToRefreshToken(res.message)) {
-
+  } else if (res && !res.success && (await tryToRefreshToken(res.message))) {
     return Promise.reject(`token refresh succes`);
   }
 

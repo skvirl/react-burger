@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import {
   requestWithTokenRefresh,
   registerUrl,
@@ -9,7 +9,17 @@ import {
 } from "../../utils/api";
 import { setCookie, deleteCookie, getCookie } from "../../utils/cookies";
 
-const initialState = {
+ type TState = {
+  errorMessage: string|null|unknown;
+  success: null | boolean;
+  user: {
+    email: null | string;
+    name: null | string;
+  };
+}
+export type TAuthSlice = {auth:TState}
+
+const initialState:TState  = {
   errorMessage: null,
   success: null,
   user: {
@@ -18,7 +28,18 @@ const initialState = {
   },
 };
 
-const options_POST = (body) => ({
+type TLoginJson = { email: string; password: string };
+
+type TRegisterJson = {
+  email: string;
+  password: string;
+  name: string;
+};
+type TLogoutJson = {
+  token: string;
+};
+
+const options_POST = (body: TLoginJson | TRegisterJson | TLogoutJson) => ({
   method: "POST",
   body: JSON.stringify(body),
   headers: {
@@ -33,13 +54,16 @@ const options_GET = () => ({
   credentials: "same-origin",
   headers: {
     "Content-Type": "application/json",
-    authorization: "Bearer " + getCookie('accessToken'),
+    authorization: "Bearer " + getCookie("accessToken"),
   },
   redirect: "follow",
   referrerPolicy: "no-referrer",
 });
 
-const options_PATCH = (body) => ({
+const options_PATCH = (body: {
+  userData: { name: string; email: string; password: string };
+  accessToken: string;
+}) => ({
   method: "PATCH",
   body: JSON.stringify(body.userData),
   headers: {
@@ -48,23 +72,23 @@ const options_PATCH = (body) => ({
   },
 });
 
-const fetchAuth = (actionType, url, fetchOptions) =>
+const fetchAuth = (actionType: string, url: URL, fetchOptions: Function): any =>
   createAsyncThunk(actionType, async function (body, { rejectWithValue }) {
     try {
       return requestWithTokenRefresh(url, fetchOptions(body))
         .then((val) => val)
         .catch((reason) => {
-
           if (reason === `token refresh succes`) {
             return requestWithTokenRefresh(url, fetchOptions(body));
           } else {
-            return rejectWithValue(reason);
+            // return rejectWithValue(reason);
+            throw reason
           }
         })
         .catch((reason) => {
-          return rejectWithValue(reason);
+          throw reason;
         });
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   });
@@ -83,7 +107,7 @@ export const fetchPatchUser = fetchAuth(
   options_PATCH
 );
 
-const pendingAuthCB = (state, action) => {
+const pendingAuthCB = (state:TState) => {
   state.user = {
     email: null,
     name: null,
@@ -92,7 +116,7 @@ const pendingAuthCB = (state, action) => {
   state.errorMessage = null;
 };
 
-const fulfilledAuthCB = (state, action) => {
+const fulfilledAuthCB = (state:TState, action: PayloadAction<any>) => {
   state.user = { ...state.user, ...action.payload.user };
   state.success = action.payload.success;
   state.errorMessage = null;
@@ -102,13 +126,13 @@ const fulfilledAuthCB = (state, action) => {
     setCookie("refreshToken", action.payload.refreshToken);
 };
 
-const rejectedAuthCB = (state, action) => {
+const rejectedAuthCB = (state:TState, action: PayloadAction<any>) => {
   state.user = {
     email: null,
     name: null,
   };
-  state.accessToken = null;
-  state.refreshToken = null;
+  // state.accessToken = null;
+  // state.refreshToken = null;
   state.success = null;
   state.errorMessage = action.payload;
 };
@@ -116,6 +140,7 @@ const rejectedAuthCB = (state, action) => {
 const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {},
 
   extraReducers: (builder) => {
     [fetchRegister, fetchLogin].forEach((thunk) => {
@@ -137,7 +162,7 @@ const authSlice = createSlice({
         state.success = null;
       })
       .addCase(fetchLogout.fulfilled, (state, action) => {
-        pendingAuthCB(state, action);
+        pendingAuthCB(state);
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
       });
@@ -146,4 +171,4 @@ const authSlice = createSlice({
 
 export default authSlice.reducer;
 
-export const { cleanAuthData } = authSlice.actions;
+ 
