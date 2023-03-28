@@ -1,20 +1,21 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk , AsyncThunk } from "@reduxjs/toolkit";
 import { forgotPasswordUrl, request } from "../../utils/api";
 
-
-
-const initialState:{
+type TInitialState = {
   forgotPasswordSuccess:boolean|null,
   forgotPasswordError:string|null|unknown,
-} = {
+}
+
+const initialState: TInitialState = {
   forgotPasswordSuccess: null,
   forgotPasswordError: null,
 };
+export type TForgotPasswordSlice = {forgotPassword:TInitialState}
 
-export const fetchForgotPassword = createAsyncThunk(
+export const fetchForgotPassword  = createAsyncThunk(
   "burger/fetchForgotPassword",
 
-  async function (body, { rejectWithValue }) {
+  async function (body:{email:string}, { rejectWithValue }) {
     try {
       return await request(forgotPasswordUrl, {
         method: "POST",
@@ -24,10 +25,10 @@ export const fetchForgotPassword = createAsyncThunk(
         },
       }).catch(err=>rejectWithValue(err));
 
-    } catch (error:any) {
-      console.log(error);
-      
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      if ( error instanceof Error && "message" in error) {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -36,7 +37,7 @@ const authSlice = createSlice({
   name: "forgotPassword",
   initialState,
   reducers: {
-    cleanForgotPasswordData(state, action) {
+    cleanForgotPasswordData(state) {
       state.forgotPasswordSuccess = null;
       state.forgotPasswordError = null;
     },

@@ -1,12 +1,12 @@
 import styles from "./OrderDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import PropTypes from "prop-types";
 import { LoaderSpinner } from "../LoaderSpinner/LoaderSpinner";
+import { useAppSelector } from "../../hooks/redux";
+import { FC } from 'react'
 
-const OrderDetails = ({ modalUse }) => {
-  const { orderNumber, hasError } = useSelector((state) => ({
+const OrderDetails: FC<{ modalUse?: boolean | undefined }> = ({ modalUse }) => {
+  const { orderNumber, hasError } = useAppSelector((state) => ({
     orderNumber: state.orderDetails.orderNumber,
     hasError: state.orderDetails.orderDetailsLoadingError,
   }));
@@ -20,14 +20,13 @@ const OrderDetails = ({ modalUse }) => {
       {!hasError && !orderNumber ? (
         <div
           className={styles.orderDetails_spinner}
-        ><LoaderSpinner/>
-          
+        ><LoaderSpinner />
+
         </div>
       ) : hasError ? (
         <div
-          className={`${styles.orderDetails} ${
-            modalUse ? styles.orderDetails_modal : styles.orderDetails_page
-          }`}
+          className={`${styles.orderDetails} ${modalUse ? styles.orderDetails_modal : styles.orderDetails_page
+            }`}
         >
           <div
             className={`text text_type_main-medium ` + styles.text_errorHeader}
@@ -39,16 +38,15 @@ const OrderDetails = ({ modalUse }) => {
               `text text_type_main-small text_color_inactive ` + styles.text3
             }
           >
-            {hasError}
+            {<>hasError</>}
           </div>
 
           <div className={styles.image}></div>
         </div>
       ) : (
         <div
-          className={`${styles.orderDetails} ${
-            modalUse ? styles.orderDetails_modal : styles.orderDetails_page
-          }`}
+          className={`${styles.orderDetails} ${modalUse ? styles.orderDetails_modal : styles.orderDetails_page
+            }`}
         >
           <div
             className={
@@ -79,6 +77,4 @@ const OrderDetails = ({ modalUse }) => {
 
 export default OrderDetails;
 
-OrderDetails.propTypes = {
-  modalUse: PropTypes.bool,
-};
+

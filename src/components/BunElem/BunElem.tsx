@@ -1,11 +1,12 @@
 import styles from "./BunElem.module.css";
 import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
-import { useMemo } from "react";
-import PropTypes from "prop-types";
-
-const BunElem = ({ type }) => {
-  const { ingredientData, selectedBunId } = useSelector((state) => ({
+import { useMemo, FC } from "react";
+import {  useAppSelector } from "../../hooks/redux";
+ 
+const BunElem: FC<{
+  type?: 'top' | 'bottom'
+}> = ({ type }) => {
+  const { ingredientData, selectedBunId } = useAppSelector((state) => ({
     ingredientData: state.burgerIngredients.burgerIngredients,
     selectedBunId: state.burgerConstructor.selectedBunId,
   }));
@@ -15,7 +16,7 @@ const BunElem = ({ type }) => {
     [ingredientData, selectedBunId]
   );
 
-  if (!selectedBunElem) return;
+  if (!selectedBunElem) return <></>;
 
   return (
     <div className={styles.elementBox}>
@@ -29,9 +30,5 @@ const BunElem = ({ type }) => {
     </div>
   );
 };
-
-BunElem.propTypes = {
-  type: PropTypes.string.isRequired,
-};
-
+ 
 export default BunElem;

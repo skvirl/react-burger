@@ -1,7 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ResetPasswordPage.module.css";
-import { useCallback, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, FormEventHandler, useEffect } from "react";
 import { fetchResetPassword } from "../../services/slices/resetPassword";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -10,6 +9,7 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useForm } from "../../hooks/useForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -18,9 +18,9 @@ const RegisterPage = () => {
     location?.state?.from !== "/forgot-password" && navigate("/");
   }, []);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { resetPasswordSuccess, resetPasswordMessage, authenticated } =
-    useSelector((state) => ({
+  useAppSelector((state) => ({
       resetPasswordSuccess: state?.resetPassword?.resetPasswordSuccess,
       resetPasswordMessage: state?.resetPassword?.resetPasswordMessage,
       authenticated: Boolean(state?.auth?.user?.name),
@@ -32,13 +32,13 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ num: "", password: "" });
 
-  const submit = useCallback(
-    (e) => {
-      e.preventDefault();
+  const submit:FormEventHandler = useCallback(
+    (event) => {
+      event.preventDefault();
       dispatch(
         fetchResetPassword({
-          password: form.password,
-          token: form.num,
+          password: String(form.password),
+          token: String(form.num),
         })
       );
     },
@@ -57,7 +57,7 @@ const RegisterPage = () => {
             <p className="text text_type_main-default">Восстановление пароля</p>
             <PasswordInput
               placeholder={"Введите новый пароль"}
-              value={form.password}
+              value={String(form.password)}
               name="password"
               onChange={onChange}
             />
@@ -66,7 +66,7 @@ const RegisterPage = () => {
               type={"text"}
               placeholder={"Введите код из письма"}
               onChange={onChange}
-              value={form.num}
+              value={String(form.num)}
               name={"num"}
             />
             <Button htmlType="submit" type="primary" size="medium">

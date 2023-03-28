@@ -1,7 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ProfilePage.module.css";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import {
   EmailInput,
   PasswordInput,
@@ -11,10 +10,11 @@ import {
 import { fetchGetUser, fetchPatchUser } from "../../services/slices/auth";
 import { getCookie } from "../../utils/cookies";
 import { useForm } from "../../hooks/useForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
-  const { storedName, storedEmail } = useSelector((state) => ({
+  const dispatch = useAppDispatch();
+  const { storedName, storedEmail } = useAppSelector((state) => ({
     storedName: state?.auth?.user?.name,
     storedEmail: state?.auth?.user?.email,
   }));
@@ -28,7 +28,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (storedEmail) {
-      dispatch(fetchGetUser(getCookie("accessToken")));
+      dispatch(fetchGetUser({}));
     } else {
       setFormValue({
         name: storedName,
@@ -57,9 +57,9 @@ const ProfilePage = () => {
     dispatch(
       fetchPatchUser({
         userData: {
-          name: form.name,
-          email: form.email,
-          password: form.password,
+          name: String(form.name),
+          email: String(form.email),
+          password: String(form.password),
         },
         accessToken: getCookie("accessToken"),
       })
@@ -73,23 +73,22 @@ const ProfilePage = () => {
           type={"text"}
           placeholder={"Имя"}
           onChange={onChange}
-          value={form.name}
+          value={String(form.name)}
           name={"name"}
           icon={"EditIcon"}
         />
 
         <EmailInput
-          type={"text"}
           placeholder={"Логин"}
           onChange={onChange}
-          value={form.email}
+          value={String(form.email)}
           name={"email"}
-          icon={"EditIcon"}
+          isIcon={true}
         />
 
         <PasswordInput
           placeholder={"Пароль"}
-          value={form.password}
+          value={String(form.password)}
           name="password"
           onChange={onChange}
         />

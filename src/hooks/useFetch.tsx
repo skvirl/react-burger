@@ -1,7 +1,7 @@
 import React from "react";
  
 const useFetch = (requestFn:Function) => {
-  const [hasError, setHasError] = React.useState<boolean|null>(null);
+  const [hasError, setHasError] = React.useState<Error|null>(null);
   const [isLoaded, setIsLoaded] = React.useState<boolean|null>(null);
   const [data, setData] = React.useState<unknown>();
 
@@ -10,7 +10,7 @@ const useFetch = (requestFn:Function) => {
       .then((result:unknown) => {
         setData(result);
       })
-      .catch((error:any) => {
+      .catch((error:Error) => {
         setHasError(error);
       })
       .finally(() => {

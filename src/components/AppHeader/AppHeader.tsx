@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import styles from "./AppHeader.module.css";
 import {
   Logo,
@@ -8,10 +7,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useNavigate } from "react-router";
 import { useMatch } from "react-router-dom";
-import React from "react";
+import React, { FC } from "react";
 
 
-const AppHeader = () => {
+const AppHeader :FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -44,7 +43,11 @@ const AppHeader = () => {
   );
 };
 
-const HeaderButton = ({ to, ico, title }) => {
+const HeaderButton: FC<{
+  to: string;
+  ico:  ({ type }: any) => JSX.Element   ; // any here, cause cant get TIconProps from ui-components   
+  title?: string;
+ }> =({ to, ico, title }) => {
   const navigate = useNavigate();
   const isActive = useMatch({ path: to, end: to.length === 1 });
   return (
@@ -63,10 +66,6 @@ const HeaderButton = ({ to, ico, title }) => {
   );
 };
 
-HeaderButton.propTypes = {
-  to: PropTypes.string,
-  title: PropTypes.string,
-  ico: PropTypes.func,
-};
+ 
 
 export default AppHeader;

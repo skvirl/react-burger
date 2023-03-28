@@ -1,8 +1,7 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./LoginPage.module.css";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect,FormEventHandler } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchLogin } from "../../services/slices/auth";
 import { cachedAuthData } from "../../utils/data";
 import { useForm } from "../../hooks/useForm";
@@ -11,6 +10,7 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const LoginPage = () => {
   const { form, onChange } = useForm({
@@ -19,14 +19,14 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
 
   let fromPage = location?.state?.from?.pathname || "/";
   fromPage = fromPage === "/profile/logout" ? "/profile" : fromPage;
   fromPage = fromPage === "/order-details" ? "/" : fromPage;
 
-  const { authenticated, authErrorMessage } = useSelector((state) => ({
+  const { authenticated, authErrorMessage } = useAppSelector((state) => ({
     authenticated: Boolean(state?.auth?.user?.name),
     authErrorMessage: state?.auth?.errorMessage,
   }));
@@ -39,13 +39,13 @@ const LoginPage = () => {
     authenticated && navigate(fromPage, { replace: true });
   }, [authenticated]);
 
-  const submit = useCallback(
-    (e) => {
-      e.preventDefault();
+  const submit:FormEventHandler = useCallback(
+    (event) => {
+      event.preventDefault();
       dispatch(
         fetchLogin({
-          email: form.email,
-          password: form.password,
+          email: String(form.email),
+          password: String(form.password),
         })
       );
     },
@@ -55,22 +55,21 @@ const LoginPage = () => {
   return (
     <div className={styles.container}>
       {authErrorMessage ? (
-        <div className="text text_type_main-default">{authErrorMessage}</div>
+        <div className="text text_type_main-default">{<>authErrorMessage</>}</div>
       ) : (
         <>
           <form className={styles.form} onSubmit={submit}>
             <p className="text text_type_main-default">Вход</p>
 
             <EmailInput
-              type={"text"}
               placeholder={"E-mail"}
               onChange={onChange}
-              value={form.email}
+              value={String(form.email)}
               name={"email"}
             />
             <PasswordInput
               placeholder="Password"
-              value={form.password}
+              value={String(form.password)}
               name="password"
               onChange={onChange}
             />

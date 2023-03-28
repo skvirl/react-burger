@@ -1,21 +1,18 @@
-import { useMemo } from "react";
-import PropTypes from "prop-types";
+import { FC, useMemo } from "react";
 import styles from "./IngredientView.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientType } from "../../utils/types";
 import { dragItemTypes, ingredientTypes } from "../../utils/itemTypes";
-import { useSelector, useDispatch } from "react-redux";
 import { useDrag, DragPreviewImage } from "react-dnd";
-import { useLocation, Link, useNavigate } from "react-router-dom";
-import { setIngredientDetails } from "../../services/slices/ingredientDetails";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../hooks/redux";
+import TIngredient from "../../types/ingredient";
 
-const IngredientView = ({ elem, alt }) => {
+const IngredientView: FC<{ elem: TIngredient, alt: string }> = ({ elem, alt }) => {
   const { _id, image, price, name } = elem;
-  const dispacth = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const constructorIngedientsList = useSelector(
+  const constructorIngedientsList = useAppSelector(
     (state) => state.burgerConstructor.burgerConstructor
   );
 
@@ -28,9 +25,9 @@ const IngredientView = ({ elem, alt }) => {
     () =>
       constructorIngedientsList
         ? constructorIngedientsList.reduce(
-            (sum, val) => sum + (val._id === elem._id ? 1 : 0),
-            0
-          )
+          (sum, val) => sum + (val._id === elem._id ? 1 : 0),
+          0
+        )
         : 0,
     [constructorIngedientsList, elem]
   );
@@ -71,25 +68,16 @@ const IngredientView = ({ elem, alt }) => {
   );
 };
 
-const Counter = ({ num }) => {
+const Counter: FC<{ num: number }> = ({ num }) => {
   return (
-    num > 0 && (
+    num > 0 ? (
       <div
         className={"text text_type_main-small " + styles.ingredient__counter}
       >
         {num}
       </div>
-    )
+    ) : <></>
   );
-};
-
-IngredientView.propTypes = {
-  elem: ingredientType.isRequired,
-  alt: PropTypes.string,
-};
-
-Counter.propTypes = {
-  num: PropTypes.number,
 };
 
 export default IngredientView;

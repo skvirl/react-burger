@@ -1,26 +1,25 @@
-import { useSelector, useDispatch } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
-import { fetchGetUser, TAuthSlice } from "../../services/slices/auth";
+import { fetchGetUser } from "../../services/slices/auth";
 import { useEffect, FC } from "react";
 import { getCookie } from "../../utils/cookies";
-
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const ProtectedRoute: FC<{
   children: React.ReactNode;
   anonymous?: boolean;
 }> = ({ children, anonymous }) => {
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const accessToken = getCookie('accessToken');
 
   const fromPage = location?.state?.from?.pathname || "/";
 
-  const authenticated = useSelector((state: TAuthSlice) =>
+  const authenticated = useAppSelector((state) =>
     state?.auth?.user?.name
   );
 
   useEffect(() => {
-    !authenticated && accessToken && dispatch(fetchGetUser());
+    !authenticated && accessToken && dispatch(fetchGetUser({}));
   }, []);
 
   if (anonymous && authenticated) {

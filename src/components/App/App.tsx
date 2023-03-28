@@ -13,8 +13,6 @@ import {
   ProfileOrders,
 } from "../../pages";
 import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
-import { useDispatch } from "react-redux";
-import { cleanIngredientDetails } from "../../services/slices/ingredientDetails";
 import Modal from "../Modal/Modal";
 import IngredientsDetails from "../Modal/IngredientDetails";
 import OrderDetails from "../Modal/OrderDetails";
@@ -22,11 +20,12 @@ import { useEffect } from "react";
 import { fetchBurgerIngredients } from "../../services/slices/burgerIngredients";
 import { cleanOrderDetails } from "../../services/slices/orderDetails";
 import { cleanConstructor } from "../../services/slices/burgerConstructor";
+import { useAppDispatch } from "../../hooks/redux";
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const background = location.state && location.state.background;
 
   useEffect(() => {

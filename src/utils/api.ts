@@ -19,6 +19,7 @@ export const request = (
   endpoint: string | URL,
   options?: RequestInit | undefined
 ) => {
+  
   return fetch(endpoint, options).then(checkResponse).then(checkSuccess);
 };
 
@@ -79,6 +80,7 @@ export const requestWithTokenRefresh = (
 };
 
 export const checkResponseAuth = (res: Response) => {
+  
   if (!res.ok && res.status === 403) {
     try {
       return res.json();
@@ -96,6 +98,7 @@ const checkSuccessAuth = async (res: {
   [key: string]: number | string | boolean;
   message: string;
 }) => {
+
   if (res && res.success) {
     return res;
   } else if (res && !res.success && (await tryToRefreshToken(res.message))) {

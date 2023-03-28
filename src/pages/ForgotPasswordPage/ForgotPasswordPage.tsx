@@ -1,19 +1,19 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ForgotPasswordPage.module.css";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, FormEventHandler, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchForgotPassword } from "../../services/slices/forgotPassword";
 import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useForm } from "../../hooks/useForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { forgotPasswordSuccess, authenticated } = useSelector((state) => ({
+  const dispatch = useAppDispatch();
+  const { forgotPasswordSuccess, authenticated } = useAppSelector((state) => ({
     forgotPasswordSuccess: state?.forgotPassword?.forgotPasswordSuccess,
     authenticated: Boolean(state?.auth?.user?.name),
   }));
@@ -24,10 +24,10 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ email: "" });
 
-  const submit = useCallback(
-    (e) => {
-      e.preventDefault();
-      dispatch(fetchForgotPassword({ email: form.email }));
+  const submit: FormEventHandler = useCallback(
+    (event) => {
+      event.preventDefault();
+      dispatch(fetchForgotPassword({ email: String(form.email) }));
     },
     [form]
   );
@@ -41,10 +41,10 @@ const RegisterPage = () => {
       <form className={styles.form} onSubmit={submit}>
         <p className="text text_type_main-default">Восстановление пароля</p>
         <EmailInput
-          type={"text"}
+          // type={"text"}
           placeholder={"E-mail"}
           onChange={onChange}
-          value={form.email}
+          value={String(form.email)}
           name={"email"}
         />
         <Button htmlType="submit" type="primary" size="medium">

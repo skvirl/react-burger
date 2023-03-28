@@ -1,7 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./RegisterPage.module.css";
-import { useCallback, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, FormEventHandler, useEffect } from "react";
 import { fetchRegister } from "../../services/slices/auth";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,12 +11,14 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { cachedAuthData } from "../../utils/data";
 import { useForm } from "../../hooks/useForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+
 const RegisterPage = () => {
   const { form, onChange } = useForm(cachedAuthData);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { authSuccess, authErrorMessage, authenticated } = useSelector(
+  const dispatch = useAppDispatch();
+  const { authSuccess, authErrorMessage, authenticated } = useAppSelector(
     (state) => ({
       authSuccess: state?.auth?.success,
       authErrorMessage: state?.auth?.errorMessage,
@@ -33,14 +34,14 @@ const RegisterPage = () => {
     authSuccess && navigate("/");
   }, [authSuccess]);
 
-  const submit = useCallback(
-    (e) => {
-      e.preventDefault();
+  const submit :FormEventHandler = useCallback(
+    (event) => {
+      event.preventDefault();
       dispatch(
         fetchRegister({
-          email: form.email,
-          password: form.password,
-          name: form.name,
+          email: String(form.email),
+          password: String(form.password),
+          name: String(form.name),
         })
       );
     },
@@ -50,7 +51,7 @@ const RegisterPage = () => {
   return (
     <div className={styles.container}>
       {authErrorMessage ? (
-        <div className="text text_type_main-default">{authErrorMessage}</div>
+        <div className="text text_type_main-default">{<>authErrorMessage</>}</div>
       ) : (
         <>
           <form className={styles.form}>
@@ -59,21 +60,20 @@ const RegisterPage = () => {
               type={"text"}
               placeholder={"Имя"}
               onChange={onChange}
-              value={form.name}
+              value={String(form.name)}
               name={"name"}
             />
 
             <EmailInput
-              type={"text"}
               placeholder={"E-mail"}
               onChange={onChange}
-              value={form.email}
+              value={String(form.email)}
               name={"email"}
             />
 
             <PasswordInput
               placeholder={"Пароль"}
-              value={form.password}
+              value={String(form.password)}
               name="password"
               onChange={onChange}
             />

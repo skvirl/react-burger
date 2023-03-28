@@ -1,10 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../hooks/redux";
 import { fetchLogout } from "../../services/slices/auth";
 import { getCookie } from "../../utils/cookies";  
 import { useEffect } from "react"; 
 
 const Logout = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   useEffect(() => {
     const refreshToken = getCookie('refreshToken');

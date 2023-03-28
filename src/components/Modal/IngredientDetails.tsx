@@ -1,37 +1,31 @@
-import PropTypes from "prop-types";
 import styles from "./IngredientDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useAppSelector } from "../../hooks/redux";
+import { FC, ReactNode } from 'react'
 
-const IngredientDetails = ({ modalUse }) => {
+const modalUseTypeGuard = (modalUse: boolean | undefined) => modalUse !== undefined ? modalUse : false;
+
+const IngredientDetails: FC<{
+  modalUse?: boolean | undefined
+}> = ({ modalUse }) => {
   const { id } = useParams();
-  const burgerIngredients = useSelector(
+  const burgerIngredients = useAppSelector(
     (state) => state.burgerIngredients.burgerIngredients
   );
 
-  if (!burgerIngredients) {
-    return <></>;
-  }
+  const emptyIngredient = <DetailsMain modalUse={modalUseTypeGuard(modalUse)} title='Ингридиент не найден'>{ }</DetailsMain>;
+  if (!burgerIngredients) return emptyIngredient;
 
   const ingredientDetails = burgerIngredients.find((val) => val._id == id);
+  if (ingredientDetails === undefined) return emptyIngredient;
 
   const { image_large, name, calories, proteins, fat, carbohydrates } =
     ingredientDetails;
 
   return (
-    <div className={styles.ingredientDetails}>
-      <div
-        className={`text text_type_main-large ${
-          styles.ingredientDetails__title
-        } ${
-          modalUse
-            ? styles.ingredientDetails__title_modal
-            : styles.ingredientDetails__title_page
-        }`}
-      >
-        Детали ингредиента
-      </div>
+
+    <DetailsMain modalUse={modalUseTypeGuard(modalUse)} title='Детали ингредиента'>
       <img
         src={image_large}
         alt="Ингредиент"
@@ -55,11 +49,36 @@ const IngredientDetails = ({ modalUse }) => {
         <CompositionBox title="Жиры, г" val={fat} />
         <CompositionBox title="Углеводы, г" val={carbohydrates} />
       </div>
-    </div>
+    </DetailsMain>
   );
 };
 
-const CompositionBox = ({ title, val }) => {
+const DetailsMain: FC<{
+  modalUse: boolean,
+  title: string,
+  children: ReactNode
+}> = ({ modalUse, title, children }) => {
+  return (
+    <div className={styles.ingredientDetails}>
+      <div
+        className={`text text_type_main-large ${styles.ingredientDetails__title
+          } ${modalUse
+            ? styles.ingredientDetails__title_modal
+            : styles.ingredientDetails__title_page
+          }`}
+      >
+        {title}
+      </div>
+      {children}
+    </div>
+
+  );
+};
+
+const CompositionBox: FC<{
+  title: string,
+  val: number
+}> = ({ title, val }) => {
   return (
     <div className={styles.ingredientDetails__compositionBox}>
       <div className={styles.ingredientDetails__compositionTitle}>{title}</div>
@@ -70,7 +89,3 @@ const CompositionBox = ({ title, val }) => {
 
 export default IngredientDetails;
 
-CompositionBox.propTypes = {
-  title: PropTypes.string.isRequired,
-  val: PropTypes.number,
-};

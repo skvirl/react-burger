@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice , PayloadAction} from "@reduxjs/toolkit";
 
 type TConstructorElement = { constructorId: string; _id: string };
 type TInitialState = {
@@ -10,20 +10,20 @@ const initialState: TInitialState = {
   burgerConstructor: null,
   selectedBunId: null,
 };
+export type TBurgerConstructorSlice = {burgerConstructor:TInitialState}
 
 const burgerSlice = createSlice({
   name: "burgerConstructor",
   initialState,
   reducers: {
-    setBun(state, action) {
+    setBun(state, action:PayloadAction<string>) {
       state.selectedBunId = action.payload;
     },
-    cleanConstructor(state, action) {
-      console.log(`cleanConstructor`);
+    cleanConstructor(state, ) {
       state.burgerConstructor = null;
       state.selectedBunId = null;
     },
-    addConstrucorIngredient(state, action) {
+    addConstrucorIngredient(state, action:PayloadAction<{constructorId:string,ingredientId:string}>) {
       state.burgerConstructor = [
         ...(state.burgerConstructor ? state.burgerConstructor : []),
         {
@@ -32,7 +32,7 @@ const burgerSlice = createSlice({
         },
       ];
     },
-    moveConstructorIngredient(state, action) {
+    moveConstructorIngredient(state, action:PayloadAction<{dragIndex:number,hoverIndex:number}>) {
       if (state.burgerConstructor === null) return;
 
       const { dragIndex, hoverIndex } = action.payload;
@@ -41,7 +41,7 @@ const burgerSlice = createSlice({
       state.burgerConstructor.splice(dragIndex, 1);
       state.burgerConstructor.splice(hoverIndex, 0, movingElement);
     },
-    removeConstrucorIngredient(state, action) {
+    removeConstrucorIngredient(state, action:PayloadAction<string>) {
       if (state.burgerConstructor === null) return;
 
       state.burgerConstructor = state.burgerConstructor.filter(

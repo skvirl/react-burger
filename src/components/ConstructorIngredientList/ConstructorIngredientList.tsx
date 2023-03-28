@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
 import  ConstructorIngredient  from "../ConstructorIngredient/ConstructorIngredient";
-
+import { useAppSelector } from "../../hooks/redux";
 const ConstructorIngredientList = () => {
-  const { ingredientData, constructorIngedientsList } = useSelector(
+  const { ingredientData, constructorIngedientsList } = useAppSelector(
     (state) => ({
       ingredientData: state.burgerIngredients.burgerIngredients,
       constructorIngedientsList: state.burgerConstructor.burgerConstructor,

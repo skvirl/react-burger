@@ -1,30 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { orderApiUrl, request } from "../../utils/api";
 
-const initialState: {
+type TInitialState = {
   orderNumber: null | string;
-  orderDetailsLoadingError: string|null|unknown;
-} = {
+  orderDetailsLoadingError: string | null | unknown;
+};
+const initialState: TInitialState = {
   orderNumber: null,
   orderDetailsLoadingError: null,
 };
+export type TOrderDetailsSlice = { orderDetails: TInitialState };
+type TOrderNumberPayload = { order: { number: string } };
 
-export const fetchOrder:any = createAsyncThunk(
+export const fetchOrder = createAsyncThunk(
   "burger/fetchOrder",
 
-  async function (ingredients, { rejectWithValue, dispatch }) {
+  async function (
+    ingredients: string[],
+    { rejectWithValue }
+  ): Promise<TOrderNumberPayload | unknown> {
     try {
-      const result = await request(orderApiUrl, {
+      return await request(orderApiUrl, {
         method: "POST",
         body: JSON.stringify({ ingredients }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      }).catch((err) => rejectWithValue(err));
-
-      return result;
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+      });
+    } catch (error: unknown) {
+      if (error instanceof Error && "message" in error) {
+        return rejectWithValue(error.message);
+      }
     }
   }
 );
@@ -33,7 +39,7 @@ const burgerSlice = createSlice({
   name: "orderDetails",
   initialState,
   reducers: {
-    cleanOrderDetails(state, action) {
+    cleanOrderDetails(state) {
       state.orderNumber = null;
       state.orderDetailsLoadingError = null;
     },
@@ -41,12 +47,14 @@ const burgerSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrder.pending, (state, action) => {
+      .addCase(fetchOrder.pending, (state) => {
         state.orderNumber = null;
         state.orderDetailsLoadingError = null;
       })
       .addCase(fetchOrder.fulfilled, (state, action) => {
-        state.orderNumber = action.payload?.order?.number;
+        state.orderNumber = (
+          action.payload as TOrderNumberPayload
+        ).order.number;
         state.orderDetailsLoadingError = null;
       })
       .addCase(fetchOrder.rejected, (state, action) => {
