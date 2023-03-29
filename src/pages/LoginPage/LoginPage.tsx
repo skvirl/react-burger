@@ -1,6 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./LoginPage.module.css";
-import { useCallback, useEffect,FormEventHandler } from "react";
+import { useCallback, useEffect, FormEventHandler } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchLogin } from "../../services/slices/auth";
 import { cachedAuthData } from "../../utils/data";
@@ -11,6 +11,7 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const LoginPage = () => {
   const { form, onChange } = useForm({
@@ -26,10 +27,11 @@ const LoginPage = () => {
   fromPage = fromPage === "/profile/logout" ? "/profile" : fromPage;
   fromPage = fromPage === "/order-details" ? "/" : fromPage;
 
-  const { authenticated, authErrorMessage } = useAppSelector((state) => ({
+  const getStoreData = (state: RootState) => ({
     authenticated: Boolean(state?.auth?.user?.name),
     authErrorMessage: state?.auth?.errorMessage,
-  }));
+  });
+  const { authenticated, authErrorMessage } = useAppSelector(getStoreData);
 
   useEffect(() => {
     authenticated && navigate(-1);
@@ -39,7 +41,7 @@ const LoginPage = () => {
     authenticated && navigate(fromPage, { replace: true });
   }, [authenticated]);
 
-  const submit:FormEventHandler = useCallback(
+  const submit: FormEventHandler = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(

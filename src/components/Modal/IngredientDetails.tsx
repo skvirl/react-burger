@@ -3,6 +3,7 @@ import "@ya.praktikum/react-developer-burger-ui-components";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import { FC, ReactNode } from 'react'
+import { RootState } from "../../services/store";
 
 const modalUseTypeGuard = (modalUse: boolean | undefined) => modalUse !== undefined ? modalUse : false;
 
@@ -10,9 +11,9 @@ const IngredientDetails: FC<{
   modalUse?: boolean | undefined
 }> = ({ modalUse }) => {
   const { id } = useParams();
-  const burgerIngredients = useAppSelector(
-    (state) => state.burgerIngredients.burgerIngredients
-  );
+  
+  const getStoreData = (state: RootState) => state.burgerIngredients.burgerIngredients;
+  const burgerIngredients = useAppSelector(getStoreData);
 
   const emptyIngredient = <DetailsMain modalUse={modalUseTypeGuard(modalUse)} title='Ингридиент не найден'>{ }</DetailsMain>;
   if (!burgerIngredients) return emptyIngredient;

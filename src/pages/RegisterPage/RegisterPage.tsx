@@ -12,19 +12,20 @@ import {
 import { cachedAuthData } from "../../utils/data";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const RegisterPage = () => {
   const { form, onChange } = useForm(cachedAuthData);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { authSuccess, authErrorMessage, authenticated } = useAppSelector(
-    (state) => ({
-      authSuccess: state?.auth?.success,
-      authErrorMessage: state?.auth?.errorMessage,
-      authenticated: Boolean(state?.auth?.user?.name),
-    })
-  );
+
+  const getStoreData = (state: RootState) => ({
+    authSuccess: state?.auth?.success,
+    authErrorMessage: state?.auth?.errorMessage,
+    authenticated: Boolean(state?.auth?.user?.name),
+  });
+  const { authSuccess, authErrorMessage, authenticated } = useAppSelector(getStoreData);
 
   useEffect(() => {
     authenticated && navigate(-1);
@@ -34,7 +35,7 @@ const RegisterPage = () => {
     authSuccess && navigate("/");
   }, [authSuccess]);
 
-  const submit :FormEventHandler = useCallback(
+  const submit: FormEventHandler = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(

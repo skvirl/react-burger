@@ -1,12 +1,16 @@
-import  ConstructorIngredient  from "../ConstructorIngredient/ConstructorIngredient";
+import ConstructorIngredient from "../ConstructorIngredient/ConstructorIngredient";
 import { useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
+
+
 const ConstructorIngredientList = () => {
-  const { ingredientData, constructorIngedientsList } = useAppSelector(
-    (state) => ({
-      ingredientData: state.burgerIngredients.burgerIngredients,
-      constructorIngedientsList: state.burgerConstructor.burgerConstructor,
-    })
-  );
+  
+  const getStoreData = (state: RootState) => ({
+    ingredientData: state.burgerIngredients.burgerIngredients,
+    constructorIngedientsList: state.burgerConstructor.burgerConstructor,
+  });
+
+  const { ingredientData, constructorIngedientsList } = useAppSelector(getStoreData);
 
   return (
     <>

@@ -10,17 +10,20 @@ import {
 } from "../../services/slices/orderDetails";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const OrderBtn = () => {
+
+  const getStoreData = (state: RootState) => ({
+    ingredientData: state.burgerIngredients.burgerIngredients,
+    constructorIngedientsList: state.burgerConstructor.burgerConstructor,
+    selectedBunId: state.burgerConstructor.selectedBunId,
+  });
   const {
     ingredientData,
     constructorIngedientsList,
     selectedBunId,
-  } = useAppSelector((state) => ({
-    ingredientData: state.burgerIngredients.burgerIngredients,
-    constructorIngedientsList: state.burgerConstructor.burgerConstructor,
-    selectedBunId: state.burgerConstructor.selectedBunId,
-  }));
+  } = useAppSelector(getStoreData);
 
   const dispatch = useAppDispatch();
   const location = useLocation();

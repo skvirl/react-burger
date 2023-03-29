@@ -5,12 +5,15 @@ import BurgerIngredients from "../../components/BurgerIngredients/BurgerIngredie
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 function BurgerConstructorPage() {
-  const { isLoaded, hasError } = useAppSelector((state) => ({
+
+  const getStoreData = (state: RootState) => ({
     isLoaded: Boolean(state.burgerIngredients.burgerIngredients),
     hasError: state.burgerIngredients.burgerIngredientsLoadingError,
-  }));
+  });
+  const { isLoaded, hasError } = useAppSelector(getStoreData);
 
   return (
     <>

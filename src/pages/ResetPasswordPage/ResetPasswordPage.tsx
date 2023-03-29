@@ -10,6 +10,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -19,12 +20,14 @@ const RegisterPage = () => {
   }, []);
 
   const dispatch = useAppDispatch();
+
+  const getStoreData = (state: RootState) => ({
+    resetPasswordSuccess: state?.resetPassword?.resetPasswordSuccess,
+    resetPasswordMessage: state?.resetPassword?.resetPasswordMessage,
+    authenticated: Boolean(state?.auth?.user?.name),
+  });
   const { resetPasswordSuccess, resetPasswordMessage, authenticated } =
-  useAppSelector((state) => ({
-      resetPasswordSuccess: state?.resetPassword?.resetPasswordSuccess,
-      resetPasswordMessage: state?.resetPassword?.resetPasswordMessage,
-      authenticated: Boolean(state?.auth?.user?.name),
-    }));
+    useAppSelector(getStoreData);
 
   useEffect(() => {
     authenticated && navigate(-1);
@@ -32,7 +35,7 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ num: "", password: "" });
 
-  const submit:FormEventHandler = useCallback(
+  const submit: FormEventHandler = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(

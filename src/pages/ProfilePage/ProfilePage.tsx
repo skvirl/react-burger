@@ -11,13 +11,16 @@ import { fetchGetUser, fetchPatchUser } from "../../services/slices/auth";
 import { getCookie } from "../../utils/cookies";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const ProfilePage = () => {
   const dispatch = useAppDispatch();
-  const { storedName, storedEmail } = useAppSelector((state) => ({
+
+  const getStoreData = (state: RootState) => ({
     storedName: state?.auth?.user?.name,
     storedEmail: state?.auth?.user?.email,
-  }));
+  });
+  const { storedName, storedEmail } = useAppSelector(getStoreData);
 
   const [formModified, setFormModified] = useState(false);
   const { form, onChange, setFormValue } = useForm({
@@ -41,8 +44,8 @@ const ProfilePage = () => {
   useEffect(() => {
     setFormModified(
       form.name !== storedName ||
-        form.email !== storedEmail ||
-        form.password !== ""
+      form.email !== storedEmail ||
+      form.password !== ""
     );
   }, [form]);
 

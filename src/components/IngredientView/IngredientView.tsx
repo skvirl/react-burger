@@ -6,15 +6,15 @@ import { useDrag, DragPreviewImage } from "react-dnd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
 import TIngredient from "../../types/ingredient";
+import { RootState } from "../../services/store";
 
 const IngredientView: FC<{ elem: TIngredient, alt: string }> = ({ elem, alt }) => {
   const { _id, image, price, name } = elem;
   const location = useLocation();
   const navigate = useNavigate();
 
-  const constructorIngedientsList = useAppSelector(
-    (state) => state.burgerConstructor.burgerConstructor
-  );
+  const getStoreData = (state: RootState) => state.burgerConstructor.burgerConstructor;
+  const constructorIngedientsList = useAppSelector(getStoreData);
 
   const [, drag, preview] = useDrag({
     type: dragItemTypes.CONSTRUCTOR_LIST,

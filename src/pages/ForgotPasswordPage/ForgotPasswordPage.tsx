@@ -9,14 +9,17 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { forgotPasswordSuccess, authenticated } = useAppSelector((state) => ({
+
+  const getStoreData = (state: RootState) => ({
     forgotPasswordSuccess: state?.forgotPassword?.forgotPasswordSuccess,
     authenticated: Boolean(state?.auth?.user?.name),
-  }));
+  });
+  const { forgotPasswordSuccess, authenticated } = useAppSelector(getStoreData);
 
   useEffect(() => {
     authenticated && navigate(-1);

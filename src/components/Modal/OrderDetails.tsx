@@ -4,12 +4,15 @@ import { Navigate } from "react-router-dom";
 import { LoaderSpinner } from "../LoaderSpinner/LoaderSpinner";
 import { useAppSelector } from "../../hooks/redux";
 import { FC } from 'react'
+import { RootState } from "../../services/store";
 
 const OrderDetails: FC<{ modalUse?: boolean | undefined }> = ({ modalUse }) => {
-  const { orderNumber, hasError } = useAppSelector((state) => ({
+
+  const getStoreData = (state: RootState) => ({
     orderNumber: state.orderDetails.orderNumber,
     hasError: state.orderDetails.orderDetailsLoadingError,
-  }));
+  });
+  const { orderNumber, hasError } = useAppSelector(getStoreData);
 
   const noData = !modalUse && !orderNumber && !hasError;
 

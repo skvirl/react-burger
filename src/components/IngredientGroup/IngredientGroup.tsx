@@ -2,12 +2,15 @@ import { useEffect, useRef, useMemo, FC } from "react";
 import styles from "./IngredientGroup.module.css";
 import IngredientView from "../IngredientView/IngredientView";
 import { useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
 
 const IngredientGroup: FC<{ name: string, type: string, alt: string, observer: IntersectionObserver }> = ({ name, type, alt, observer }) => {
-  const { ingredientData, selectedBunId } = useAppSelector((state) => ({
+
+  const getStoreData = (state: RootState) => ({
     ingredientData: state.burgerIngredients.burgerIngredients,
     selectedBunId: state.burgerConstructor.selectedBunId,
-  }));
+  });
+  const { ingredientData, selectedBunId } = useAppSelector(getStoreData);
 
   const groupRef = useRef<HTMLDivElement>(null);
 

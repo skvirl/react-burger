@@ -1,18 +1,18 @@
-import { useEffect, FC, ReactNode, KeyboardEvent, MouseEventHandler } from "react";
+import { useEffect, FC, ReactNode, KeyboardEvent, MouseEventHandler, FormEventHandler } from "react";
 import ReactDOM from "react-dom";
 import styles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const modalsElement = document.getElementById("modal");
 
-const Modal: FC<{ closeModal: Function, children: ReactNode }> = ({ children, closeModal }) => {
+const Modal: FC<{ closeModal: () => void, children: ReactNode }> = ({ children, closeModal }) => {
 
   return (
 
     modalsElement !== null ? ReactDOM.createPortal(
       <div className={styles.modal}>
-        <ModalOverlay closeModal={closeModal as unknown as MouseEventHandler} />
-        <ModalContent closeModal={closeModal as unknown as MouseEventHandler}>{children}</ModalContent>
+        <ModalOverlay closeModal={closeModal} />
+        <ModalContent closeModal={closeModal}>{children}</ModalContent>
       </div>,
       modalsElement
     ) :
@@ -21,14 +21,14 @@ const Modal: FC<{ closeModal: Function, children: ReactNode }> = ({ children, cl
 };
 
 const ModalOverlay: FC<{ closeModal: Function }> = ({ closeModal }) => {
-  return <div className={styles.modal__overlay} onClick={ closeModal as unknown as MouseEventHandler}></div>;
+  return <div className={styles.modal__overlay} onClick={closeModal as MouseEventHandler}></div>;
 };
 
 const ModalContent: FC<{ closeModal: Function, children: ReactNode }> = ({ children, closeModal }) => {
   useEffect(() => {
-    function closeByEscape(evt: Event) {
-      const keyboardEvent = evt as unknown as KeyboardEvent;
-      if (keyboardEvent.key === "Escape") {
+
+    const closeByEscape = (ev: { key: string }) => {
+      if (ev.key === "Escape") {
         closeModal(undefined);
       }
     }
@@ -42,7 +42,7 @@ const ModalContent: FC<{ closeModal: Function, children: ReactNode }> = ({ child
   return (
     <div className={styles.modal__content}>
       {children}
-      <div className={styles.modal__close} onClick={closeModal as unknown as MouseEventHandler}>
+      <div className={styles.modal__close} onClick={closeModal as MouseEventHandler}>
         <CloseIcon type="primary" />
       </div>
     </div>
@@ -51,4 +51,3 @@ const ModalContent: FC<{ closeModal: Function, children: ReactNode }> = ({ child
 
 export default Modal;
 
- 
