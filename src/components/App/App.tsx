@@ -11,6 +11,8 @@ import {
   ProfileLayout,
   Logout,
   ProfileOrders,
+  OrderFeed,
+  OrderFeedDetails,
 } from "../../pages";
 import ProtectedRoute from "../../hoc/ProtectedRoute/ProtectedRoute";
 import Modal from "../Modal/Modal";
@@ -68,6 +70,9 @@ export default function App() {
             <Route path="logout" element={<Logout />} />
           </Route>
           <Route path="/ingredients/:id" element={<IngredientsDetails />} />
+          <Route path="/feed" element={<OrderFeed />} />
+          <Route path="/feed/:id" element={<OrderFeedDetails />} />
+          <Route path="/order-details" element={<OrderDetails />} />
           <Route path="/order-details" element={<OrderDetails />} />
           <Route path="*" element={<NotFound404Page />} />
         </Route>

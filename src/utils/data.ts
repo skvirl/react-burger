@@ -1,20 +1,20 @@
-import { v4} from 'uuid';
+import { v4 } from 'uuid';
 
 
 export const selectedBunId = "60d3b41abdacab0026a733c6";
 
 export const constructorIngedientsList = [
-  {constructorId:v4() ,_id:"60d3b41abdacab0026a733c9"},
-  {constructorId:v4() ,_id:"60d3b41abdacab0026a733ce"},
-  {constructorId:v4() ,_id:"60d3b41abdacab0026a733d1"},
-  {constructorId:v4() ,_id:"60d3b41abdacab0026a733d1"},
-  {constructorId:v4() ,_id:"60d3b41abdacab0026a733d0"},
+  { constructorId: v4(), _id: "60d3b41abdacab0026a733c9" },
+  { constructorId: v4(), _id: "60d3b41abdacab0026a733ce" },
+  { constructorId: v4(), _id: "60d3b41abdacab0026a733d1" },
+  { constructorId: v4(), _id: "60d3b41abdacab0026a733d1" },
+  { constructorId: v4(), _id: "60d3b41abdacab0026a733d0" },
 ];
 
-export const initialConstructorIngredientData = {selectedBunId:selectedBunId, ingredients:constructorIngedientsList }
+export const initialConstructorIngredientData = { selectedBunId: selectedBunId, ingredients: constructorIngedientsList }
 // export const initialConstructorIngredientData = {selectedBunId:null, ingredients:[] }
- 
-export const cachedData = [
+
+export const cachedIngredientData = [
   {
     _id: "60d3b41abdacab0026a733c6",
     name: "Краторная булка N-200i",
@@ -230,9 +230,9 @@ export const cachedData = [
 ];
 
 export const ingredientTabs = [
-  {value:'bun', name: 'Булки',    alt:'Булка'},
-  {value:'sauce', name: 'Соусы',  alt:'Соус'},
-  {value:'main', name: 'Начинки', alt:'Начинка'}
+  { value: 'bun', name: 'Булки', alt: 'Булка' },
+  { value: 'sauce', name: 'Соусы', alt: 'Соус' },
+  { value: 'main', name: 'Начинки', alt: 'Начинка' }
 ];
 
 export const cachedAuthData = {
@@ -240,3 +240,24 @@ export const cachedAuthData = {
   email: 'qweqweqweqw2@yandex.ru',
   password: 'qweqweqweqwe2',
 }
+
+export const cachedOrderFeed = {
+  "success": true,
+  "orders": [
+    {
+      "ingredients": [
+        "60d3463f7034a000269f45e7",
+        "60d3463f7034a000269f45e9",
+        "60d3463f7034a000269f45e8",
+        "60d3463f7034a000269f45ea"
+      ],
+      "_id": "",
+      "status": "done",
+      "number": 0,
+      "createdAt": "2021-06-23T14:43:22.587Z",
+      "updatedAt": "2021-06-23T14:43:22.603Z"
+    }
+  ],
+  "total": 1,
+  "totalToday": 1
+} 
