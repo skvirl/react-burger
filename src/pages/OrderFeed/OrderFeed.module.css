@@ -4,6 +4,10 @@
   display: flex;
   justify-content: center;
 }
+.main_title{
+  max-width: 1240px;
+  text-align: left;
+}
 
 .container {
   width: 100%;
@@ -12,6 +16,16 @@
   margin-left: 2%;
   margin-right: 2%;
 
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: nowrap; */
+  /* justify-content: space-between; */
+}
+.wrapper {
+  width: 100%;
+  max-width: 1240px;
+
+ 
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
