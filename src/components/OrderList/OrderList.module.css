@@ -1,12 +1,21 @@
+
+.orderList{
+  overflow-y: scroll;
+  overflow-x:  hidden;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #131316;
+}
+
 .card {
   background: linear-gradient(0deg, #1c1c21, #1c1c21);
   box-shadow: 0px 0px 1px 0px #0000000a;
   box-shadow: 0px 0px 2px 0px #0000000f;
   box-shadow: 0px 4px 8px 0px #0000000a;
   border-radius: 40px;
-  width: 584px;
+  /* width: 584px; */
   min-height: 214px;
-  margin-top: 20px;
+  margin-bottom: 20px;
 
   display: flex;
   flex-direction: column;
@@ -26,13 +35,18 @@
   margin-left: 9px;
 }
 
-.card__Name {
+.card__name {
   margin-top: 24px;
   text-align: left;
-  /* height: 30px; */
 }
-.card__CreatedAt {
+.card__status {
+  margin-top: 24px;
+  text-align: left;
 }
+.card__status_complete {
+  color:#00CCCC;
+}
+
 .card__Ingredients {
   overflow-x: scroll;
   scrollbar-width: thin;
@@ -56,28 +70,41 @@
   margin-right: 24px;
 }
 
-.card__ImgContainer {
+
+.items_list {
+  display: flex;
+  flex-direction: row-reverse;
+  width: fit-content;
+  color: white;
+}
+
+.items_picture {
+  margin-left: -16px;
+}
+
+.items_list > .items_picture:last-child {
+  margin-left: 0;
+}
+
+.imgContainer {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 100px;
+  border: 2px solid transparent;
   box-sizing: border-box;
-  height: 64px;
-  width: 64px;
-  position: absolute;
-  border-radius: 50%;
-  border: 2px solid transparent; /*2*/
-  background: linear-gradient(63.18deg, rgb(128, 26, 179), rgb(76, 76, 255))
-    border-box; /*3*/
-  -webkit-mask: /*4*/ linear-gradient(#fff 0 0) padding-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor; /*5'*/
-  mask-composite: exclude; /*5*/
+  background: linear-gradient(var(--bg-color_element), var(--bg-color_element))
+      content-box,
+    linear-gradient(var(--gradient-color_1), var(--gradient-color_2)) border-box;
 }
 
-.card__ImgContainer img {
+.picture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
 }
 
-.card__ImgContainer:hover {
-  height: 64px;
-  width: 64px;
-  border-radius: 50%;
-  position: absolute;
-  background-color: black;
+.overflow {
+  background: var(--bg-color_overlay) content-box;
 }

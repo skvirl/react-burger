@@ -1,14 +1,25 @@
 import styles from "./OrderFeed.module.css";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import OrdersList from "../../components/OrderList/OrderList";
-
+import OrdersStatistic from "../../components/OrdersStatistic/OrdersStatistic";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { RootState } from "../../services/store";
+import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
 const OrderFeed: FC = () => {
-  const ws = new WebSocket("wss://norma.nomoreparties.space/orders/all");
-  ws.onmessage = (event) => {
-    console.log(event);
-  };
-  return (
-    <>
+
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch({ type: 'socket/connect' });
+    return () => {
+      dispatch({ type: 'socket/disconnect' })
+    }
+  }, []);
+
+  const getStoreData = (state: RootState) => state.orderFeed.success;
+  const feedSuccess = useAppSelector(getStoreData);
+
+  return feedSuccess ?
+    (<>
       <main className={styles.main}>
         <div className={styles.container}>
           <span className={`text text_type_main-large ${styles.main_title}`}>
@@ -20,16 +31,13 @@ const OrderFeed: FC = () => {
               <OrdersList />
             </section>
             <section className={styles.mainSection}>
-              <span className="text text_type_digits-large"> 🚧</span>
-              <span className="text text_type_digits-medium">
-                under construction
-              </span>
+              <OrdersStatistic />
             </section>
           </div>
         </div>
       </main>
-    </>
-  );
+    </>) :
+    <div className={styles.spinner}><LoaderSpinner /></div>;
 };
 
 export default OrderFeed;

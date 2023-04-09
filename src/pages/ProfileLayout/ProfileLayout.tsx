@@ -6,7 +6,9 @@ function ProfileLayout() {
   return (
     <div className={styles.main}>
       <div className={styles.container}>
-        <ProfileNav />
+        <div className='pt-30'>
+          <ProfileNav />
+        </div>
         <div className={styles.layout}>
           <Outlet />
         </div>

@@ -1,0 +1,13 @@
+.profileOrdersContainer{
+    margin-top: 40px;
+    width: 844px;
+    overflow: auto;
+    height: calc(100% - 50px);
+}
+.spinner{
+    height: calc(100% - 50px);
+    width: 844px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

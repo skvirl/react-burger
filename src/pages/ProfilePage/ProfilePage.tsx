@@ -70,7 +70,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <>
+    <div className='pt-30'>
       <form className={styles.form} onSubmit={sendChanges}>
         <Input
           type={"text"}
@@ -117,7 +117,7 @@ const ProfilePage = () => {
           </div>
         )}
       </form>
-    </>
+    </div>
   );
 };
 
