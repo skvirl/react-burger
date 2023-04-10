@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { orderApiUrl, request } from "../../utils/api";
+import { getCookie } from "../../utils/cookies";
 
 type TInitialState = {
   orderNumber: null | string;
@@ -25,6 +26,7 @@ export const fetchOrder = createAsyncThunk(
         body: JSON.stringify({ ingredients }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
+          authorization: "Bearer " + getCookie("accessToken"),
         },
       });
     } catch (error: unknown) {

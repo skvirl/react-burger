@@ -5,21 +5,25 @@ import OrdersStatistic from "../../components/OrdersStatistic/OrdersStatistic";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { RootState } from "../../services/store";
 import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
-const OrderFeed: FC = () => {
+import { WS_OrdersUrl } from "../../utils/api";
 
+const OrderFeed: FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch({ type: 'socket/connect' });
+    dispatch({
+      type: "socket/connect",
+      payload: { wsUrl: String(WS_OrdersUrl) },
+    });
     return () => {
-      dispatch({ type: 'socket/disconnect' })
-    }
+      dispatch({ type: "socket/disconnect" });
+    };
   }, []);
 
   const getStoreData = (state: RootState) => state.orderFeed.success;
   const feedSuccess = useAppSelector(getStoreData);
 
-  return feedSuccess ?
-    (<>
+  return feedSuccess ? (
+    <>
       <main className={styles.main}>
         <div className={styles.container}>
           <span className={`text text_type_main-large ${styles.main_title}`}>
@@ -36,8 +40,12 @@ const OrderFeed: FC = () => {
           </div>
         </div>
       </main>
-    </>) :
-    <div className={styles.spinner}><LoaderSpinner /></div>;
+    </>
+  ) : (
+    <div className={styles.spinner}>
+      <LoaderSpinner />
+    </div>
+  );
 };
 
 export default OrderFeed;

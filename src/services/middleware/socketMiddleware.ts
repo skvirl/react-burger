@@ -1,20 +1,25 @@
 
 import type { Middleware } from "redux";
- import { setOrderFeedData,setOrderFeedClose } from "../../services/slices/orderFeed";
+import { setOrderFeedData, setOrderFeedClose } from "../../services/slices/orderFeed";
 
-const socketMiddleware = (wsUrl: string): Middleware => {
+const socketMiddleware = (): Middleware => {
   let socket: WebSocket | null = null;
 
   return (store) => (next) => (action) => {
     const { dispatch, getState } = store;
-    const { type } = action;
+    const { type, payload } = action;
+
 
     switch (type) {
       case "socket/connect":
+
+        const wsUrl: string = payload.wsUrl;
+        console.log(wsUrl);
+
         socket = new WebSocket(wsUrl);
 
         if (socket) {
-          
+
           socket.onopen = (event) => {
             // console.log('WS_CONNECTION_SUCCESS');
           };
@@ -25,8 +30,9 @@ const socketMiddleware = (wsUrl: string): Middleware => {
           };
 
           socket.onmessage = (event) => {
-            // console.log(`WS_CONNECTION_MESSAGE: `);
+            console.log(`WS_CONNECTION_MESSAGE: `);
             const { data } = event;
+            console.log(data);
             dispatch(setOrderFeedData(JSON.parse(data)));
           };
 

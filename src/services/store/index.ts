@@ -7,9 +7,9 @@ import orderDetailsReducer from '../slices/orderDetails';
 import resetPasswordReducer from '../slices/resetPassword';
 import forgotPasswordReducer from '../slices/forgotPassword';
 import authReducer from '../slices/auth';
-import orderFeedReducer   from '../slices/orderFeed'; 
+import orderFeedReducer from '../slices/orderFeed';
 
-const store =  configureStore({
+const store = configureStore({
   reducer: {
     burgerIngredients: burgerIngredientsReducer,
     burgerConstructor: burgerConstructorReducer,
@@ -20,7 +20,7 @@ const store =  configureStore({
     orderFeed: orderFeedReducer,
   },
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(socketMiddleware('wss://norma.nomoreparties.space/orders/all')),
+    getDefaultMiddleware().concat(socketMiddleware()),
 });
 
 export type RootState = ReturnType<typeof store.getState>

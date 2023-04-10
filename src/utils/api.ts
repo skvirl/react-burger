@@ -1,4 +1,3 @@
-import { Url } from "url";
 import { setCookie, getCookie } from "./cookies";
 
 export const baseUrl = new URL("https://norma.nomoreparties.space/api/");
@@ -15,11 +14,17 @@ export const logoutUrl = new URL("auth/logout", baseUrl);
 export const tokenUrl = new URL("auth/token", baseUrl);
 export const userUrl = new URL("auth/user", baseUrl);
 
+export const baseWSUrl = new URL("wss://norma.nomoreparties.space/");
+export const WS_OrdersUrl = new URL("orders/all", baseWSUrl);
+
+export const WS_UserOrdersUrl = new URL("orders", baseWSUrl);
+
+
 export const request = (
   endpoint: string | URL,
   options?: RequestInit | undefined
 ) => {
-  
+
   return fetch(endpoint, options).then(checkResponse).then(checkSuccess);
 };
 
@@ -80,7 +85,7 @@ export const requestWithTokenRefresh = (
 };
 
 export const checkResponseAuth = (res: Response) => {
-  
+
   if (!res.ok && res.status === 403) {
     try {
       return res.json();

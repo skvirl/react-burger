@@ -9,26 +9,20 @@ import { useNavigate } from "react-router";
 import { useMatch } from "react-router-dom";
 import React, { FC } from "react";
 
-
-const AppHeader :FC = () => {
+const AppHeader: FC = () => {
   const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <nav className={styles.leftNav}>
-          <HeaderButton
-            to="/"
-            ico={BurgerIcon}
-            title="Конструктор"
-          />
-          <HeaderButton
-            to="/orders"
-            ico={ListIcon}
-            title="Лента заказов"
-          />
+          <HeaderButton to="/" ico={BurgerIcon} title="Конструктор" />
+          <HeaderButton to="/feed" ico={ListIcon} title="Лента заказов" />
         </nav>
-        <button className={styles.logo + " header__logo"} onClick={() => navigate("/")}>
+        <button
+          className={styles.logo + " header__logo"}
+          onClick={() => navigate("/")}
+        >
           <Logo />
         </button>
         <nav className={styles.rightNav}>
@@ -45,14 +39,20 @@ const AppHeader :FC = () => {
 
 const HeaderButton: FC<{
   to: string;
-  ico:  ({ type }: any) => JSX.Element   ; // any here, cause cant get TIconProps from ui-components   
+  ico: ({ type }: any) => JSX.Element; // any here, cause cant get TIconProps from ui-components
   title?: string;
- }> =({ to, ico, title }) => {
+}> = ({ to, ico, title }) => {
   const navigate = useNavigate();
   const isActive = useMatch({ path: to, end: to.length === 1 });
   return (
     <button className={styles.button} onClick={() => navigate(to)}>
-      <div className={styles.button__logo}>{React.createElement(ico, {type:(isActive?"primary":"secondary")}, null)}</div>
+      <div className={styles.button__logo}>
+        {React.createElement(
+          ico,
+          { type: isActive ? "primary" : "secondary" },
+          null
+        )}
+      </div>
       <span
         className={
           (isActive
@@ -65,7 +65,5 @@ const HeaderButton: FC<{
     </button>
   );
 };
-
- 
 
 export default AppHeader;
