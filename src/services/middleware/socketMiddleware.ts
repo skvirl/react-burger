@@ -14,7 +14,6 @@ const socketMiddleware = (): Middleware => {
       case "socket/connect":
 
         const wsUrl: string = payload.wsUrl;
-        console.log(wsUrl);
 
         socket = new WebSocket(wsUrl);
 
@@ -30,9 +29,8 @@ const socketMiddleware = (): Middleware => {
           };
 
           socket.onmessage = (event) => {
-            console.log(`WS_CONNECTION_MESSAGE: `);
+            // console.log(`WS_CONNECTION_MESSAGE: `);
             const { data } = event;
-            console.log(data);
             dispatch(setOrderFeedData(JSON.parse(data)));
           };
 

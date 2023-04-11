@@ -14,17 +14,6 @@ import { useLocation } from "react-router-dom";
 const OrderFeedDetails = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
-  console.log(location);
-
-  useEffect(() => {
-    dispatch({
-      type: "socket/connect",
-      payload: { wsUrl: getSocketURL(location.pathname) },
-    });
-    return () => {
-      dispatch({ type: "socket/disconnect" });
-    };
-  }, []);
 
   const _id = useParams()?.id;
   const getStoreData = (state: RootState) => ({
@@ -32,8 +21,22 @@ const OrderFeedDetails = () => {
     ingredientData: state.burgerIngredients.burgerIngredients,
     feedSuccess: state.orderFeed.success,
   });
-
   const { order, ingredientData, feedSuccess } = useAppSelector(getStoreData);
+
+  useEffect(() => {
+    if (!feedSuccess) {
+
+      dispatch({
+        type: "socket/connect",
+        payload: { wsUrl: getSocketURL(location.pathname) },
+      });
+
+      return () => {
+        dispatch({ type: "socket/disconnect" });
+      };
+    }
+  }, []);
+
 
   const groupedIngedients = useMemo(
     () => groupFeedIngredients(order ? order.ingredients : [], ingredientData),
@@ -136,9 +139,8 @@ const OrderFeedDetails = () => {
           </div>
 
           <div
-            className={`text text_type_main-small mt-3 ${
-              order?.status === "Выполнен" ? styles.status_done : ""
-            }`}
+            className={`text text_type_main-small mt-3 ${order?.status === "Выполнен" ? styles.status_done : ""
+              }`}
           >
             {order?.status}
           </div>

@@ -2,23 +2,35 @@
   height: 100%;
 }
 
+.total__col{
+  height: 100%;
+}
+
 .OrderLists__Wrapper {
   display: flex;
   flex-direction: row;
   width: 100%;
-  text-align: left;
   max-height: calc(100% - 410px);
-}
+  text-align: left;
+ }
 
 .OrderLists__OrderLists {
   width: 50%;
 }
+.OrderLists__ReadyListWrapper{
+  display: flex;
+  flex-direction: row;
+}
 
 .OrderLists__ReadyList {
   margin-top: 24px;
+  margin-right: calc(200px - 30%);
+  display: flex;
+  flex-direction: row;
   color: #00cccc;
+
   overflow-y: auto;
-  overflow-y: scroll;
+  overflow-x: hidden;
   height: 100%;
   scrollbar-width: thin;
   scrollbar-color: #8585ad #131316;
@@ -26,13 +38,15 @@
 
 .OrderLists__WaitList {
   margin-top: 24px;
+  margin-right: calc(200px - 30%);
+  display: flex;
+  flex-direction: row;
   overflow-y: auto;
-  scrollbar-color: #8585ad #2f2f37;
-
-  overflow-y: scroll;
+  overflow-x: hidden;
   height: 100%;
   scrollbar-width: thin;
   scrollbar-color: #8585ad #131316;
+
 }
 
 .total__wrapper {
