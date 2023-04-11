@@ -7,19 +7,19 @@ import groupFeedIngredients from "../../utils/groupFeedIngredients";
 import styles from "./OrderFeedDetails.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
-import { WS_UserOrdersUrl } from "../../utils/api";
+import { WS_UserOrdersUrl, WS_OrdersUrl } from "../../utils/api";
 import { getCookie } from "../../utils/cookies";
+import { useLocation } from "react-router-dom";
 
 const OrderFeedDetails = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
+  console.log(location);
 
   useEffect(() => {
-    const accessToken = getCookie("accessToken");
-    accessToken && WS_UserOrdersUrl.searchParams.set("token", accessToken);
-
     dispatch({
       type: "socket/connect",
-      payload: { wsUrl: String(WS_UserOrdersUrl) },
+      payload: { wsUrl: getSocketURL(location.pathname) },
     });
     return () => {
       dispatch({ type: "socket/disconnect" });
@@ -169,4 +169,15 @@ const OrderFeedDetails = () => {
     </div>
   );
 };
+
+function getSocketURL(pathname: string): string | undefined {
+  if (~pathname.indexOf("/feed/")) return String(WS_OrdersUrl);
+  if (~pathname.indexOf("/orders/")) {
+    const accessToken = getCookie("accessToken");
+    accessToken && WS_UserOrdersUrl.searchParams.set("token", accessToken);
+    return String(WS_UserOrdersUrl);
+  }
+  return undefined;
+}
+
 export default OrderFeedDetails;

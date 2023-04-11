@@ -32,7 +32,7 @@ export default function App() {
 
   useEffect(() => {
     dispatch(fetchBurgerIngredients());
-   }, []);
+  }, []);
 
   return (
     <>
@@ -66,20 +66,45 @@ export default function App() {
             }
           >
             <Route index element={<ProfilePage />} />
-            <Route path="orders" element={<ProfileOrders />} />
             <Route path="logout" element={<Logout />} />
+            <Route path="orders" element={<ProfileOrders />} />
           </Route>
           <Route path="/ingredients/:id" element={<IngredientsDetails />} />
+          <Route path="/order-details" element={<OrderDetails />} />
           <Route path="/feed" element={<OrderFeed />} />
           <Route path="/feed/:id" element={<OrderFeedDetails />} />
-          <Route path="/order-details" element={<OrderDetails />} />
-          <Route path="/order-details" element={<OrderDetails />} />
+          <Route path="/orders/:id" element={<OrderFeedDetails />} />
           <Route path="*" element={<NotFound404Page />} />
         </Route>
       </Routes>
 
       {background && (
         <Routes>
+          <Route
+            path="/orders/:id"
+            element={
+              <Modal
+                closeModal={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderFeedDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path="/feed/:id"
+            element={
+              <Modal
+                closeModal={() => {
+                  navigate(-1);
+                }}
+              >
+                <OrderFeedDetails />
+              </Modal>
+            }
+          />
+
           <Route
             path="/ingredients/:id"
             element={
