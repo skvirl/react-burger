@@ -39,7 +39,7 @@ const AppHeader: FC = () => {
 
 const HeaderButton: FC<{
   to: string;
-  ico: ({ type }: any) => JSX.Element; // any here, cause cant get TIconProps from ui-components
+  ico: typeof ProfileIcon; // any here, cause cant get TIconProps from ui-components
   title?: string;
 }> = ({ to, ico, title }) => {
   const navigate = useNavigate();
