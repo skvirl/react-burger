@@ -1,7 +1,12 @@
 import { createAction } from '@reduxjs/toolkit'
-// import { LiveTableActions } from '../../types/live-table';
+ import { TFeedState } from '../../types/TOrderFeed';  
 
-export const connect = createAction<string, 'LIVE_TABLE_CONNECT'>('LIVE_TABLE_CONNECT')
-export const disconnect = createAction('LIVE_TABLE_DISCONNECT');
-export type TLiveTableActions = ReturnType<typeof connect>
+export const connect = createAction<string, 'FEED_CONNECT'>('FEED_CONNECT')
+export const disconnect = createAction('FEED_DISCONNECT');
+export const wsMessage = createAction<TFeedState, 'FEED_WS_MESSAGE'>('FEED_WS_MESSAGE');
+export const wsClose = createAction('FEED_WS_CLOSE');
+
+export type TFeedActions = ReturnType<typeof connect>
                                 | ReturnType<typeof disconnect> 
+                                | ReturnType<typeof wsMessage> 
+                                | ReturnType<typeof wsClose> 

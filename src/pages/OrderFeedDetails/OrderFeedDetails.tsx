@@ -10,6 +10,7 @@ import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
 import { WS_UserOrdersUrl, WS_OrdersUrl } from "../../utils/api";
 import { getCookie } from "../../utils/cookies";
 import { useLocation } from "react-router-dom";
+import { connect, disconnect } from "../../services/actions/orderFeed";  
 
 const OrderFeedDetails = () => {
   const dispatch = useAppDispatch();
@@ -24,15 +25,11 @@ const OrderFeedDetails = () => {
   const { order, ingredientData, feedSuccess } = useAppSelector(getStoreData);
 
   useEffect(() => {
-    if (!feedSuccess) {
-
-      dispatch({
-        type: "socket/connect",
-        payload: { wsUrl: getSocketURL(location.pathname) },
-      });
+    if (  !feedSuccess) {
+       dispatch(connect(getSocketURL(location.pathname) ));
 
       return () => {
-        dispatch({ type: "socket/disconnect" });
+        dispatch(disconnect());
       };
     }
   }, []);
@@ -172,14 +169,14 @@ const OrderFeedDetails = () => {
   );
 };
 
-function getSocketURL(pathname: string): string | undefined {
+function getSocketURL(pathname: string): string  {
   if (~pathname.indexOf("/feed/")) return String(WS_OrdersUrl);
   if (~pathname.indexOf("/orders/")) {
     const accessToken = getCookie("accessToken");
     accessToken && WS_UserOrdersUrl.searchParams.set("token", accessToken);
     return String(WS_UserOrdersUrl);
   }
-  return undefined;
+  return '';
 }
 
 export default OrderFeedDetails;

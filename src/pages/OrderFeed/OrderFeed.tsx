@@ -6,16 +6,14 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { RootState } from "../../services/store";
 import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
 import { WS_OrdersUrl } from "../../utils/api";
+import { connect, disconnect } from "../../services/actions/orderFeed";  
 
 const OrderFeed: FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch({
-      type: "socket/connect",
-      payload: { wsUrl: String(WS_OrdersUrl) },
-    });
+    dispatch(  connect(String(WS_OrdersUrl)) );
     return () => {
-      dispatch({ type: "socket/disconnect" });
+      dispatch(disconnect());
     };
   }, []);
 

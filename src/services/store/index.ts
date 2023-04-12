@@ -1,5 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
-import socketMiddleware from '../middleware/socketMiddleware';
+import { configureStore , ActionCreatorWithPayload} from '@reduxjs/toolkit';
+import createSocketMiddleware from '../middleware/socketMiddleware';
+import {connect, disconnect,wsMessage,wsClose } from "../actions/orderFeed";
+
 
 import burgerIngredientsReducer from '../slices/burgerIngredients';
 import burgerConstructorReducer from '../slices/burgerConstructor';
@@ -7,8 +9,8 @@ import orderDetailsReducer from '../slices/orderDetails';
 import resetPasswordReducer from '../slices/resetPassword';
 import forgotPasswordReducer from '../slices/forgotPassword';
 import authReducer from '../slices/auth';
-import orderFeedReducer from '../slices/orderFeed';
-
+import { orderFeedReducer } from '../reducers/orderFeed'; 
+ 
 const store = configureStore({
   reducer: {
     burgerIngredients: burgerIngredientsReducer,
@@ -20,7 +22,7 @@ const store = configureStore({
     orderFeed: orderFeedReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware()),
+    getDefaultMiddleware().concat(createSocketMiddleware({connect, disconnect,wsMessage,wsClose })),
 });
 
 export type RootState = ReturnType<typeof store.getState>

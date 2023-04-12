@@ -9,3 +9,10 @@ export type TOrder = {
     updatedAt: string;
     number: number;
   };
+
+  export type TFeedState = {
+    orders: TOrder[] | null;
+    success: boolean | null;
+    total: number | null;
+    totalToday: number | null;
+  } ;

@@ -4,7 +4,7 @@ import { FC, useMemo, useEffect } from "react";
 import { RootState } from "../../services/store";
 import { useAppSelector } from "../../hooks/redux";
 import groupFeedIngredients from "../../utils/groupFeedIngredients";
-import { TOrder } from "../../types/TOrder";
+import { TOrder } from "../../types/TOrderFeed";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const OrdersList: FC<{ showStatus?: boolean }> = ({ showStatus = false }) => {

@@ -6,6 +6,7 @@ import { RootState } from "../../services/store";
 import { LoaderSpinner } from "../../components/LoaderSpinner/LoaderSpinner";
 import { WS_UserOrdersUrl } from "../../utils/api";
 import { getCookie } from "../../utils/cookies";
+import { connect, disconnect } from "../../services/actions/orderFeed";  
 
 const ProfileOrders = () => {
   const dispatch = useAppDispatch();
@@ -14,12 +15,9 @@ const ProfileOrders = () => {
     const accessToken = getCookie("accessToken");
     accessToken && WS_UserOrdersUrl.searchParams.set("token", accessToken);
 
-    dispatch({
-      type: "socket/connect",
-      payload: { wsUrl: String(WS_UserOrdersUrl) },
-    });
+    dispatch(connect( String(WS_UserOrdersUrl) ) );
     return () => {
-      dispatch({ type: "socket/disconnect" });
+      dispatch( disconnect());
     };
   }, []);
 
