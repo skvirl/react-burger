@@ -1,6 +1,6 @@
 import "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./ProfilePage.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEventHandler } from "react";
 import {
   EmailInput,
   PasswordInput,
@@ -44,8 +44,8 @@ const ProfilePage = () => {
   useEffect(() => {
     setFormModified(
       form.name !== storedName ||
-      form.email !== storedEmail ||
-      form.password !== ""
+        form.email !== storedEmail ||
+        form.password !== ""
     );
   }, [form]);
 
@@ -56,7 +56,7 @@ const ProfilePage = () => {
       password: "",
     });
 
-  const sendChanges = () => {
+  const sendChanges: FormEventHandler<HTMLFormElement> = () => {
     dispatch(
       fetchPatchUser({
         userData: {
@@ -70,7 +70,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className='pt-30'>
+    <div className="pt-30">
       <form className={styles.form} onSubmit={sendChanges}>
         <Input
           type={"text"}

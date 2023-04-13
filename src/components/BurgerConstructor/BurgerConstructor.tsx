@@ -6,10 +6,10 @@ import {
   addConstrucorIngredient,
 } from "../../services/slices/burgerConstructor";
 import { v4 } from "uuid";
-import { useDrop, DropTargetMonitor } from "react-dnd";
-import BunElem from '../BunElem/BunElem'
-import ConstructorIngredientList from '../ConstructorIngredientList/ConstructorIngredientList'
-import OrderBtn from '../OrderBtn/OrderBtn'
+import { useDrop } from "react-dnd";
+import BunElem from "../BunElem/BunElem";
+import ConstructorIngredientList from "../ConstructorIngredientList/ConstructorIngredientList";
+import OrderBtn from "../OrderBtn/OrderBtn";
 
 const BurgerConstructor = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +18,7 @@ const BurgerConstructor = () => {
     collect: (monitor) => ({
       isHover: monitor.isOver(),
     }),
-    drop: (item: { _id: string, itsBun: boolean, }) => {
+    drop: (item: { _id: string; itsBun: boolean }) => {
       if (item.itsBun) {
         dispatch(setBun(item._id));
       } else {

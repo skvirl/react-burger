@@ -25,7 +25,8 @@ const RegisterPage = () => {
     authErrorMessage: state?.auth?.errorMessage,
     authenticated: Boolean(state?.auth?.user?.name),
   });
-  const { authSuccess, authErrorMessage, authenticated } = useAppSelector(getStoreData);
+  const { authSuccess, authErrorMessage, authenticated } =
+    useAppSelector(getStoreData);
 
   useEffect(() => {
     authenticated && navigate(-1);
@@ -36,7 +37,7 @@ const RegisterPage = () => {
   }, [authSuccess]);
 
   const submit: FormEventHandler = useCallback(
-    (event) => {
+    (event: React.SyntheticEvent<Element, Event>) => {
       event.preventDefault();
       dispatch(
         fetchRegister({
@@ -52,7 +53,9 @@ const RegisterPage = () => {
   return (
     <div className={styles.container}>
       {authErrorMessage ? (
-        <div className="text text_type_main-default">{<>authErrorMessage</>}</div>
+        <div className="text text_type_main-default">
+          {<>authErrorMessage</>}
+        </div>
       ) : (
         <>
           <form className={styles.form}>

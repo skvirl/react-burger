@@ -41,7 +41,7 @@ const LoginPage = () => {
     authenticated && navigate(fromPage, { replace: true });
   }, [authenticated]);
 
-  const submit: FormEventHandler = useCallback(
+  const submit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(
@@ -57,7 +57,9 @@ const LoginPage = () => {
   return (
     <div className={styles.container}>
       {authErrorMessage ? (
-        <div className="text text_type_main-default">{<>authErrorMessage</>}</div>
+        <div className="text text_type_main-default">
+          {<>authErrorMessage</>}
+        </div>
       ) : (
         <>
           <form className={styles.form} onSubmit={submit}>

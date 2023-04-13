@@ -35,7 +35,7 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ num: "", password: "" });
 
-  const submit: FormEventHandler = useCallback(
+  const submit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(

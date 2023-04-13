@@ -31,8 +31,8 @@ const ModalContent: FC<{ closeModal: () => void; children: ReactNode }> = ({
   closeModal,
 }) => {
   useEffect(() => {
-    const closeByEscape = (ev: { key: string }) => {
-      if (ev.key === "Escape") {
+    const closeByEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         closeModal();
       }
     };

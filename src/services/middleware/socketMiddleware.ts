@@ -21,9 +21,9 @@ const createSocketMiddleware = (wsActions: TwsActionTypes): Middleware => {
     const { type, payload } = action;
     const { connect, disconnect, wsMessage, wsClose } = wsActions;
     console.log(action);
-    if (connect.match(action) &&   typeof payload === 'string') {
+    if (connect.match(action) && typeof payload === 'string') {
       const wsUrl: string = payload;
-      
+
       socket = new WebSocket(payload);
 
       if (socket) {

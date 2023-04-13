@@ -10,15 +10,13 @@ import {
   removeConstrucorIngredient,
   moveConstructorIngredient,
 } from "../../services/slices/burgerConstructor";
-import { useDrop, useDrag, DragSourceHookSpec } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 import TIngredient from "../../types/ingredient";
 
-
 const ConstructorIngredient: FC<{
-  ingredient: TIngredient,
-  constructorId?: string,
-  index?: number,
-
+  ingredient: TIngredient;
+  constructorId?: string;
+  index?: number;
 }> = ({ constructorId, ingredient, index }) => {
   const dispatch = useAppDispatch();
   const dragRef = useRef<HTMLInputElement>(null);
@@ -51,7 +49,9 @@ const ConstructorIngredient: FC<{
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
 
-      const hoverClientY = (clientOffset?.y !== undefined ? clientOffset.y : 0) - hoverBoundingRect.top;
+      const hoverClientY =
+        (clientOffset?.y !== undefined ? clientOffset.y : 0) -
+        hoverBoundingRect.top;
       const indexDiff = Math.abs(hoverIndex - dragIndex);
 
       if (
@@ -105,8 +105,5 @@ const ConstructorIngredient: FC<{
     </div>
   );
 };
-
-
-
 
 export default ConstructorIngredient;

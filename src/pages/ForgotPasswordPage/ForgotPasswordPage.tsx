@@ -27,7 +27,7 @@ const RegisterPage = () => {
 
   const { form, onChange } = useForm({ email: "" });
 
-  const submit: FormEventHandler = useCallback(
+  const submit: FormEventHandler<HTMLFormElement> = useCallback(
     (event) => {
       event.preventDefault();
       dispatch(fetchForgotPassword({ email: String(form.email) }));
