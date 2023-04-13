@@ -62,7 +62,7 @@ export const tryToRefreshToken = async (errMessage: string) => {
       const { success, accessToken, refreshToken } = await res.json();
       if (success) {
         accessToken &&
-          setCookie("accessToken", accessToken.split("Bearer ")[1]);
+          setCookie("accessToken", accessToken.split("Bearer ")[1], { path: "/" });
         refreshToken && setCookie("refreshToken", refreshToken);
       }
       return true;
