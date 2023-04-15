@@ -20,7 +20,7 @@ const createSocketMiddleware = (wsActions: TwsActionTypes): Middleware => {
     const { dispatch, getState } = store;
     const { type, payload } = action;
     const { connect, disconnect, wsMessage, wsClose } = wsActions;
-    console.log(action);
+
     if (connect.match(action) && typeof payload === 'string') {
       const wsUrl: string = payload;
 
@@ -28,7 +28,7 @@ const createSocketMiddleware = (wsActions: TwsActionTypes): Middleware => {
 
       if (socket) {
         socket.onopen = (event) => {
-          console.log('WS_CONNECTION_SUCCESS');
+          // console.log('WS_CONNECTION_SUCCESS');
         };
 
         socket.onerror = (event) => {
