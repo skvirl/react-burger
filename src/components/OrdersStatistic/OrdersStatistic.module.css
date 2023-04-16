@@ -1,0 +1,62 @@
+.container {
+  height: 100%;
+}
+
+.total__col{
+  height: 100%;
+}
+
+.OrderLists__Wrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-height: calc(100% - 410px);
+  text-align: left;
+ }
+
+.OrderLists__OrderLists {
+  width: 50%;
+}
+.OrderLists__ReadyListWrapper{
+  display: flex;
+  flex-direction: row;
+}
+
+.OrderLists__ReadyList {
+  margin-top: 24px;
+  margin-right: calc(200px - 30%);
+  display: flex;
+  flex-direction: row;
+  color: #00cccc;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #131316;
+}
+
+.OrderLists__WaitList {
+  margin-top: 24px;
+  margin-right: calc(200px - 30%);
+  display: flex;
+  flex-direction: row;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #131316;
+
+}
+
+.total__wrapper {
+  margin-top: 60px;
+  text-align: left;
+  scrollbar-color: #8585ad #2f2f37;
+}
+
+.total__glow {
+  text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25),
+    0px 0px 8px rgba(51, 51, 255, 0.25), 0px 4px 32px rgba(51, 51, 255, 0.5);
+}
+

@@ -133,7 +133,7 @@ export const fetchPatchUser = fetchAuth(
   options_PATCH
 );
 
-const pendingAuthCB = (state:TState) => {
+const pendingAuthCB = (state: TState) => {
   state.user = {
     email: null,
     name: null,
@@ -142,18 +142,18 @@ const pendingAuthCB = (state:TState) => {
   state.errorMessage = null;
 };
 
-const fulfilledAuthCB = (state:TState, payload:TAuthPayload ) => {
+const fulfilledAuthCB = (state: TState, payload: TAuthPayload) => {
   state.user = { ...state.user, ...payload.user };
   state.success = payload.success;
   state.errorMessage = null;
   payload.accessToken &&
-    setCookie("accessToken", payload.accessToken.split("Bearer ")[1]);
-  payload?.refreshToken && setCookie("refreshToken", payload.refreshToken);
+    setCookie("accessToken", payload.accessToken.split("Bearer ")[1], { path: "/" });
+  payload?.refreshToken && setCookie("refreshToken", payload.refreshToken, { path: "/" });
 };
 
 const rejectedAuthCB = (
   state: TState,
-  payload:TAuthPayload
+  payload: TAuthPayload
 ) => {
   state.user = {
     email: null,

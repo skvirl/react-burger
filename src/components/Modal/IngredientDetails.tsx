@@ -2,31 +2,42 @@ import styles from "./IngredientDetails.module.css";
 import "@ya.praktikum/react-developer-burger-ui-components";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../../hooks/redux";
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode } from "react";
 import { RootState } from "../../services/store";
 
-const modalUseTypeGuard = (modalUse: boolean | undefined) => modalUse !== undefined ? modalUse : false;
+const modalUseTypeGuard = (modalUse: boolean | undefined) =>
+  modalUse !== undefined ? modalUse : false;
 
 const IngredientDetails: FC<{
-  modalUse?: boolean | undefined
+  modalUse?: boolean | undefined;
 }> = ({ modalUse }) => {
   const { id } = useParams();
-  
-  const getStoreData = (state: RootState) => state.burgerIngredients.burgerIngredients;
+
+  const getStoreData = (state: RootState) =>
+    state.burgerIngredients.burgerIngredients;
   const burgerIngredients = useAppSelector(getStoreData);
 
-  const emptyIngredient = <DetailsMain modalUse={modalUseTypeGuard(modalUse)} title='Ингридиент не найден'>{ }</DetailsMain>;
+  const emptyIngredient = (
+    <DetailsMain
+      modalUse={modalUseTypeGuard(modalUse)}
+      title="Ингридиент не найден"
+    >
+      {}
+    </DetailsMain>
+  );
   if (!burgerIngredients) return emptyIngredient;
 
-  const ingredientDetails = burgerIngredients.find((val) => val._id == id);
+  const ingredientDetails = burgerIngredients.find((val) => val._id === id);
   if (ingredientDetails === undefined) return emptyIngredient;
 
   const { image_large, name, calories, proteins, fat, carbohydrates } =
     ingredientDetails;
 
   return (
-
-    <DetailsMain modalUse={modalUseTypeGuard(modalUse)} title='Детали ингредиента'>
+    <DetailsMain
+      modalUse={modalUseTypeGuard(modalUse)}
+      title="Детали ингредиента"
+    >
       <img
         src={image_large}
         alt="Ингредиент"
@@ -55,30 +66,31 @@ const IngredientDetails: FC<{
 };
 
 const DetailsMain: FC<{
-  modalUse: boolean,
-  title: string,
-  children: ReactNode
+  modalUse: boolean;
+  title: string;
+  children: ReactNode;
 }> = ({ modalUse, title, children }) => {
   return (
     <div className={styles.ingredientDetails}>
       <div
-        className={`text text_type_main-large ${styles.ingredientDetails__title
-          } ${modalUse
+        className={`text text_type_main-large ${
+          styles.ingredientDetails__title
+        } ${
+          modalUse
             ? styles.ingredientDetails__title_modal
             : styles.ingredientDetails__title_page
-          }`}
+        }`}
       >
         {title}
       </div>
       {children}
     </div>
-
   );
 };
 
 const CompositionBox: FC<{
-  title: string,
-  val: number
+  title: string;
+  val: number;
 }> = ({ title, val }) => {
   return (
     <div className={styles.ingredientDetails__compositionBox}>
@@ -89,4 +101,3 @@ const CompositionBox: FC<{
 };
 
 export default IngredientDetails;
-

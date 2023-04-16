@@ -20,7 +20,7 @@ type TBurgerIngredient = {
   __v: number;
 };
 
-type TBurgerIngredients = null | Array<TBurgerIngredient>;
+export type TBurgerIngredients = null | Array<TBurgerIngredient>;
 
 type TInitialState = {
   burgerIngredients: TBurgerIngredients;

@@ -11,6 +11,3 @@ export const ingredientType = PropTypes.shape({
   fat: PropTypes.number,
   carbohydrates: PropTypes.number,
 });
-
-
- 

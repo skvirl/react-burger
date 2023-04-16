@@ -1,0 +1,110 @@
+
+.orderList{
+  overflow-y: scroll;
+  overflow-x:  hidden;
+  height: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #131316;
+}
+
+.card {
+  background: linear-gradient(0deg, #1c1c21, #1c1c21);
+  box-shadow: 0px 0px 1px 0px #0000000a;
+  box-shadow: 0px 0px 2px 0px #0000000f;
+  box-shadow: 0px 4px 8px 0px #0000000a;
+  border-radius: 40px;
+  /* width: 584px; */
+  min-height: 214px;
+  margin-bottom: 20px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.topPanel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.card__Price {
+  display: flex;
+  align-items: center;
+}
+.card__PriceNum {
+  margin-left: 9px;
+}
+
+.card__name {
+  margin-top: 24px;
+  text-align: left;
+}
+.card__status {
+  margin-top: 24px;
+  text-align: left;
+}
+.card__status_complete {
+  color:#00CCCC;
+}
+
+.card__Ingredients {
+  overflow-x: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #1c1c21;
+  width: 436px;
+  height: 64px;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.card__bottomPanel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.card__Wrapper {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+
+.items_list {
+  display: flex;
+  flex-direction: row-reverse;
+  width: fit-content;
+  color: white;
+}
+
+.items_picture {
+  margin-left: -16px;
+}
+
+.items_list > .items_picture:last-child {
+  margin-left: 0;
+}
+
+.imgContainer {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 100px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  background: linear-gradient(var(--bg-color_element), var(--bg-color_element))
+      content-box,
+    linear-gradient(var(--gradient-color_1), var(--gradient-color_2)) border-box;
+}
+
+.picture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+}
+
+.overflow {
+  background: var(--bg-color_overlay) content-box;
+}

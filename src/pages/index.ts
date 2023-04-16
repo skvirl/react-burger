@@ -9,6 +9,8 @@ import Layout from "./Layout/Layout";
 import ProfileLayout from "./ProfileLayout/ProfileLayout";
 import Logout from "./Logout/Logout";
 import ProfileOrders from "./ProfileOrders/ProfileOrders";
+import OrderFeed from "./OrderFeed/OrderFeed";
+import OrderFeedDetails from "./OrderFeedDetails/OrderFeedDetails";
 
 export {
   BurgerConstructorPage,
@@ -21,5 +23,7 @@ export {
   Layout,
   ProfileLayout,
   Logout,
-  ProfileOrders
+  ProfileOrders,
+  OrderFeed,
+  OrderFeedDetails
 };

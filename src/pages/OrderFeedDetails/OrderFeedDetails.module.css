@@ -1,0 +1,78 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.order {
+  width: 640px;
+  text-align: left;
+  overflow: auto;
+
+  margin: 50px;
+}
+
+.status_done {
+  color: #00cccc;
+}
+
+.number {
+  text-align: center;
+}
+.params {
+  display: flex;
+  flex-direction: row;
+}
+
+.leftIngredientRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.rightIngredientRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+}
+
+.ingredient {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.total {
+  display: flex;
+  flex-direction: row;
+}
+
+.imgContainer {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 100px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  background: linear-gradient(var(--bg-color_element), var(--bg-color_element))
+      content-box,
+    linear-gradient(var(--gradient-color_1), var(--gradient-color_2)) border-box;
+}
+
+.picture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+}
