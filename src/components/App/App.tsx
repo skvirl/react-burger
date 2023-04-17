@@ -68,7 +68,7 @@ export default function App() {
             <Route index element={<ProfilePage />} />
             <Route path="logout" element={<Logout />} />
             <Route path="orders" element={<ProfileOrders />} />
-            <Route path="orders/:id" element={<OrderFeedDetails />} />
+            <Route path="/orders/:id" element={<OrderFeedDetails />} />
           </Route>
           <Route path="/ingredients/:id" element={<IngredientsDetails />} />
           <Route path="/order-details" element={<OrderDetails />} />
@@ -77,14 +77,11 @@ export default function App() {
           <Route path="*" element={<NotFound404Page />} />
         </Route>
       </Routes>
-            
-      {       
-      
-        
-      background && (
+
+      {background && (
         <Routes>
           <Route
-            path="/profile/orders/:id"
+            path="/orders/:id"
             element={
               <Modal
                 closeModal={() => {
