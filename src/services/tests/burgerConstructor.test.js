@@ -1,25 +1,24 @@
-// import * as actions from "./actions";
-// import * as types from "./constants";
 import reducer from "../../services/slices/burgerConstructor";
 
+const strData = "someTestString";
 const initialState = {
   burgerConstructor: null,
   selectedBunId: null,
 };
-describe("setBun reducer", () => {
+describe("burgerConstructor reducer", () => {
   it("should return the initial state", () => {
     expect(reducer(initialState, {})).toEqual(initialState);
   });
 
-  it("should handle setBun", () => {
+  it("should handle setBun action", () => {
     expect(
       reducer(initialState, {
         type: "burgerConstructor/setBun",
-        payload: "11111111",
+        payload: strData,
       })
     ).toEqual({
       ...initialState,
-      selectedBunId: "11111111",
+      selectedBunId: strData,
     });
   });
 });
