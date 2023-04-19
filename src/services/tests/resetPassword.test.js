@@ -80,6 +80,5 @@ describe("ResetPassword extra reducers", () => {
     expect(state.resetPasswordSuccess).toBeNull();
     expect(state.resetPasswordMessage).toBeNull();
     expect(state.resetPasswordError).toBe("rejected message");
-    // console.log(state);
   });
 });
