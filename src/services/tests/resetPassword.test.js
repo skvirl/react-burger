@@ -1,7 +1,8 @@
 import { jest } from "@jest/globals";
-import { fetchResetPassword } from "../slices/resetPassword";
+import reducer, { fetchResetPassword } from "../slices/resetPassword";
+import { log } from "console";
 
-describe("ResetPasswordThunk", () => {
+describe("ResetPassword thunk", () => {
   it("should fetchResetPassword with resolved response", async () => {
     const response = { success: true, message: "" };
 
@@ -16,10 +17,69 @@ describe("ResetPasswordThunk", () => {
 
     const { calls } = dispatch.mock;
     expect(calls).toHaveLength(2);
+    const [pendingCall, fulfilledCall] = calls;
+
+    expect(pendingCall[0].type).toBe(fetchResetPassword.pending().type);
+    expect(fulfilledCall[0].type).toBe(fetchResetPassword.fulfilled().type);
+    expect(fulfilledCall[0].payload).toBe(response);
+  });
+
+  it("should fetchResetPassword with rejected response", async () => {
+    const response = "Ошибка undefined: undefined";
+
+    fetch.mockResolvedValue({
+      ok: false,
+    });
+
+    const dispatch = jest.fn();
+    const thunk = fetchResetPassword();
+    await thunk(dispatch, () => ({}));
+
+    const { calls } = dispatch.mock;
+    expect(calls).toHaveLength(2);
     const [pendingCall, rejectedCall] = calls;
 
     expect(pendingCall[0].type).toBe(fetchResetPassword.pending().type);
-    expect(rejectedCall[0].type).toBe(fetchResetPassword.fulfilled().type);
+    expect(rejectedCall[0].type).toBe(fetchResetPassword.rejected().type);
     expect(rejectedCall[0].payload).toBe(response);
+  });
+});
+
+describe("ResetPassword extra reducers", () => {
+  const initialState = {
+    resetPasswordSuccess: null,
+    resetPasswordError: null,
+    resetPasswordMessage: null,
+  };
+
+  it("should change state with pending action", () => {
+    const state = reducer(initialState, fetchResetPassword.pending());
+    expect(state.resetPasswordSuccess).toBeNull();
+    expect(state.resetPasswordMessage).toBeNull();
+    expect(state.resetPasswordError).toBeNull();
+  });
+
+  it("should change state with fulfilled action", () => {
+    const state = reducer(
+      initialState,
+      fetchResetPassword.fulfilled({
+        success: true,
+        message: "fulfilled message",
+      })
+    );
+    expect(state.resetPasswordSuccess).toBeTruthy();
+    expect(state.resetPasswordMessage).toBe("fulfilled message");
+    expect(state.resetPasswordError).toBeNull();
+  });
+
+  it("should change state with rejected action", () => {
+    const state = reducer(
+      initialState,
+      fetchResetPassword.rejected("rejected message")
+    );
+    expect(state.resetPasswordSuccess).toBeNull();
+    expect(state.resetPasswordMessage).toBeNull();
+    expect(state.resetPasswordError).toBe("rejected message");
+    // console.log(state);
   });
 });
