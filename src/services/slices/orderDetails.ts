@@ -54,6 +54,9 @@ const burgerSlice = createSlice({
         state.orderDetailsLoadingError = null;
       })
       .addCase(fetchOrder.fulfilled, (state, action) => {
+        console.log('7777777777777777777777');
+        console.log(action.payload);
+        
         state.orderNumber = (
           action.payload as TOrderNumberPayload
         ).order.number;
