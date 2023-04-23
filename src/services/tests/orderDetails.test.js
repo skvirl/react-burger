@@ -1,90 +1,73 @@
 import { jest } from "@jest/globals";
-import reducer, { fetchOrder } from "../slices/orderDetails";
-import { resolvedResponse } from "../../tests/fetchThunk";
+import reducer, { fetchOrder, cleanOrderDetails } from "../slices/orderDetails";
+import { resolvedResponse, rejectedResponse } from "../../tests/fetchThunk";
+
+describe("orderDetails reducer", () => {
+  it("should clean orderNumber and orderDetailsLoadingError", () => {
+
+    const initialState = {
+      orderNumber: "some number data",
+      orderDetailsLoadingError: null,
+    };
+
+    const resultState = { orderNumber: null, orderDetailsLoadingError: null };
+
+    const action = {
+      type: cleanOrderDetails.type,
+      payload: {},
+    };
+
+    const result = reducer(initialState, action);
+
+    expect(result).toEqual(resultState);
+  });
+});
 
 describe("orderDetails thunk", () => {
   resolvedResponse({
-    fetchFunction:fetchOrder,
-    fetchFunctionName:'fetchOrder',
-    response:{order:{number:'123123123'}},
+    fetchFunction: fetchOrder,
+    fetchFunctionName: "fetchOrder",
+    response: { success: true, order: { number: "5555555" } },
   });
 
-  // it("should fetchResetPassword with resolved response", async () => {
-  //   const response = { success: true, message: "" };
-
-  //   fetch.mockResolvedValue({
-  //     ok: true,
-  //     json: () => Promise.resolve(response),
-  //   });
-
-  //   const dispatch = jest.fn();
-  //   const thunk = fetchResetPassword();
-  //   await thunk(dispatch, () => ({}));
-
-  //   const { calls } = dispatch.mock;
-  //   expect(calls).toHaveLength(2);
-  //   const [pendingCall, fulfilledCall] = calls;
-
-  //   expect(pendingCall[0].type).toBe(fetchResetPassword.pending().type);
-  //   expect(fulfilledCall[0].type).toBe(fetchResetPassword.fulfilled().type);
-  //   expect(fulfilledCall[0].payload).toBe(response);
-  // });
-
-  // it("should fetchResetPassword with rejected response", async () => {
-  //   const response = "Ошибка undefined: undefined";
-
-  //   fetch.mockResolvedValue({
-  //     ok: false,
-  //   });
-
-  //   const dispatch = jest.fn();
-  //   const thunk = fetchResetPassword();
-  //   await thunk(dispatch, () => ({}));
-
-  //   const { calls } = dispatch.mock;
-  //   expect(calls).toHaveLength(2);
-  //   const [pendingCall, rejectedCall] = calls;
-
-  //   expect(pendingCall[0].type).toBe(fetchResetPassword.pending().type);
-  //   expect(rejectedCall[0].type).toBe(fetchResetPassword.rejected().type);
-  //   expect(rejectedCall[0].payload).toBe(response);
-  // });
+  rejectedResponse({
+    fetchFunction: fetchOrder,
+    fetchFunctionName: "fetchOrder",
+  });
 });
 
-// describe("orderDetails extra reducers", () => {
-//   const initialState = {
-//     resetPasswordSuccess: null,
-//     resetPasswordError: null,
-//     resetPasswordMessage: null,
-//   };
+describe("orderDetails extra reducers", () => {
+  const initialState = {
+    orderNumber: null,
+    orderDetailsLoadingError: null,
+  };
 
-//   it("should change state with pending action", () => {
-//     const state = reducer(initialState, fetchResetPassword.pending());
-//     expect(state.resetPasswordSuccess).toBeNull();
-//     expect(state.resetPasswordMessage).toBeNull();
-//     expect(state.resetPasswordError).toBeNull();
-//   });
+  it("should change state with pending action", () => {
+    const state = reducer(initialState, fetchOrder.pending());
+    expect(state.orderNumber).toBeNull();
+    expect(state.orderDetailsLoadingError).toBeNull();
+  });
 
-//   it("should change state with fulfilled action", () => {
-//     const state = reducer(
-//       initialState,
-//       fetchResetPassword.fulfilled({
-//         success: true,
-//         message: "fulfilled message",
-//       })
-//     );
-//     expect(state.resetPasswordSuccess).toBeTruthy();
-//     expect(state.resetPasswordMessage).toBe("fulfilled message");
-//     expect(state.resetPasswordError).toBeNull();
-//   });
+  it("should change state with fulfilled action", () => {
+    const number = "5555555";
 
-//   it("should change state with rejected action", () => {
-//     const state = reducer(
-//       initialState,
-//       fetchResetPassword.rejected("rejected message")
-//     );
-//     expect(state.resetPasswordSuccess).toBeNull();
-//     expect(state.resetPasswordMessage).toBeNull();
-//     expect(state.resetPasswordError).toBe("rejected message");
-//   });
-// });
+    const state = reducer(
+      initialState,
+      fetchOrder.fulfilled({
+        success: true,
+        order: { number },
+      })
+    );
+    expect(state.orderNumber).toBe(number);
+    expect(state.orderDetailsLoadingError).toBeNull();
+  });
+
+  it("should change state with rejected action", () => {
+    const rejectMessage = "rejected message";
+
+    const state = reducer(initialState, fetchOrder.rejected(rejectMessage));
+
+    expect(state.orderNumber).toBeNull();
+    expect(state.orderDetailsLoadingError).toBe(rejectMessage);
+  });
+});
