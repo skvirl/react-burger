@@ -104,11 +104,11 @@ const fetchAuth = (actionType: string, url: URL, fetchOptions: Function) =>
             if (reason === `token refresh succes`) {
               return requestWithTokenRefresh(url, fetchOptions(body));
             } else {
-              throw reason;
+              return rejectWithValue(reason);
             }
           })
           .catch((reason) => {
-            throw reason;
+            return rejectWithValue(reason);
           });
       } catch (error: unknown) {
         if (error instanceof Error && "message" in error) {
@@ -153,14 +153,14 @@ const fulfilledAuthCB = (state: TState, payload: TAuthPayload) => {
 
 const rejectedAuthCB = (
   state: TState,
-  payload: TAuthPayload
+  message: string
 ) => {
   state.user = {
     email: null,
     name: null,
   };
   state.success = null;
-  state.errorMessage = payload;
+  state.errorMessage = message;
 };
 
 const authSlice = createSlice({
@@ -175,14 +175,14 @@ const authSlice = createSlice({
         fulfilledAuthCB(state, action.payload as TAuthPayload)
       })
       .addCase(fetchPatchUser.rejected, (state, action) => {
-        rejectedAuthCB(state, action.payload as TAuthPayload);
+        rejectedAuthCB(state, String(action.error.message));
       })
 
       .addCase(fetchGetUser.fulfilled, (state, action) => {
         fulfilledAuthCB(state, action.payload as TAuthPayload)
       })
       .addCase(fetchGetUser.rejected, (state, action) => {
-        rejectedAuthCB(state, action.payload as TAuthPayload);
+        rejectedAuthCB(state, String(action.error.message));
       })
 
       .addCase(fetchRegister.pending, pendingAuthCB)
@@ -190,7 +190,7 @@ const authSlice = createSlice({
         fulfilledAuthCB(state, action.payload as TAuthPayload)
       })
       .addCase(fetchRegister.rejected, (state, action) => {
-        rejectedAuthCB(state, action.payload as TAuthPayload);
+        rejectedAuthCB(state, String(action.error.message));
       })
 
       .addCase(fetchLogin.pending, pendingAuthCB)
@@ -198,7 +198,7 @@ const authSlice = createSlice({
         fulfilledAuthCB(state, action.payload as TAuthPayload)
       })
       .addCase(fetchLogin.rejected, (state, action) => {
-        rejectedAuthCB(state, action.payload as TAuthPayload);
+        rejectedAuthCB(state, String(action.error.message));
       })
 
       .addCase(fetchLogout.pending, (state) => {
