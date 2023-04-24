@@ -99,13 +99,15 @@ const fetchAuth = (actionType: string, url: URL, fetchOptions: Function) =>
       try {
         return requestWithTokenRefresh(url, fetchOptions(body))
           .then((val) => val)
-          .catch((reason) => {
-
+          .catch(reason => { 
+            console.log(reason);
+            
             if (reason === `token refresh succes`) {
               return requestWithTokenRefresh(url, fetchOptions(body));
             } else {
               return rejectWithValue(reason);
             }
+            return reason
           })
           .catch((reason) => {
             return rejectWithValue(reason);

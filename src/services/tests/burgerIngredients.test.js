@@ -39,10 +39,7 @@ describe("BurgerIngredients extra reducers", () => {
       initialState,
       fetchBurgerIngredients.fulfilled({
         success: true,
-        data:  [{_id:'any'},
-        {_id:'data'},
-        {_id:'inside1'},]
-      ,
+        data,
       })
     );
     expect(state.burgerIngredients).toEqual(data);
@@ -50,7 +47,7 @@ describe("BurgerIngredients extra reducers", () => {
   });
 
   it("should change state with rejected action", () => {
-    const rejectMessage = "rejected message";
+    const rejectMessage = "page not found";
 
     const state = reducer(initialState, fetchBurgerIngredients.rejected(rejectMessage));
 

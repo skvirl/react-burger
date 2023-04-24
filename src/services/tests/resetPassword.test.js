@@ -48,10 +48,10 @@ describe("ResetPassword extra reducers", () => {
   it("should change state with rejected action", () => {
     const state = reducer(
       initialState,
-      fetchResetPassword.rejected("rejected message")
+      fetchResetPassword.rejected("page not found")
     );
     expect(state.resetPasswordSuccess).toBeNull();
     expect(state.resetPasswordMessage).toBeNull();
-    expect(state.resetPasswordError).toBe("rejected message");
+    expect(state.resetPasswordError).toBe("page not found");
   });
 });

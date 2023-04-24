@@ -98,8 +98,10 @@ export const checkResponseAuth = (res: Response) => {
       return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
     }
   } else if (res.ok) {
+
     return res.json();
   }
+  console.log(res);
 
   return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
 };

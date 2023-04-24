@@ -63,7 +63,7 @@ describe("orderDetails extra reducers", () => {
   });
 
   it("should change state with rejected action", () => {
-    const rejectMessage = "rejected message";
+    const rejectMessage = "page not found";
 
     const state = reducer(initialState, fetchForgotPassword.rejected(rejectMessage));
 
