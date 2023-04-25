@@ -77,7 +77,7 @@ const LoginPage = () => {
               name="password"
               onChange={onChange}
             />
-            <Button htmlType="submit" type="primary" size="medium">
+            <Button htmlType="submit" type="primary" size="medium" data-cy="loginBtn">
               Войти
             </Button>
           </form>

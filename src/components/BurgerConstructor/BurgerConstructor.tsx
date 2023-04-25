@@ -35,7 +35,7 @@ const BurgerConstructor = () => {
     <div ref={drop} className={styles.burgerParts}>
       <BunElem type="top" />
 
-      <div className={styles.inredientList}>
+      <div className={styles.inredientList}  data-cy="inredientList">
         <ConstructorIngredientList />
       </div>
 

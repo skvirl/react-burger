@@ -25,7 +25,7 @@ const AppHeader: FC = () => {
         >
           <Logo />
         </button>
-        <nav className={styles.rightNav}>
+        <nav className={styles.rightNav}  >
           <HeaderButton
             to="/profile"
             ico={ProfileIcon}

@@ -82,6 +82,7 @@ const OrderBtn = () => {
               dispatch(cleanOrderDetails(undefined));
             }
           }}
+          data-cy="createOrder"
         >
           Оформить заказ
         </Button>
