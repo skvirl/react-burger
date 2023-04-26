@@ -9,7 +9,7 @@ describe("template spec", () => {
 
   it("should open burger constructor by default", function () {
     cy.get(
-      '[data-type="bun"] > .IngredientGroup_ingredientGroup__cards__oIUnP > :nth-child(1)'
+      '[data-cy="ingredientGroup__bun"] > :nth-child(1)'
     ).click();
     cy.contains("Детали ингредиента");
   });
@@ -21,20 +21,20 @@ describe("template spec", () => {
     cy.get('[data-cy="inredientList"]').as("inredientList");
     cy.get('[data-cy="createOrder"]').as("createOrder");
     cy.get(
-      '[data-type="bun"] > .IngredientGroup_ingredientGroup__cards__oIUnP > :nth-child(1)'
+      '[data-cy="ingredientGroup__bun"] > :nth-child(1)'
     ).as("bunIngredient");
     cy.get(
-      '[data-type="sauce"] > .IngredientGroup_ingredientGroup__cards__oIUnP > :nth-child(1)'
+      '[data-cy="ingredientGroup__sauce"] > :nth-child(1)'
     ).as("sauceIngredient");
     cy.get(
-      '[data-type="main"] > .IngredientGroup_ingredientGroup__cards__oIUnP > :nth-child(1)'
+      '[data-cy="ingredientGroup__main"] > :nth-child(1)'
     ).as("mainIngredient1");
     cy.get(
-      '[data-type="main"] > .IngredientGroup_ingredientGroup__cards__oIUnP > :nth-child(7)'
+      '[data-cy="ingredientGroup__main"] > :nth-child(7)'
     ).as("mainIngredient7");
 
 
-    
+
     cy.get("@bunIngredient").trigger("dragstart", {
       dataTransfer,
     });
@@ -64,10 +64,10 @@ describe("template spec", () => {
     });
 
     cy.get(
-      ":nth-child(1) > .ConstructorIngredient_elementBox_dragable__D-1x3 > .ConstructorIngredient_elementBox_dragIcon__IWjwE"
+      '[data-cy="inredientList"]>:nth-child(1) > [data-cy="dragIcon"]'
     )
       .trigger("mousedown", { which: 2 })
-      .trigger("mousemove", 80, 160, )
+      .trigger("mousemove", 80, 160,)
       .trigger("mouseup", { force: true });
 
     cy.get("@createOrder").click();

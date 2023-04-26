@@ -90,7 +90,11 @@ const ConstructorIngredient: FC<{
           (isDragging && styles.elementBox_dragable__hidden)
         }
       >
-        <div ref={dragRef} className={styles.elementBox_dragIcon}>
+        <div
+          ref={dragRef}
+          className={styles.elementBox_dragIcon}
+          data-cy="dragIcon"
+        >
           <DragIcon type="primary" />
         </div>
         <ConstructorElement
