@@ -9,13 +9,17 @@ import {
   Input,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { cachedAuthData } from "../../utils/data";
+// import { cachedAuthData } from "../../utils/data";
 import { useForm } from "../../hooks/useForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { RootState } from "../../services/store";
 
 const RegisterPage = () => {
-  const { form, onChange } = useForm(cachedAuthData);
+  const { form, onChange } = useForm({
+    name: '',
+    email: '',
+    password: '',
+  });
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

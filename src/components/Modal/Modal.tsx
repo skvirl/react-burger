@@ -46,8 +46,8 @@ const ModalContent: FC<{ closeModal: () => void; children: ReactNode }> = ({
   return (
     <div className={styles.modal__content}>
       {children}
-      <div className={styles.modal__close} onClick={closeModal}>
-        <CloseIcon type="primary" />
+      <div className={styles.modal__close} onClick={closeModal} data-cy="closeIcon">
+        <CloseIcon type="primary"  />
       </div>
     </div>
   );

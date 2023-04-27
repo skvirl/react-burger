@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "types": ["cypress"]
   },
-  "include": ["src", "./node_modules/@types/uuid"]
+  "include": ["src", "cypress/**/*.ts", "./node_modules/@types/uuid"]
 }
