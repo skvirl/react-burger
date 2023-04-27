@@ -235,10 +235,15 @@ export const ingredientTabs = [
   { value: 'main', name: 'Начинки', alt: 'Начинка' }
 ];
 
+// export const cachedAuthData = {
+//   name: 'qqweqweqw2',
+//   email: 'qweqweqweqw2@yandex.ru',
+//   password: 'qweqweqweqwe2',
+// }
 export const cachedAuthData = {
-  name: 'qqweqweqw2',
-  email: 'qweqweqweqw2@yandex.ru',
-  password: 'qweqweqweqwe2',
+  name: '',
+  email: '',
+  password: '',
 }
 
 export const cachedOrderFeed = {

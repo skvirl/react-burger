@@ -34,24 +34,24 @@ const initialState: TInitialState = {
   burgerIngredientsLoadingError: null,
 };
 
-export const fetchBurgerIngredients =
-  createAsyncThunk(
-    "burger/fetchBurgerIngredients",
+export const fetchBurgerIngredients = createAsyncThunk(
+  "burger/fetchBurgerIngredients",
 
-    async function (_, { rejectWithValue },):Promise<TBurgerIngredients|unknown> {
-      try {
-        return (
-          await request(ingredientsApiUrl).catch((err) => {
-            throw err;
-          })
-        ).data;
-      } catch (error: unknown) {
-        if ( error instanceof Error && "message" in error) {
-          return rejectWithValue(error.message);
-        }
+  async function (
+    _,
+    { rejectWithValue }
+  ): Promise<TBurgerIngredients | unknown> {
+    try {
+      return await request(ingredientsApiUrl).catch((err) =>
+        rejectWithValue(err)
+      );
+    } catch (error: unknown) {
+      if (error instanceof Error && "message" in error) {
+        return rejectWithValue(error.message);
       }
     }
-  );
+  }
+);
 
 const burgerSlice = createSlice({
   name: "burgerIngredients",
@@ -64,12 +64,14 @@ const burgerSlice = createSlice({
         state.burgerIngredientsLoadingError = null;
       })
       .addCase(fetchBurgerIngredients.fulfilled, (state, action) => {
-        state.burgerIngredients = action.payload as TBurgerIngredients;
+        state.burgerIngredients = (
+          action.payload as { data: TBurgerIngredients }
+        ).data;
         state.burgerIngredientsLoadingError = null;
       })
       .addCase(fetchBurgerIngredients.rejected, (state, action) => {
         state.burgerIngredients = null;
-        state.burgerIngredientsLoadingError = String(action.payload);
+        state.burgerIngredientsLoadingError = String(action.error.message);
       });
   },
 });

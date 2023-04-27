@@ -20,6 +20,7 @@ export const fetchOrder = createAsyncThunk(
     ingredients: string[],
     { rejectWithValue }
   ): Promise<TOrderNumberPayload | unknown> {
+
     try {
       return await request(orderApiUrl, {
         method: "POST",
@@ -28,9 +29,10 @@ export const fetchOrder = createAsyncThunk(
           "Content-type": "application/json; charset=UTF-8",
           authorization: "Bearer " + getCookie("accessToken"),
         },
-      });
-    } catch (error: unknown) {
-      if (error instanceof Error && "message" in error) {
+      }).catch((err) => rejectWithValue(err));
+
+     } catch (error: unknown) {
+       if (error instanceof Error && "message" in error) {
         return rejectWithValue(error.message);
       }
     }
@@ -60,8 +62,9 @@ const burgerSlice = createSlice({
         state.orderDetailsLoadingError = null;
       })
       .addCase(fetchOrder.rejected, (state, action) => {
+        
         state.orderNumber = null;
-        state.orderDetailsLoadingError = String(action.payload);
+        state.orderDetailsLoadingError = String(action.error.message);
       });
   },
 });

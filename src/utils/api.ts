@@ -24,21 +24,26 @@ export const request = (
   endpoint: string | URL,
   options?: RequestInit | undefined
 ) => {
+  const res = fetch(endpoint, options).then(checkResponse).then(checkSuccess);
 
-  return fetch(endpoint, options).then(checkResponse).then(checkSuccess);
+  return res;
 };
 
 const checkResponse = (res: Response) => {
+
   if (res.ok) {
     return res.json();
   }
+
   return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
 };
+
 
 const checkSuccess = (res: { [key: string]: number | string | boolean }) => {
   if (res && res.success) {
     return res;
   }
+
   return Promise.reject(`Ответ не success: ${res}`);
 };
 
@@ -93,6 +98,7 @@ export const checkResponseAuth = (res: Response) => {
       return Promise.reject(`Ошибка ${res.status}: ${res.statusText}`);
     }
   } else if (res.ok) {
+
     return res.json();
   }
 

@@ -55,7 +55,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchForgotPassword.rejected, (state, action) => {
         state.forgotPasswordSuccess = null;
-        state.forgotPasswordError = action.payload;
+        state.forgotPasswordError = String(action.error.message);
       });
   },
 });

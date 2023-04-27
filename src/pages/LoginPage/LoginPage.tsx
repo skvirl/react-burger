@@ -70,14 +70,16 @@ const LoginPage = () => {
               onChange={onChange}
               value={String(form.email)}
               name={"email"}
+              data-cy="loginEmailInput"
             />
             <PasswordInput
               placeholder="Password"
               value={String(form.password)}
               name="password"
               onChange={onChange}
+              data-cy="loginPasswordInput"
             />
-            <Button htmlType="submit" type="primary" size="medium">
+            <Button htmlType="submit" type="primary" size="medium" data-cy="loginBtn">
               Войти
             </Button>
           </form>

@@ -116,7 +116,6 @@ const CardOrder: FC<{
   const navigate = useNavigate();
 
   let pathname = location.pathname;
-  console.log(location);
   
   // pathname = ~pathname.indexOf("/orders") ? "/orders" : pathname;
 

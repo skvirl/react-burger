@@ -77,14 +77,11 @@ export default function App() {
           <Route path="*" element={<NotFound404Page />} />
         </Route>
       </Routes>
-            
-      {       
-      
-        
-      background && (
+
+      {background && (
         <Routes>
           <Route
-            path="/profile/orders/:id"
+            path="/orders/:id"
             element={
               <Modal
                 closeModal={() => {

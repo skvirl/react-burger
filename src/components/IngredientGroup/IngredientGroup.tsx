@@ -4,8 +4,12 @@ import IngredientView from "../IngredientView/IngredientView";
 import { useAppSelector } from "../../hooks/redux";
 import { RootState } from "../../services/store";
 
-const IngredientGroup: FC<{ name: string, type: string, alt: string, observer: IntersectionObserver }> = ({ name, type, alt, observer }) => {
-
+const IngredientGroup: FC<{
+  name: string;
+  type: string;
+  alt: string;
+  observer: IntersectionObserver;
+}> = ({ name, type, alt, observer }) => {
   const getStoreData = (state: RootState) => ({
     ingredientData: state.burgerIngredients.burgerIngredients,
     selectedBunId: state.burgerConstructor.selectedBunId,
@@ -15,7 +19,6 @@ const IngredientGroup: FC<{ name: string, type: string, alt: string, observer: I
   const groupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-
     if (!observer) return;
 
     const ingredientGroupElement = groupRef.current;
@@ -23,8 +26,7 @@ const IngredientGroup: FC<{ name: string, type: string, alt: string, observer: I
 
     return () => {
       ingredientGroupElement && observer.unobserve(ingredientGroupElement);
-    }
-
+    };
   }, [observer, groupRef]);
 
   const filteredIngedientData = useMemo(
@@ -42,19 +44,16 @@ const IngredientGroup: FC<{ name: string, type: string, alt: string, observer: I
       >
         {name}
       </div>
-      <div className={styles.ingredientGroup__cards}>
+      <div
+        className={styles.ingredientGroup__cards}
+        data-cy={`ingredientGroup__${type}`}
+      >
         {filteredIngedientData?.map((val) => (
-          <IngredientView
-            elem={val}
-            alt={alt}
-            key={val._id}
-          />
+          <IngredientView elem={val} alt={alt} key={val._id} />
         ))}
       </div>
     </div>
   );
 };
-
-
 
 export default IngredientGroup;

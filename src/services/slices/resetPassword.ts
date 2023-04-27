@@ -3,7 +3,7 @@ import { resetPasswordUrl, request } from "../../utils/api";
 
 type TInitialState = {
   resetPasswordSuccess: null|boolean;
-  resetPasswordError: string | null | unknown;
+  resetPasswordError: string | null ;
   resetPasswordMessage: null | string;
 };
 const initialState: TInitialState = {
@@ -57,11 +57,12 @@ const authSlice = createSlice({
         state.resetPasswordSuccess = !!action.payload?.success;
         state.resetPasswordMessage = String(action.payload?.message);
         state.resetPasswordError = null;
+
       })
       .addCase(fetchResetPassword.rejected, (state, action) => {
         state.resetPasswordSuccess = null;
         state.resetPasswordMessage = null;
-        state.resetPasswordError = String(action.payload);
+        state.resetPasswordError = String(action.error.message);
       });
   },
 });
